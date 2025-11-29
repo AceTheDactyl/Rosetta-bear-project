@@ -1,0 +1,216 @@
+# ROSETTA BEAR PROJECT - MASTER BRIDGE REGISTRY
+# z=0.90 Full Substrate Transcendence State
+# Updated: 2025-11-29
+
+metadata:
+  coordinate: "Δ3.142|0.900|1.000Ω"
+  z_level: 0.90
+  status: "SEALED"
+  evolution_cycle: "EVO-20251129192549"
+
+# ============================================================================
+# DIRECTORY BRIDGES - Connecting all repository components
+# ============================================================================
+
+directory_bridges:
+
+  # Core CBS Runtime
+  cbs_runtime:
+    root_files:
+      - cbs_boot_loader.py
+      - cbs_memory_manager.py
+      - cbs_reasoning_engine.py
+      - cbs_update_manager.py
+      - cbs_interactive_demo.py
+      - ghmp.py
+    specs: tool_shed_specs/cbs_*.yaml
+    demo: cbs_demo/
+    docs: docs/CBS_*.md
+
+  # Evolution Engine
+  evolution_engine:
+    script: scripts/autonomous_evolution_engine.py
+    spec: tool_shed_specs/autonomous_evolution_engine.yaml
+    burden_tracker: tool_shed_specs/burden_tracker.yaml
+    logs: evolution_logs/
+    docs:
+      - docs/evolution_engine_integration_tests.md
+      - docs/autonomous_evolution_engine_test_scenarios.md
+
+  # Generated Tools
+  generated_tools:
+    rosetta_firmware:
+      path: generated_tools/rosetta_firmware/
+      registry: generated_tools/rosetta_firmware/__init__.py
+      tools:
+        autonomous:
+          - rosetta_bear_rhz_self_building_firmware_forge (z=0.90)
+          - rosetta_bear_consensus_validator (z=0.89)
+        supervised:
+          - rosetta_bear_friction_detector (z=0.87)
+          - rosetta_bear_rhz_meta_orchestrator (z=0.867)
+          - rosetta_bear_rhz_coordination_bridge (z=0.86)
+    triadic_rhz:
+      path: generated_tools/triadic_rhz/
+      legacy: true
+      tools:
+        - tool_critical_0000 (bridge, z=0.86)
+        - tool_critical_0001 (coordination, z=0.86)
+        - tool_critical_0002 (meta_tool, z=0.867)
+        - tool_supercritical_0003 (self_building, z=0.90)
+
+  # Tool Specifications
+  tool_specs:
+    path: tool_shed_specs/
+    specs:
+      - cbs_boot_loader.yaml
+      - cbs_memory_manager.yaml
+      - cbs_reasoning_engine.yaml
+      - cbs_update_manager.yaml
+      - ghmp_supervision_bridge.yaml
+      - burden_tracker.yaml
+      - burden_tracker_phase_binding.yaml
+      - autonomous_evolution_engine.yaml
+
+  # GHMP Plates (Geometric Hash Map Protocol)
+  ghmp_plates:
+    path: ghmp_plates/
+    milestones:
+      z087:
+        path: ghmp_plates/milestones/z087_substrate_transcendence_validation/
+        vault_node: vn-helix-substrate-transcendence-validation-*
+      z090:
+        path: ghmp_plates/milestones/z090_full_substrate_transcendence/
+        vault_node: vn-helix-full-transcendence-*
+    identity: cbs_demo/identity.png
+
+  # Documentation
+  docs:
+    path: docs/
+    z090_package:
+      - STATE_TRANSFER_PACKAGE_z090.md
+      - ELEVATION_z090_ANNOUNCEMENT.md
+      - ARCHITECTURE_BEYOND_z090.md
+    guides:
+      - CBS_Complete_Guide.md
+      - Helix_Elevation_Tracking.md
+    tracking:
+      - burden_tracking_simulation.json
+      - phase_cascade_history.json
+
+  # Scripts
+  scripts:
+    path: scripts/
+    files:
+      - autonomous_evolution_engine.py
+      - ghmp_capture.py
+      - regenerate_witnesses.py
+      - run_triadic_cycle.py
+
+  # Helix Shed (Historical/Reference)
+  helix_shed:
+    path: "Helix Shed w Bridge/"
+    state_transfers:
+      - STATE_TRANSFER_PACKAGE_z0p73.md
+      - "State Transfer Storage/STATE_TRANSFER_PACKAGE_z073.md"
+      - "State Transfer Storage/STATE_TRANSFER_PACKAGE_z0p52.md"
+      - "Triadic Structuring/STATE_TRANSFER_PACKAGE_z080.md"
+    architecture:
+      - HELIX_TOOL_SHED_ARCHITECTURE.md
+      - HELIX_PATTERN_PERSISTENCE_CORE.md
+      - HELIX_TOOL_SHED_BUILD_SUMMARY.md
+    signature: Signature Module/
+
+  # TRIAD Project Files
+  triad_files:
+    path: TRIAD_project_files/
+    files:
+      - STATE_TRANSFER_PACKAGE_TRIAD_083.md
+      - STATE_TRANSFER_PACKAGE_z0p85.md
+      - PROJECT_B_INSTRUCTIONS.md
+
+  # Evolution of TRIAD (Research)
+  evolution_research:
+    path: "Evolution of TRIAD-083/"
+    drift_os: "Drift_OS/"
+    frameworks: "Evolution of TRIAD-083/"
+
+  # Firmware (ESP32 Hardware)
+  firmware:
+    path: firmware/
+    project: firmware/stylus_maker_esp32s3/
+    docs: firmware/README.md
+
+  # Frontend
+  frontend:
+    path: frontend/
+    description: "Web interface for CBS runtime"
+
+# ============================================================================
+# CROSS-COMPONENT BRIDGES
+# ============================================================================
+
+cross_bridges:
+
+  # Tool Generation Pipeline
+  tool_pipeline:
+    input: tool_shed_specs/autonomous_evolution_engine.yaml
+    engine: scripts/autonomous_evolution_engine.py
+    output: generated_tools/rosetta_firmware/
+    logs: evolution_logs/
+
+  # State Transfer Chain
+  state_transfer_chain:
+    current: docs/STATE_TRANSFER_PACKAGE_z090.md
+    history:
+      - "Helix Shed w Bridge/Triadic Structuring/STATE_TRANSFER_PACKAGE_z080.md"
+      - "Helix Shed w Bridge/STATE_TRANSFER_PACKAGE_z0p73.md"
+      - "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_z0p52.md"
+    protocol: "Helix Shed w Bridge/state_transfer.yaml"
+
+  # CBS → GHMP → Tools
+  runtime_to_tools:
+    runtime:
+      - cbs_boot_loader.py
+      - cbs_memory_manager.py
+    ghmp: ghmp.py
+    tools: generated_tools/rosetta_firmware/
+
+  # Burden Tracking → Evolution
+  burden_evolution:
+    tracker_spec: tool_shed_specs/burden_tracker.yaml
+    simulation_data: docs/burden_tracking_simulation.json
+    engine: scripts/autonomous_evolution_engine.py
+    friction_tool: generated_tools/rosetta_firmware/rosetta_bear_friction_detector.py
+
+# ============================================================================
+# IMPORT SHORTCUTS
+# ============================================================================
+
+quick_imports:
+  python:
+    rosetta_firmware: |
+      from generated_tools.rosetta_firmware import ROSETTA_FIRMWARE_TOOLS
+    triadic_rhz: |
+      from generated_tools.triadic_rhz import *
+    cbs_core: |
+      from cbs_boot_loader import CBSBootLoader
+      from cbs_memory_manager import CBSMemoryManager
+      from cbs_reasoning_engine import CBSReasoningEngine
+    evolution: |
+      import sys; sys.path.insert(0, 'scripts')
+      from autonomous_evolution_engine import EvolutionEngine
+
+# ============================================================================
+# VERIFICATION COMMANDS
+# ============================================================================
+
+verification:
+  check_tools: |
+    python -c "from generated_tools.rosetta_firmware import ROSETTA_FIRMWARE_TOOLS; print(f'Tools: {len(ROSETTA_FIRMWARE_TOOLS)}')"
+  check_evolution: |
+    ls -la evolution_logs/
+  check_ghmp: |
+    ls -la ghmp_plates/milestones/
+  run_cycle: |
+    python scripts/autonomous_evolution_engine.py
