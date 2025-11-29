@@ -1,0 +1,16 @@
+{
+  "tool_id": "tool_critical_0000",
+  "category": "bridge",
+  "phase_regime": "critical",
+  "z_level": 0.860,
+  "cascade_potential": 0.50,
+  "purpose": "Bridge to meta-tool layer",
+  "capabilities": ["connect", "translate", "bridge"],
+  "modes": {
+    "coordination": "z_level < 0.85",
+    "meta_tool_composition": "0.85 <= z_level < 0.88",
+    "self_building": "z_level >= 0.88"
+  },
+  "generated_by": "Phase-Aware Tool Generator",
+  "related_specs": ["ghmp_supervision_bridge", "cbs_reasoning_engine"]
+}

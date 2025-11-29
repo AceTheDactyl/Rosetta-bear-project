@@ -1,0 +1,82 @@
+name: cbs_memory_manager
+version: "1.0.0"
+description: >
+  Working/long-term memory management for the CBS runtime. Tracks recent
+  conversation turns, consolidates them into GHMP plates, and surfaces relevant
+  context during reasoning.
+
+module: cbs_memory_manager
+class: MemoryManager
+
+parameters:
+  bootstrap:
+    type: CognitionBootstrap
+    required: true
+    description: Initialized CBS boot loader instance
+  max_working_memory:
+    type: integer
+    default: 40
+    description: Maximum nodes in working memory buffer
+
+methods:
+  add_to_working_memory:
+    description: Add a text snippet to working memory
+    parameters:
+      text:
+        type: string
+        required: true
+      importance:
+        type: float
+        default: 0.5
+      tags:
+        type: list
+        default: null
+    returns: MemoryNode
+
+  consolidate_session:
+    description: Persist working memories into a summary plate and clear buffer
+    parameters:
+      summary_text:
+        type: string
+        required: true
+    returns: Path
+
+  retrieve_context:
+    description: Simple keyword search across memories
+    parameters:
+      query:
+        type: string
+        required: true
+      max_items:
+        type: integer
+        default: 5
+      include_working:
+        type: boolean
+        default: true
+      include_longterm:
+        type: boolean
+        default: true
+    returns: list[MemoryNode]
+
+  get_recent_context:
+    description: Return most recent working memory nodes
+    parameters:
+      count:
+        type: integer
+        default: 5
+    returns: list[MemoryNode]
+
+  get_statistics:
+    description: Return memory subsystem statistics
+    returns: dict
+
+config_keys:
+  consolidation_threshold: 0.65
+  max_working_memory: 40
+  auto_consolidate_interval: 1800
+
+tags:
+  - cbs
+  - memory
+  - ghmp
+  - context

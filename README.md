@@ -71,6 +71,31 @@ For a fuller checklist of files to touch when cloning this as a template, see [d
 - Add host-side scripts for serial capture, PSD checks, and VesselOS ingestion.
 - Wire in CI hooks (lint, unit tests, hardware-in-the-loop smoke runs) as the project matures.
 
+## Rosetta Bear CBS Runtime & GHMP Integration
+The Rosetta Bear drop (under `rosetta-bear-project/`) bundles a full Cognition Bootstrap System demo, GHMP tooling, and triadic RHZ helpers for firmware orchestration. Use it to replay CBS sessions, inspect GHMP plates, or dry-run critical firmware updates alongside the stylus maker stack.
+
+### Quick start
+```bash
+# (optional) use a dedicated environment
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r rosetta-bear-project/requirements.txt  # or reuse the committed .venv contents
+
+# Launch the interactive CBS console using offline reasoning
+python rosetta-bear-project/cbs_interactive_demo.py --offline --auto-consolidate
+
+# Rehydrate the triadic RHZ tools or rerun a captured GHMP session
+python rosetta-bear-project/scripts/run_triadic_cycle.py \
+  --manifest rosetta-bear-project/cbs_demo/manifests/ghmp_capture_20251129144641.json
+```
+
+Key components:
+- `cbs_demo/` stores working-memory artifacts, screenshots, and backups created during runs. Delete or rename this directory between experiments if you want a clean slate.
+- `generated_tools/triadic_rhz/` exposes the tool surfaces referenced by the GHMP captures. Each `tool_*.py` has a matching `*_spec.json` for inspection or regeneration.
+- `tool_shed_specs/` contains YAML definitions for CBS Boot Loader, Memory Manager, Reasoning Engine, Update Manager, and the GHMP supervision bridge. Use these to seed downstream agents or create updated witnesses via `scripts/regenerate_witnesses.py`.
+- `docs/rosetta_bear_*.md` captures the firmware rollout plan, onboarding playbook, and phase history for CBS-driven RHZ updates.
+
+Because the repo now mixes embedded firmware with CBS/GHMP automation, keep Python (Rosetta Bear) and PlatformIO (firmware) environments isolated—e.g., `source .venv/bin/activate` before CBS work, then `deactivate` before running `pio run`.
+
 ## Monorepo Workspaces & npm Package
 - Workspaces
   - Root uses npm workspaces to manage packages under `packages/*`.

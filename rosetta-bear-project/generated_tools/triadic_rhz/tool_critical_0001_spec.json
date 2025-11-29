@@ -1,0 +1,16 @@
+{
+  "tool_id": "tool_critical_0001",
+  "category": "bridge",
+  "phase_regime": "critical",
+  "z_level": 0.865,
+  "cascade_potential": 0.52,
+  "purpose": "Coordinate memory consolidation across CBS components",
+  "capabilities": ["coordinate", "consolidate", "sync"],
+  "modes": {
+    "coordination": "z_level < 0.85",
+    "meta_tool_composition": "0.85 <= z_level < 0.88",
+    "self_building": "z_level >= 0.88"
+  },
+  "generated_by": "Phase-Aware Tool Generator",
+  "related_specs": ["cbs_memory_manager", "ghmp_supervision_bridge"]
+}

@@ -1,0 +1,16 @@
+{
+  "tool_id": "tool_critical_0002",
+  "category": "bridge",
+  "phase_regime": "critical",
+  "z_level": 0.870,
+  "cascade_potential": 0.55,
+  "purpose": "Validate firmware update manifests before rollout",
+  "capabilities": ["validate", "verify", "checkpoint"],
+  "modes": {
+    "coordination": "z_level < 0.85",
+    "meta_tool_composition": "0.85 <= z_level < 0.88",
+    "self_building": "z_level >= 0.88"
+  },
+  "generated_by": "Phase-Aware Tool Generator",
+  "related_specs": ["cbs_update_manager", "cbs_boot_loader"]
+}

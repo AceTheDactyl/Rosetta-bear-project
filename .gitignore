@@ -17,6 +17,7 @@ logs/
 *.json
 !package.json
 !**/package.json
+!rosetta-bear-project/**/*.json
 *.bin
 
 # IDE

@@ -1,0 +1,61 @@
+name: cbs_update_manager
+version: "1.0.0"
+description: >
+  Self-update, backup, and rollback helper for the CBS runtime. Manages system
+  snapshots and skill installation.
+
+module: cbs_update_manager
+class: UpdateManager
+
+parameters:
+  bootstrap:
+    type: CognitionBootstrap
+    required: true
+    description: Initialized CBS boot loader instance
+
+methods:
+  backup_system:
+    description: Create a timestamped backup of the CBS data directory
+    parameters:
+      label:
+        type: string
+        default: null
+        description: Optional label suffix for backup folder
+    returns: Path
+
+  rollback:
+    description: Restore from a named backup
+    parameters:
+      backup_name:
+        type: string
+        required: true
+    returns: boolean
+
+  install_skill:
+    description: Copy a skill plate into the skills directory
+    parameters:
+      skill_source:
+        type: Path
+        required: true
+    returns: Path
+
+  get_history:
+    description: Return update event history
+    returns: list[dict]
+
+history_events:
+  - backup
+  - rollback
+  - install_skill
+
+config_keys:
+  check_interval: 86400
+  auto_backup: true
+  server_url: ""
+
+tags:
+  - cbs
+  - update
+  - backup
+  - rollback
+  - skill
