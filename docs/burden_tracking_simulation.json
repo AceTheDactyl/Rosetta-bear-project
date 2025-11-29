@@ -1,0 +1,102 @@
+{
+  "tool": "burden_tracker_v1.0",
+  "timestamp": "2025-11-29T14:41:36.440385+00:00",
+  "coordinate": "\u03943.14159|0.900|1.000\u03a9",
+  "activities": [
+    {
+      "type": "bridge",
+      "duration_min": 45,
+      "z_level": 0.86,
+      "confidence": 0.216,
+      "start": "2025-11-29T14:41:36+00:00",
+      "end": "2025-11-29T15:26:36+00:00"
+    },
+    {
+      "type": "coordination",
+      "duration_min": 60,
+      "z_level": 0.86,
+      "confidence": 0.13,
+      "start": "2025-11-29T14:46:36+00:00",
+      "end": "2025-11-29T15:46:36+00:00"
+    },
+    {
+      "type": "meta_tool",
+      "duration_min": 75,
+      "z_level": 0.867,
+      "confidence": 0.304,
+      "start": "2025-11-29T14:51:36+00:00",
+      "end": "2025-11-29T16:06:36+00:00"
+    },
+    {
+      "type": "self_building",
+      "duration_min": 90,
+      "z_level": 0.9,
+      "confidence": 0.35,
+      "start": "2025-11-29T14:56:36+00:00",
+      "end": "2025-11-29T16:26:36+00:00"
+    }
+  ],
+  "metrics": {
+    "current_phase": {
+      "z_level": 0.9,
+      "regime": "supercritical",
+      "burden_multiplier": 0.151,
+      "order_parameter": 0.42,
+      "consensus_time": 110,
+      "correlation_length": 110
+    },
+    "totals": {
+      "activities_tracked": 4,
+      "total_burden_hours": 4.5,
+      "reduction_achieved_hours": 0.68
+    },
+    "optimization_recommendations": [
+      "Prioritize coordination rituals while z\u22480.86",
+      "Tie cascade regeneration to GHMP manifests",
+      "Automate witness refresh via scripts/regenerate_witnesses.py"
+    ],
+    "weekly_summaries": [
+      {
+        "week_start": "2025-11-29T14:41:36+00:00",
+        "week_end": "2025-12-06T14:41:36+00:00",
+        "total_hours": 4.5,
+        "reduction_achieved_hours": 0.68,
+        "average_z_level": 0.872,
+        "phase_regime": "supercritical",
+        "phase_efficiency": 15.1,
+        "trend": "baseline",
+        "trend_percent": 0,
+        "categories": {
+          "bridge": {
+            "count": 1,
+            "hours": 0.75,
+            "percentage": 16.7
+          },
+          "coordination": {
+            "count": 1,
+            "hours": 1.0,
+            "percentage": 22.2
+          },
+          "meta_tool": {
+            "count": 1,
+            "hours": 1.25,
+            "percentage": 27.8
+          },
+          "self_building": {
+            "count": 1,
+            "hours": 1.5,
+            "percentage": 33.3
+          }
+        },
+        "top_categories": [
+          "self_building",
+          "meta_tool",
+          "coordination"
+        ],
+        "recommendations": [
+          "Use scripts/ghmp_capture.py before major firmware drops."
+        ]
+      }
+    ]
+  }
+}

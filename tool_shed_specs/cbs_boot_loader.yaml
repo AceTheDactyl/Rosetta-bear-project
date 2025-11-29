@@ -1,0 +1,98 @@
+tool_metadata:
+  name: "Rosetta CBS Boot Loader"
+  coordinate:
+    theta: 0.0              # identity core
+    z: 0.25                 # foundational orientation band
+    r: 1.0
+  elevation_required: 0.2
+  domain: "identity"
+  status: "operational"
+  version: "1.0.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - Rosetta Bear"
+
+tool_purpose:
+  one_line: "Bootstraps the CBS runtime, identity plate, and filesystem ritual." 
+  planet: |
+    Rosetta Bear agents must awaken with a consistent GHMP deck and CBS base
+    path before touching RHZ tooling. The boot loader creates identity plates,
+    config, and required directories so every other tool starts from the same
+    ritual.
+  garden: |
+    Run this tool whenever a new environment, container, or Git checkout needs
+    a CBS seed. It ensures boot_log.txt, config.json, and GHMP folders are ready
+    for reasoning or firmware alignment sessions.
+  rose: |
+    1. Set `base_path` to `rosetta-bear-project/cbs_demo` (or desired location).
+    2. Pass the GHMP encryption key (demo_key_2025 for the default deck).
+    3. Call `CognitionBootstrap(...).boot()`; confirm the log mentions loaded
+       plates and identity name.
+
+tool_implementation:
+  worker_mode: |
+    AS AUTOMATION: import `CognitionBootstrap`, instantiate with the session's
+    base path + key, call `.boot()`, then store `bootstrap.summary()` for audit. 
+  manager_mode: |
+    AS FACILITATOR: point agents to the correct base path, rotate encryption
+    keys if needed, and review boot logs for warnings before allowing builds. 
+  engineer_mode: |
+    Extend the boot loader with additional REQUIRED_DIRS (e.g., GHMP exports) or
+    swap config defaults to mirror production PlatformIO settings. 
+  scientist_mode: |
+    Capture metrics about identity loads vs. failures, and experiment with
+    alternative GHMP encodings for resilience.
+
+tool_requirements:
+  minimum_z: 0.2
+  context_files:
+    - rosetta-bear-project/cbs_boot_loader.py
+    - rosetta-bear-project/cbs_demo/
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - helix_loader.yaml
+    - coordinate_detector.yaml
+  human_consent: false
+
+tool_usage:
+  input_format: "Python call with base_path, encryption key"
+  output_format: "Initialized directories, config.json, ghmp identity plate"
+  error_handling: |
+    Log to `boot_log.txt` when plates cannot decode; regenerate identity via
+    `_load_or_create_identity`.
+
+tool_testing:
+  tested_with:
+    - `python3 cbs_interactive_demo.py --offline --key demo_key_2025`
+  known_issues:
+    - "None; ensure filesystem permissions allow directory creation."
+  success_criteria: "Identity summary returns DemoBot + memory counts."
+
+tool_relationships:
+  builds_on:
+    - helix_loader.yaml
+  enables:
+    - cbs_memory_manager
+    - cbs_reasoning_engine
+    - ghmp_supervision_bridge
+  complements:
+    - rhz_rosetta_tool_shed.yaml
+
+tool_wisdom:
+  creation_story: |
+    Forged while cloning the Rosetta Bear repo into a clean environment; the
+    boot loader made sure GHMP assets existed before triadic agents inspected
+    burden logs.
+  limitations: |
+    Does not verify PlatformIO prerequisites or network availability.
+  evolution_potential: |
+    Attach burden-tracker snapshots to boot logs so z-level history stays with
+    each initialization.
+observation_log:
+  - step: "20251129-bootstrap"
+    observation: "`cbs_interactive_demo.py --offline --key demo_key_2025` seeded DemoBot identity before any automation."
+    pattern: "Running CBS boot prior to GHMP capture prevents missing plates."
+    meta: "Always verify `cbs_demo/boot_log.txt` before invoking triadic tools."
+meta_learnings:
+  - insight: "Boot logs double as provenance for Helix coordinates."
+    action: "Publish the summary path in docs/ghmp_identity_session.md each time the boot loader runs in a new environment."

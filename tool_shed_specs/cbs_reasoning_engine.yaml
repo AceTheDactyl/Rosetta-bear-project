@@ -1,0 +1,93 @@
+tool_metadata:
+  name: "Rosetta CBS Reasoning Engine"
+  coordinate:
+    theta: 2.36             # meta-cognitive band
+    z: 0.65
+    r: 1.0
+  elevation_required: 0.6
+  domain: "meta"
+  status: "operational"
+  version: "1.0.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - Rosetta Bear"
+
+tool_purpose:
+  one_line: "Routes CBS conversations through offline/LLM backends with GHMP context."
+  planet: |
+    To align RHZ firmware updates with Rosetta Bear cognition, responses must
+    cite GHMP memories and stay transparent about backend availability. The
+    reasoning engine maintains conversation turns, retrieves context, and talks
+    to OpenAI, Anthropic, or offline fallbacks.
+  garden: |
+    Use this tool when guiding CBS prompts such as "Initiate PlatformIO ritual"
+    or "Document burden tracker insights." It ensures GHMP-backed responses are
+    logged and ready for GHMP plate consolidation.
+  rose: |
+    1. Instantiate `ReasoningEngine(bootstrap, memory_mgr, backend)`.
+    2. Call `.respond(user_text, retrieve_context=True)`.
+    3. Inspect returned text + context to embed into docs or GHMP metadata.
+
+tool_implementation:
+  worker_mode: |
+    AS AUTOMATION: feed prompts and capture `.history` + `.respond` outputs;
+    pass `importance` >0.55 so MemoryManager persists them.
+  manager_mode: |
+    Choose backend names (`offline`, `local`, `openai`, `anthropic`) and ensure
+    API keys/environment variables exist before remote runs.
+  engineer_mode: |
+    Add new backend implementations or adjust `system_prompt` to map specific
+    Helix coordinates.
+  scientist_mode: |
+    Instrument `context_nodes` to study how GHMP density influences bot tone.
+
+tool_requirements:
+  minimum_z: 0.6
+  context_files:
+    - rosetta-bear-project/cbs_reasoning_engine.py
+    - rosetta-bear-project/cbs_memory_manager.py
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - Rosetta CBS Memory Manager
+  human_consent: false
+
+tool_usage:
+  input_format: "Text prompts + optional backend kwargs"
+  output_format: "Assistant reply as string"
+  error_handling: |
+    Fallback to OfflineBackend when remote API throws; append reason to reply.
+
+tool_testing:
+  tested_with:
+    - "Offline backend via cbs_interactive_demo"
+  known_issues:
+    - "Anthropic/OpenAI import errors when packages missing."
+  success_criteria: "Prompts archived alongside GHMP plates referencing DemoBot identity."
+
+tool_relationships:
+  builds_on:
+    - Rosetta CBS Memory Manager
+  enables:
+    - ghmp_supervision_bridge
+    - triadic_meta_orchestrator
+  complements:
+    - burden_tracker_phase_binding
+
+tool_wisdom:
+  creation_story: |
+    Elevated during the RHZ firmware ritual so the CBS agent could narrate
+    PlatformIO supervision at z≈0.867.
+  limitations: |
+    Offline backend offers deterministic text; lacks randomness when bridging
+    creative z>0.8 states.
+  evolution_potential: |
+    Bind each backend invocation to GHMP observation logs for automatic Shed
+    testing evidence.
+observation_log:
+  - step: "20251129-bridge"
+    observation: "Reasoning engine powered both manual CBS prompts and automated ghmp_capture runs."
+    pattern: "Consistent prompts ('Initiate build ritual', etc.) keep GHMP manifests comparable."
+    meta: "Document prompt sets inside run manifests to speed audits."
+meta_learnings:
+  - insight: "Switching between offline + local backends mid-run can fragment GHMP context."
+    action: "Hold backend constant per ritual or record backend swaps inside manifests."

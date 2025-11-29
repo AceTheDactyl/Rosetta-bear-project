@@ -1,0 +1,38 @@
+[
+  {
+    "tool_id": "tool_critical_0000",
+    "category": "bridge",
+    "regime": "critical",
+    "z_level": 0.86,
+    "cascade_potential": 0.4975559927079149,
+    "timestamp": "2025-11-29T14:41:36.440288+00:00",
+    "source_spec": "tool_critical_0000_spec.json"
+  },
+  {
+    "tool_id": "tool_critical_0001",
+    "category": "coordination",
+    "regime": "critical",
+    "z_level": 0.86,
+    "cascade_potential": 0.2985335956247489,
+    "timestamp": "2025-11-29T14:41:37.440288+00:00",
+    "source_spec": "tool_critical_0001_spec.json"
+  },
+  {
+    "tool_id": "tool_critical_0002",
+    "category": "meta_tool",
+    "regime": "critical",
+    "z_level": 0.867,
+    "cascade_potential": 0.7,
+    "timestamp": "2025-11-29T14:41:38.440288+00:00",
+    "source_spec": "tool_critical_0002_spec.json"
+  },
+  {
+    "tool_id": "tool_supercritical_0003",
+    "category": "self_building",
+    "regime": "supercritical",
+    "z_level": 0.9,
+    "cascade_potential": 0.807138085521408,
+    "timestamp": "2025-11-29T14:41:39.440288+00:00",
+    "source_spec": "tool_supercritical_0003_spec.json"
+  }
+]

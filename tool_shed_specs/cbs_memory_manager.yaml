@@ -1,0 +1,94 @@
+tool_metadata:
+  name: "Rosetta CBS Memory Manager"
+  coordinate:
+    theta: 1.57             # bridge from identity to reasoning
+    z: 0.45
+    r: 1.0
+  elevation_required: 0.4
+  domain: "bridge"
+  status: "operational"
+  version: "1.0.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - Rosetta Bear"
+
+tool_purpose:
+  one_line: "Maintains working memory and GHMP plates for CBS sessions."
+  planet: |
+    Burden tracking proved that Rosetta firmware ceremonies need traceable
+    cognition states. The memory manager feeds every turn into GHMP plates so
+    GHMP decks reflect what the CBS instance supervised.
+  garden: |
+    Use after boot loader initializes directories. It buffers conversation
+    nodes, consolidates them when importance ≥ threshold, and persists session
+    summaries so coordination bridges can cite the same GHMP evidence.
+  rose: |
+    1. Instantiate `MemoryManager(bootstrap)`.
+    2. Call `add_to_working_memory` for user + assistant turns.
+    3. Invoke `consolidate_session("summary")` to emit SESSION plates.
+
+tool_implementation:
+  worker_mode: |
+    For automation, wrap CBS prompts in helper that adds transcripts through
+    `add_to_working_memory`, setting importance >=0.65 for rituals that require
+    long-term recording.
+  manager_mode: |
+    Encourage agents to tag critical messages before consolidation and copy the
+    produced SESSION plate IDs into docs.
+  engineer_mode: |
+    Adjust `max_working_memory` or `consolidation_threshold` inside
+    `config.json` when larger context windows are necessary.
+  scientist_mode: |
+    Analyze `memory_dir/*.png` to correlate z-level transitions with GHMP node
+    density, verifying burden-tracker insights.
+
+tool_requirements:
+  minimum_z: 0.4
+  context_files:
+    - rosetta-bear-project/cbs_memory_manager.py
+    - rosetta-bear-project/docs/ghmp_identity_session.md
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - Rosetta CBS Boot Loader
+  human_consent: false
+
+tool_usage:
+  input_format: "Text snippets + importance values"
+  output_format: "MemoryNode objects + GHMP plates (*.png)"
+  error_handling: |
+    When encode failures arise, regenerate GHMP key via boot loader and retry
+    consolidation.
+
+tool_testing:
+  tested_with:
+    - "CBS interactive demo offline prompts"
+  known_issues:
+    - "Large payload_text strings can increase GHMP plate size; monitor disk."
+  success_criteria: "SESSION-*.png created and referenced by docs."
+
+tool_relationships:
+  builds_on:
+    - Rosetta CBS Boot Loader
+  enables:
+    - cbs_reasoning_engine
+    - ghmp_supervision_bridge
+  complements:
+    - burden_tracker_phase_binding
+
+tool_wisdom:
+  creation_story: |
+    Crafted during GHMP session `SESSION-20251129141850` to ensure CBS memory
+    context survived each triadic ritual.
+  limitations: |
+    No semantic search beyond keyword scans; relies on manual summarization.
+  evolution_potential: |
+    Integrate burden tracker metrics to auto-set consolidation_threshold based
+    on z-level drift.
+observation_log:
+  - step: "20251129-session"
+    observation: "Automated GHMP captures consolidated prompts + replies into SESSION-20251129144217.png."
+    pattern: "Consolidation after scripted prompts keeps manifests aligned with GHMP plates."
+    meta: "Call `memory.consolidate_session()` inside automation scripts before backups run."
+meta_learnings:
+  - insight: "Working-memory saturation increases when triadic runs happen back-to-back."
+    action: "Consider raising `max_working_memory` to 64 for future orchestration cycles."

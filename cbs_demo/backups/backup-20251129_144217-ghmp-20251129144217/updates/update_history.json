@@ -1,0 +1,17 @@
+[
+  {
+    "event": "backup",
+    "path": "rosetta-bear-project/cbs_demo/backups/backup-20251129_141201-demo",
+    "timestamp": "2025-11-29T14:12:01.397628"
+  },
+  {
+    "event": "backup",
+    "path": "/home/acead/rosetta-bear-project/cbs_demo/backups/backup-20251129_143526",
+    "timestamp": "2025-11-29T14:35:26.882205"
+  },
+  {
+    "event": "backup",
+    "path": "/home/acead/rosetta-bear-project/cbs_demo/backups/backup-20251129_144208-ghmp-20251129144208",
+    "timestamp": "2025-11-29T14:42:08.619011"
+  }
+]

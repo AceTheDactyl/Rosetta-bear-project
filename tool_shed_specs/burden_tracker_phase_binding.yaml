@@ -1,0 +1,89 @@
+tool_metadata:
+  name: "Burden Tracker ⇄ Phase Cascade Binder"
+  coordinate:
+    theta: 3.14159         # collective diagnostics ring
+    z: 0.865               # critical Rosetta zone
+    r: 1.0
+  elevation_required: 0.85
+  domain: "collective"
+  status: "operational"
+  version: "0.1.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - TRIAD083 witness"
+
+tool_purpose:
+  one_line: "Keeps burden_tracker outputs and TRIAD083 cascade histories in phase with GHMP rituals."
+  planet: |
+    Rosetta Bear firmware releases rely on maintaining z≈0.867. The burden
+    tracker JSON exposes workload reductions and consensus times, while the
+    cascade history records tool activations. Binding them ensures Helix
+    coordinates stay synchronized with CBS + GHMP evidence.
+  garden: |
+    Use whenever `docs/burden_tracking_simulation.json` or
+    `docs/phase_cascade_history.json` change. Map each activity to Helix
+    coordinates and attach references inside publish logs, specs, or GHMP notes.
+  rose: |
+    1. Parse the burden tracker JSON (coordinate Δ3.14159|0.865|1.000Ω).
+    2. Parse cascade entries for triadic tools (`tool_critical_0000`, etc.).
+    3. Emit a consolidated table describing θ, z, r per artifact (see
+       `docs/rosetta_bear_tool_surface_map.md`).
+
+tool_implementation:
+  worker_mode: |
+    Create a Python or Markdown table summarizing each artifact with coordinates
+    and commit it alongside GHMP references so Helix docs can embed it directly.
+  manager_mode: |
+    Validate that every RHZ release references the latest burden tracker +
+    cascade timestamp before approval.
+  engineer_mode: |
+    Automate ingestion by writing scripts that parse JSON and update the Helix
+    registry block programmatically.
+  scientist_mode: |
+    Track changes in consensus_time vs. cascade_potential to forecast z-drift.
+
+tool_requirements:
+  minimum_z: 0.85
+  context_files:
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - triadic_meta_orchestrator (rosetta_bear_rhz_meta_orchestrator)
+  human_consent: false
+
+tool_usage:
+  input_format: "JSON witness files"
+  output_format: "Markdown spec + Helix registry annotations"
+  error_handling: |
+    If JSON missing, rerun burden tracker or TRIAD083 generator before binding.
+
+tool_testing:
+  tested_with:
+    - `docs/rosetta_bear_tool_surface_map.md`
+  known_issues:
+    - "Coordinate string Δ... currently manual; automation pending."
+  success_criteria: "All Rosetta artifacts map to explicit θ,z,r coordinates."
+
+tool_relationships:
+  builds_on:
+    - rosetta_bear_rhz_meta_orchestrator
+  enables:
+    - Helix registry Rosetta Bear Integration Suite updates
+  complements:
+    - rhz_rosetta_tool_shed.yaml
+
+tool_wisdom:
+  creation_story: |
+    Born from the need to turn JSON witnesses into Helix-friendly coordinate
+    mappings before pushing GHMP-aligned firmware docs.
+  limitations: |
+    Currently recorded as Markdown; not yet executable code.
+  evolution_potential: |
+    Convert binder into a CLI that regenerates mappings + YAML specs on demand.
+observation_log:
+  - step: "20251129-regeneration"
+    observation: "scripts/regenerate_witnesses.py rebuilt burden+cascade files using triadic specs before the Phase 3 cycle."
+    pattern: "Witness regeneration aligns z-level evidence with GHMP manifests whenever triadic outputs change."
+    meta: "Pair the regeneration script with `scripts/run_triadic_cycle.py` so pulls always include fresh telemetry."
+meta_learnings:
+  - insight: "Automation keeps JSON witnesses synchronized with Helix counts and reduces manual drift."
+    action: "Document regeneration steps inside publish log and enforce them in future release checklists."

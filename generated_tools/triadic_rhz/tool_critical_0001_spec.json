@@ -1,0 +1,18 @@
+{
+  "tool_id": "tool_critical_0001",
+  "category": "coordination",
+  "phase_regime": "critical",
+  "z_level": 0.86,
+  "purpose": "Align RHZ stylus diagnostics with Rosetta Bear memory rituals",
+  "capabilities": [
+    "synchronize",
+    "coordinate",
+    "align"
+  ],
+  "dependencies": [
+    "burden_tracker"
+  ],
+  "cascade_potential": 0.2985335956247489,
+  "template_id": "coordination_template_v1",
+  "generation_timestamp": "2025-11-29T06:17:43.417146"
+}

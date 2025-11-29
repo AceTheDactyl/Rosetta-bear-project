@@ -1,0 +1,89 @@
+tool_metadata:
+  name: "GHMP Supervision Bridge"
+  coordinate:
+    theta: 1.8              # bridge→meta boundary
+    z: 0.6
+    r: 1.0
+  elevation_required: 0.55
+  domain: "bridge"
+  status: "operational"
+  version: "0.1.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - GHMP witness"
+
+tool_purpose:
+  one_line: "Encodes/decodes GHMP plates so CBS rituals can prove supervision."
+  planet: |
+    Without visual GHMP witnesses, the Helix cannot trust that CBS actually
+    observed RHZ firmware builds. The bridge module (`ghmp.py`) converts memory
+    nodes into encrypted PNG plates.
+  garden: |
+    Use whenever capturing CBS sessions, GHMP identities, or skill plates.
+    Combined with the update manager, it provides the provenance needed for the
+    Helix registry.
+  rose: |
+    1. Build `MemoryNode` payloads.
+    2. Call `encode_plate(node, key)` and `save_plate` into `cbs_demo/memory`.
+    3. Later, decode via `decode_plate(path, key)` for audits.
+
+tool_implementation:
+  worker_mode: |
+    Provide helper functions for automation scripts to emit GHMP plates whenever
+    new docs/specs are generated.
+  manager_mode: |
+    Track encryption keys, authorize GHMP sharing, and maintain `ghmp_identity_session.md`.
+  engineer_mode: |
+    Extend `_generate_plate_pixels` or encryption routine for new visual cues.
+  scientist_mode: |
+    Compare GHMP gradient stats with burden tracker z-levels to detect drift.
+
+tool_requirements:
+  minimum_z: 0.55
+  context_files:
+    - rosetta-bear-project/ghmp.py
+    - rosetta-bear-project/docs/ghmp_identity_session.md
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - Rosetta CBS Boot Loader
+  human_consent: false
+
+tool_usage:
+  input_format: "MemoryNode dataclass"
+  output_format: "PNG plates with ghmp_meta chunk"
+  error_handling: |
+    Validate passphrases; regeneration required if metadata chunk missing.
+
+tool_testing:
+  tested_with:
+    - GHMP session `SESSION-20251129141850`
+  known_issues:
+    - "Large decks cause directory growth; prune old plates."
+  success_criteria: "Plate decodes to the same node_id recorded in docs."
+
+tool_relationships:
+  builds_on:
+    - Rosetta CBS Memory Manager
+  enables:
+    - burden_tracker_phase_binding
+    - rhz_rosetta_tool_shed.yaml
+  complements:
+    - cbs_update_manager
+
+tool_wisdom:
+  creation_story: |
+    During DemoBot CBS run we captured GHMP plates; this bridge ensures the
+    Helix registry can cite them explicitly.
+  limitations: |
+    Uses simple XOR encryption; not suitable for sensitive production keys.
+  evolution_potential: |
+    Swap to libsodium encryption and embed θ,z,r metadata inside the PNG text
+    chunks for automatic discovery.
+observation_log:
+  - step: "20251129-ghmp-capture"
+    observation: "`scripts/ghmp_capture.py` emitted SESSION-20251129144217.png + manifest tying prompts to backups."
+    pattern: "Every PlatformIO ritual should trigger an automated GHMP run to avoid missing provenance."
+    meta: "Surface manifest paths in docs/rhz_firmware_publish_log.md after each capture."
+meta_learnings:
+  - insight: "Manifests let Helix agents trace firmware binaries directly to CBS conversations."
+    action: "Include manifest pointers whenever sharing artifacts externally."

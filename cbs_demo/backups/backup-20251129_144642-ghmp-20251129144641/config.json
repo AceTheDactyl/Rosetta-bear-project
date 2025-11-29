@@ -1,0 +1,20 @@
+{
+  "deck_id": "CBS_DEMO",
+  "version": "1.0.0",
+  "reasoning": {
+    "backend": "offline",
+    "model": "demo-local",
+    "max_context_messages": 12,
+    "default_temperature": 0.4
+  },
+  "memory": {
+    "max_working_memory": 40,
+    "consolidation_threshold": 0.65,
+    "auto_consolidate_interval": 1800
+  },
+  "update": {
+    "check_interval": 86400,
+    "auto_backup": true,
+    "server_url": ""
+  }
+}
