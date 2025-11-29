@@ -1,0 +1,165 @@
+﻿""" 
+rosetta_ghmp_node.py - ROS2 Node for GHMP Integration 
+===================================================== 
+ROS2 node that bridges Rosetta Bear sensors and GPT responses to GHMP memory plate encoding. 
+INSTALL: 
+pip install rclpy 
+RUN: 
+ros2 run rosetta_bear rosetta_ghmp_node 
+TOPICS: 
+Subscribes: 
+/rosetta/user_input (String) 
+/rosetta/gpt_response (String) 
+/rosetta/touch_event (String) # JSON: {"type": "hug", "data": {...}} /rosetta/session_control (String) # "start:<user_id>" or "end:<summary>" 
+Publishes: 
+/rosetta/session_status (String) 
+/rosetta/memory_encoded (String) # Plate path when session ends """ 
+import rclpy 
+from rclpy.node import Node 
+from std_msgs.msg import String 
+import json 
+from datetime import datetime 
+# Import GHMP bridge 
+from rosetta_ghmp_bridge import RosettaSessionEncoder 
+class RosettaGHMPNode(Node): 
+""" 
+ROS2 node that encodes Rosetta Bear sessions as GHMP plates. 
+""" 
+def __init__(self): 
+super().__init__('rosetta_ghmp_node') 
+# Declare parameters
+self.declare_parameter('deck_id', 'ROSETTA_THERAPY_2025') self.declare_parameter('encryption_key', 'rosetta_bear_key_2025') self.declare_parameter('storage_path', '/home/pi/rosetta_memory') self.declare_parameter('retention_hours', 24) 
+self.declare_parameter('auto_encode_interval', 1800.0) # 30 minutes 
+# Get parameters 
+deck_id = self.get_parameter('deck_id').value 
+key = self.get_parameter('encryption_key').value 
+storage_path = self.get_parameter('storage_path').value retention_hours = self.get_parameter('retention_hours').value auto_interval = self.get_parameter('auto_encode_interval').value 
+# Initialize encoder 
+self.encoder = RosettaSessionEncoder( 
+deck_id=deck_id, 
+encryption_key=key, 
+storage_path=storage_path, 
+retention_hours=retention_hours 
+) 
+self.get_logger().info(f'GHMP encoder initialized: {storage_path}') 
+# Subscribers 
+self.create_subscription( 
+String, 
+'/rosetta/user_input', 
+self.user_input_callback, 
+10 
+) 
+self.create_subscription( 
+String, 
+'/rosetta/gpt_response', 
+self.gpt_response_callback, 
+10 
+) 
+self.create_subscription( 
+String, 
+'/rosetta/touch_event', 
+self.touch_event_callback, 
+10 
+) 
+self.create_subscription(
+String, 
+'/rosetta/session_control', 
+self.session_control_callback, 
+10 
+) 
+# Publishers 
+self.status_pub = self.create_publisher(String, '/rosetta/session_status', 10) self.encoded_pub = self.create_publisher(String, '/rosetta/memory_encoded', 10) 
+# Auto-encode timer (fallback if end_session not called) 
+self.create_timer(auto_interval, self.auto_encode_callback) 
+# Cleanup timer (every hour) 
+self.create_timer(3600.0, self.cleanup_callback) 
+def user_input_callback(self, msg: String): 
+"""Handle user input messages""" 
+try: 
+self.encoder.add_interaction("user", msg.data) 
+self.get_logger().debug(f'User input logged: {len(msg.data)} chars') except RuntimeError as e: 
+self.get_logger().warning(f'User input without active session: {e}') 
+def gpt_response_callback(self, msg: String): 
+"""Handle GPT response messages""" 
+try: 
+self.encoder.add_interaction("assistant", msg.data) 
+self.get_logger().debug(f'GPT response logged: {len(msg.data)} chars') except RuntimeError as e: 
+self.get_logger().warning(f'GPT response without active session: {e}') 
+def touch_event_callback(self, msg: String): 
+"""Handle touch/sensor events""" 
+try: 
+event = json.loads(msg.data) 
+event_type = event.get('type', 'unknown') 
+event_data = event.get('data', {}) 
+self.encoder.add_sensor_event(event_type, event_data) 
+self.get_logger().info(f'Sensor event: {event_type}') 
+# Detect patterns based on events 
+if event_type == 'hug': 
+self.encoder.add_detected_pattern('physical_comfort') 
+elif event_type == 'rock':
+self.encoder.add_detected_pattern('self_soothing') 
+except json.JSONDecodeError: 
+self.get_logger().error(f'Invalid touch event JSON: {msg.data}') except Exception as e: 
+self.get_logger().error(f'Touch event error: {e}') 
+def session_control_callback(self, msg: String): 
+"""Handle session control commands""" 
+try: 
+command = msg.data 
+if command.startswith('start:'): 
+user_id = command.split(':', 1)[1] 
+session_id = self.encoder.start_session(user_id) 
+self.get_logger().info(f'Session started: {session_id}') 
+status_msg = String() 
+status_msg.data = f'STARTED:{session_id}' 
+self.status_pub.publish(status_msg) 
+elif command.startswith('end:'): 
+summary = command.split(':', 1)[1] if ':' in command else "" plate_path = self.encoder.end_session(summary=summary) 
+self.get_logger().info(f'Session ended: {plate_path}') 
+status_msg = String() 
+status_msg.data = 'ENDED' 
+self.status_pub.publish(status_msg) 
+encoded_msg = String() 
+encoded_msg.data = plate_path 
+self.encoded_pub.publish(encoded_msg) 
+else: 
+self.get_logger().warning(f'Unknown session control: {command}') 
+except RuntimeError as e: 
+self.get_logger().error(f'Session control error: {e}') 
+def auto_encode_callback(self): 
+"""Auto-encode long-running sessions""" 
+try: 
+if self.encoder.current_session: 
+# Check if session is running too long
+if self.encoder.session_start: 
+duration = (datetime.now() - 
+self.encoder.session_start).total_seconds() 
+if duration > 1800: # 30 minutes 
+plate_path = self.encoder.end_session( 
+summary="Auto-encoded after 30min" 
+) 
+self.get_logger().info(f'Auto-encoded session: {plate_path}') 
+encoded_msg = String() 
+encoded_msg.data = plate_path 
+self.encoded_pub.publish(encoded_msg) 
+except Exception as e: 
+self.get_logger().error(f'Auto-encode error: {e}') 
+def cleanup_callback(self): 
+"""Periodic cleanup of old sessions""" 
+try: 
+deleted = self.encoder.cleanup_old_sessions() 
+if deleted > 0: 
+self.get_logger().info(f'Cleaned up {deleted} expired session(s)') except Exception as e: 
+self.get_logger().error(f'Cleanup error: {e}') 
+def main(args=None): 
+"""Main entry point""" 
+rclpy.init(args=args) 
+node = RosettaGHMPNode() 
+try: 
+rclpy.spin(node) 
+except KeyboardInterrupt: 
+pass 
+finally: 
+node.destroy_node() 
+rclpy.shutdown() 
+if __name__ == '__main__': 
+main()

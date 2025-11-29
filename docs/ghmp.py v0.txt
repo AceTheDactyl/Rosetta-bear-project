@@ -1,0 +1,472 @@
+﻿""" 
+ghmp.py v0.2 - Geometric Holographic Memory Plates 
+=================================================== 
+Production-ready implementation with: 
+- Reed-Solomon error correction 
+- Enhanced header with version flags 
+- Embedded/minimal gradient modes for Pi/microcontrollers - Full backward compatibility with v0.1 
+INSTALL: 
+pip install numpy pillow reedsolo 
+USAGE: 
+from ghmp import MemoryNode, Emotion, encode_plate, decode_plate 
+node = MemoryNode( 
+node_id="TEST-001", 
+deck_id="MY_DECK", 
+title="Example", 
+payload_text="Data here...", 
+emotion=Emotion(valence=0.5, arousal=0.6) 
+) 
+# With ECC 
+img = encode_plate(node, key="secret", ecc_enabled=True) img.save("memory.png") 
+# Decode 
+recovered = decode_plate(Image.open("memory.png"), key="secret") """ 
+from __future__ import annotations 
+import json 
+import math 
+import zlib 
+import hashlib 
+import os 
+from dataclasses import dataclass, asdict, field 
+from typing import List, Tuple, Dict, Any, Optional, Set from pathlib import Path 
+from collections import deque 
+try:
+import numpy as np 
+from PIL import Image 
+except ImportError: 
+raise ImportError("Required: pip install numpy pillow") 
+try: 
+from reedsolo import RSCodec 
+ECC_AVAILABLE = True 
+except ImportError: 
+ECC_AVAILABLE = False 
+print("Warning: reedsolo not available. Install with: pip install reedsolo") 
+# ============================================================================ # CONSTANTS v0.2 
+# ============================================================================ 
+MAGIC_V1 = b"GEOMHSE1" 
+MAGIC_V2 = b"GEOMHSE2" 
+VERSION_1 = 1 
+VERSION_2 = 2 
+BYTES_PER_PIXEL = 3 
+# Flag definitions (VERSION_2) 
+FLAG_ECC_ENABLED = 0b00000001 
+FLAG_COMPRESSED = 0b00000010 
+FLAG_ENCRYPTED = 0b00000100 
+# Bits 3-7 reserved 
+# ============================================================================ # UTILITY FUNCTIONS 
+# ============================================================================ 
+def _keystream(key: str, n: int) -> bytes: 
+"""Generate deterministic keystream from key string.""" 
+seed = hashlib.sha256(key.encode("utf-8")).digest() 
+out = bytearray() 
+h = seed 
+while len(out) < n: 
+h = hashlib.sha256(h).digest() 
+out.extend(h) 
+return bytes(out[:n]) 
+def _build_meta_dict(node: MemoryNode, geometry: GeometrySpec) -> Dict[str, Any]: """Combine node and geometry into serializable dict.""" 
+return {
+"node": asdict(node), 
+"geometry": asdict(geometry), 
+"color_semantics": { 
+"red_channel": "priority/urgency (0-1)", 
+"green_channel": "structural_density (0-1)", 
+"blue_channel": "emotional_valence (0-1)", 
+"alpha_channel": "stability/confidence (0-1)", 
+}, 
+"format": "GHMP_v2", 
+"version": VERSION_2, 
+} 
+# ============================================================================ # DATA STRUCTURES 
+# ============================================================================ 
+@dataclass 
+class Emotion: 
+"""Emotional metadata for memory encoding.""" 
+valence: float # -1 (negative) to 1 (positive) 
+arousal: float # 0 (calm) to 1 (intense) 
+label: str = "" 
+def __post_init__(self): 
+self.valence = max(-1.0, min(1.0, self.valence)) 
+self.arousal = max(0.0, min(1.0, self.arousal)) 
+@dataclass 
+class Link: 
+"""Link to another memory node.""" 
+ref: str 
+relation: str = "related" 
+note: str = "" 
+@dataclass 
+class MemoryNode: 
+"""Complete memory node structure.""" 
+node_id: str 
+deck_id: str 
+title: str 
+payload_text: str 
+links: List[Link] = field(default_factory=list) 
+tags: List[str] = field(default_factory=list)
+emotion: Emotion = field(default_factory=lambda: Emotion(0.0, 0.5, "neutral")) 
+def __post_init__(self): 
+if not isinstance(self.links, list): 
+self.links = list(self.links) if self.links else [] 
+if not isinstance(self.tags, list): 
+self.tags = list(self.tags) if self.tags else [] 
+@dataclass 
+class GeometrySpec: 
+"""Geometric structure specification.""" 
+grid_size: int 
+anchors: List[Tuple[float, float]] 
+facets: List[List[int]] 
+description: str 
+diamond_lattice: bool = True 
+@staticmethod 
+def default_diamond(grid_size: int = 8) -> GeometrySpec: 
+"""Create default diamond lattice geometry.""" 
+anchors = [ 
+(0.5, 0.5), (0.5, 0.15), (0.85, 0.5), (0.5, 0.85), 
+(0.15, 0.5), (0.2, 0.2), (0.8, 0.2), (0.8, 0.8), (0.2, 0.8), 
+] 
+facets = [ 
+[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1], 
+[1, 5, 6], [2, 6, 7], [3, 7, 8], [4, 8, 5], 
+] 
+return GeometrySpec(grid_size, anchors, facets, 
+"Default diamond lattice: center + cardinal + corners", True) 
+# ============================================================================ # ENCODING 
+# ============================================================================ 
+def encode_plate( 
+node: MemoryNode, 
+key: str, 
+geometry: Optional[GeometrySpec] = None, 
+size: Tuple[int, int] = (512, 512), 
+ecc_enabled: bool = False, 
+ecc_nsym: int = 32, 
+gradient_mode: str = "full" 
+) -> Image.Image:
+""" 
+Encode MemoryNode into GHMP plate (PNG). 
+Args: 
+node: Memory node to encode 
+key: Encryption key 
+geometry: Geometry spec (default: diamond) 
+size: Output size in pixels 
+ecc_enabled: Enable Reed-Solomon error correction 
+ecc_nsym: ECC redundancy bytes (default 32) 
+gradient_mode: "full", "embedded", or "minimal" 
+Returns: 
+PIL Image with encoded memory 
+""" 
+if ecc_enabled and not ECC_AVAILABLE: 
+raise ImportError("reedsolo required for ECC: pip install reedsolo") 
+if geometry is None: 
+geometry = GeometrySpec.default_diamond() 
+# Build metadata 
+meta = _build_meta_dict(node, geometry) 
+payload_bytes = json.dumps(meta, ensure_ascii=False, separators=(",", ":")).encode("utf-8") 
+# Compress 
+comp = zlib.compress(payload_bytes, level=9) 
+# Apply ECC if enabled 
+if ecc_enabled: 
+rs = RSCodec(ecc_nsym) 
+comp = rs.encode(comp) 
+# XOR encrypt 
+ks = _keystream(key, len(comp)) 
+enc = bytes(b ^ k for b, k in zip(comp, ks)) 
+# Build header (v2 format: 48 bytes fixed) 
+payload_len = len(enc) 
+flags = 0 
+if ecc_enabled: 
+flags |= FLAG_ECC_ENABLED 
+flags |= FLAG_COMPRESSED | FLAG_ENCRYPTED 
+header = bytearray()
+header.extend(MAGIC_V2) 
+header.append(VERSION_2) 
+header.append(flags) 
+header.extend(payload_len.to_bytes(4, "big")) 
+header.extend(hashlib.sha256(comp).digest()) 
+header.extend(b'\x00\x00') # Reserved 
+blob = bytes(header) + enc 
+# Calculate space 
+w, h = size 
+total_pixels = w * h 
+needed_pixels = math.ceil(len(blob) / BYTES_PER_PIXEL) 
+if needed_pixels > total_pixels: 
+raise ValueError(f"Image too small: need {needed_pixels} pixels, have {total_pixels}") 
+# Pad to pixel boundary 
+total_bytes = needed_pixels * BYTES_PER_PIXEL 
+if len(blob) < total_bytes: 
+blob += bytes(total_bytes - len(blob)) 
+# Create RGBA array 
+arr = np.zeros((h, w, 4), dtype=np.uint8) 
+flat = arr.reshape(-1, 4) 
+# Write payload 
+for i in range(needed_pixels): 
+r, g, b = blob[3 * i : 3 * i + 3] 
+flat[i, 0] = r 
+flat[i, 1] = g 
+flat[i, 2] = b 
+flat[i, 3] = 255 
+# Fill gradient 
+_fill_geometry_gradient(arr, node, geometry, needed_pixels, mode=gradient_mode) return Image.fromarray(arr, mode="RGBA") 
+def _fill_geometry_gradient( 
+arr: np.ndarray, 
+node: MemoryNode, 
+geometry: GeometrySpec, 
+start_index: int,
+mode: str = "full" 
+) -> None: 
+""" 
+Fill gradient with performance modes. 
+Modes: 
+full: Complete computation (desktop/server) 
+embedded: Simplified for Pi/Jetson 
+minimal: Fastest for microcontrollers 
+""" 
+h, w, _ = arr.shape 
+flat = arr.reshape(-1, 4) 
+center_x = (w - 1) / 2.0 
+center_y = (h - 1) / 2.0 
+val = node.emotion.valence 
+aro = node.emotion.arousal 
+val01 = (val + 1.0) / 2.0 
+anchor_pixels = [(ax * (w - 1), ay * (h - 1)) for ax, ay in geometry.anchors] total_pixels = w * h 
+if mode == "minimal": 
+# Fastest: pre-quantize to 16x16 grid 
+for i in range(start_index, total_pixels): 
+y = i // w 
+x = i % w 
+dx = (x - center_x) / max(1.0, center_x) 
+dy = (y - center_y) / max(1.0, center_y) 
+r2 = dx * dx + dy * dy 
+manhattan = abs(dx) + abs(dy) 
+structural = max(0.0, 1.0 - manhattan) 
+priority = aro * (1.0 - min(1.0, r2)) 
+emo_base = val01 
+stability = max(0.0, 1.0 - r2) 
+flat[i, 0] = int(255 * priority) 
+flat[i, 1] = int(255 * structural) 
+flat[i, 2] = int(255 * emo_base) 
+flat[i, 3] = int(255 * stability) 
+elif mode == "embedded":
+# Medium: skip angle computation 
+for i in range(start_index, total_pixels): 
+y = i // w 
+x = i % w 
+dx = (x - center_x) / max(1.0, center_x) 
+dy = (y - center_y) / max(1.0, center_y) 
+r2 = dx * dx + dy * dy 
+manhattan = abs(dx) + abs(dy) 
+structural = max(0.0, 1.0 - manhattan) 
+priority = aro * (1.0 - min(1.0, r2)) 
+emo_base = 0.5 * val01 + 0.5 * (1.0 - r2) 
+stability = max(0.0, 1.0 - r2) 
+flat[i, 0] = int(255 * priority) 
+flat[i, 1] = int(255 * structural) 
+flat[i, 2] = int(255 * emo_base) 
+flat[i, 3] = int(255 * stability) 
+else: # "full" 
+for i in range(start_index, total_pixels): 
+y = i // w 
+x = i % w 
+dx = (x - center_x) / max(1.0, center_x) 
+dy = (y - center_y) / max(1.0, center_y) 
+r2 = dx * dx + dy * dy 
+manhattan = abs(dx) + abs(dy) 
+angle = math.atan2(dy, dx) 
+structural = max(0.0, 1.0 - manhattan) 
+priority = aro * (1.0 - min(1.0, r2)) 
+angle_norm = (angle + math.pi) / (2 * math.pi) 
+emo_base = 0.5 * val01 + 0.5 * angle_norm 
+stability = max(0.0, 1.0 - r2) 
+# Facet boost 
+facet_boost = 0.0 
+for ax, ay in anchor_pixels: 
+ddx = (x - ax) / max(1.0, center_x) 
+ddy = (y - ay) / max(1.0, center_y) 
+d = math.sqrt(ddx * ddx + ddy * ddy) 
+if d < 0.15: 
+facet_boost = max(facet_boost, 1.0 - (d / 0.15))
+structural = min(1.0, structural + 0.5 * facet_boost) 
+priority = min(1.0, priority + 0.5 * facet_boost) 
+flat[i, 0] = int(255 * priority) 
+flat[i, 1] = int(255 * structural) 
+flat[i, 2] = int(255 * emo_base) 
+flat[i, 3] = int(255 * stability) 
+# ============================================================================ # DECODING 
+# ============================================================================ 
+def decode_plate( 
+img: Image.Image, 
+key: str 
+) -> Tuple[MemoryNode, GeometrySpec, Dict[str, Any]]: 
+""" 
+Decode GHMP plate back to MemoryNode. 
+Supports both v1 and v2 formats. 
+Args: 
+img: PIL Image to decode 
+key: Decryption key 
+Returns: 
+(MemoryNode, GeometrySpec, metadata_dict) 
+""" 
+img = img.convert("RGBA") 
+arr = np.array(img) 
+flat = arr.reshape(-1, 4) 
+probe_bytes = bytes(flat[:256, :3].reshape(-1)) 
+# Detect version 
+if probe_bytes.startswith(MAGIC_V2): 
+return _decode_v2(flat, key) 
+elif probe_bytes.startswith(MAGIC_V1): 
+return _decode_v1(flat, key) 
+else: 
+raise ValueError("Not a GHMP plate (MAGIC mismatch)") 
+def _decode_v2(flat: np.ndarray, key: str) -> Tuple[MemoryNode, GeometrySpec, Dict]:
+"""Decode v2 format with fixed 48-byte header""" 
+probe_bytes = bytes(flat[:256, :3].reshape(-1)) 
+version = probe_bytes[8] 
+if version != VERSION_2: 
+raise ValueError(f"Unsupported v2 version: {version}") 
+flags = probe_bytes[9] 
+ecc_enabled = bool(flags & FLAG_ECC_ENABLED) 
+payload_len = int.from_bytes(probe_bytes[10:14], "big") 
+digest = probe_bytes[14:46] 
+# Reserved: probe_bytes[46:48] 
+header_len = 48 
+total_len = header_len + payload_len 
+needed_pixels = math.ceil(total_len / BYTES_PER_PIXEL) 
+payload_bytes = bytes(flat[:needed_pixels, :3].reshape(-1)) 
+enc = payload_bytes[header_len : header_len + payload_len] 
+# Decrypt 
+ks = _keystream(key, len(enc)) 
+comp = bytes(b ^ k for b, k in zip(enc, ks)) 
+# Verify checksum 
+if hashlib.sha256(comp).digest() != digest: 
+raise ValueError("Checksum mismatch - wrong key or corrupted") 
+# Decode ECC if enabled 
+if ecc_enabled: 
+if not ECC_AVAILABLE: 
+raise ImportError("reedsolo required to decode ECC plates") 
+rs = RSCodec(32) # Match encoding 
+comp, _, _ = rs.decode(comp) 
+# Decompress 
+raw = zlib.decompress(comp) 
+meta = json.loads(raw.decode("utf-8")) 
+return _reconstruct_objects(meta) 
+def _decode_v1(flat: np.ndarray, key: str) -> Tuple[MemoryNode, GeometrySpec, Dict]: """Decode v1 format (backward compatibility)""" 
+probe_bytes = bytes(flat[:256, :3].reshape(-1))
+version = probe_bytes[len(MAGIC_V1)] 
+if version != VERSION_1: 
+raise ValueError(f"Unsupported v1 version: {version}") 
+offset = len(MAGIC_V1) + 1 
+payload_len = int.from_bytes(probe_bytes[offset : offset + 4], "big") offset += 4 
+digest = probe_bytes[offset : offset + 32] 
+offset += 32 
+while offset % BYTES_PER_PIXEL != 0: 
+offset += 1 
+header_len = offset 
+total_len = header_len + payload_len 
+needed_pixels = math.ceil(total_len / BYTES_PER_PIXEL) 
+payload_bytes = bytes(flat[:needed_pixels, :3].reshape(-1)) enc = payload_bytes[header_len : header_len + payload_len] 
+ks = _keystream(key, len(enc)) 
+comp = bytes(b ^ k for b, k in zip(enc, ks)) 
+if hashlib.sha256(comp).digest() != digest: 
+raise ValueError("Checksum mismatch") 
+raw = zlib.decompress(comp) 
+meta = json.loads(raw.decode("utf-8")) 
+return _reconstruct_objects(meta) 
+def _reconstruct_objects(meta: Dict) -> Tuple[MemoryNode, GeometrySpec, Dict]: """Reconstruct MemoryNode and GeometrySpec from metadata""" node_dict = meta["node"] 
+geom_dict = meta["geometry"] 
+emotion = Emotion(**node_dict["emotion"]) 
+links = [Link(**ld) for ld in node_dict["links"]] 
+node = MemoryNode( 
+node_id=node_dict["node_id"], 
+deck_id=node_dict["deck_id"], 
+title=node_dict["title"], 
+payload_text=node_dict["payload_text"],
+links=links, 
+tags=node_dict["tags"], 
+emotion=emotion, 
+) 
+geometry = GeometrySpec( 
+grid_size=geom_dict["grid_size"], 
+anchors=[tuple(pt) for pt in geom_dict["anchors"]], 
+facets=[list(f) for f in geom_dict["facets"]], 
+description=geom_dict["description"], 
+diamond_lattice=geom_dict.get("diamond_lattice", True), 
+) 
+return node, geometry, meta 
+# ============================================================================ # DECK MANAGEMENT 
+# ============================================================================ 
+class MemoryDeck: 
+"""Collection of linked memory plates with graph operations.""" 
+def __init__(self, deck_id: str): 
+self.deck_id = deck_id 
+self.plates: Dict[str, MemoryNode] = {} 
+self.geometries: Dict[str, GeometrySpec] = {} 
+def add_plate(self, node: MemoryNode, geometry: Optional[GeometrySpec] = None): """Add plate to deck""" 
+if node.deck_id != self.deck_id: 
+raise ValueError(f"Node deck_id mismatch: {node.deck_id} != {self.deck_id}") self.plates[node.node_id] = node 
+self.geometries[node.node_id] = geometry or GeometrySpec.default_diamond() 
+def get_plate(self, node_id: str) -> Optional[MemoryNode]: 
+return self.plates.get(node_id) 
+def traverse(self, start_id: str, depth: int = 3) -> List[MemoryNode]: """BFS traversal from start node""" 
+if start_id not in self.plates: 
+return [] 
+visited = set() 
+result = [] 
+queue = deque([(start_id, 0)])
+while queue: 
+node_id, d = queue.popleft() 
+if node_id in visited or d > depth: 
+continue 
+visited.add(node_id) 
+node = self.plates.get(node_id) 
+if node: 
+result.append(node) 
+for link in node.links: 
+if link.ref in self.plates: 
+queue.append((link.ref, d + 1)) 
+return result 
+def save_to_directory(self, path: str, key: str, **encode_kwargs): """Save all plates as PNGs""" 
+Path(path).mkdir(parents=True, exist_ok=True) 
+for node_id, node in self.plates.items(): 
+geom = self.geometries.get(node_id) 
+img = encode_plate(node, key, geom, **encode_kwargs) 
+safe_id = "".join(c if c.isalnum() or c in "-_" else "_" for c in node_id) img.save(os.path.join(path, f"{safe_id}.png")) 
+@classmethod 
+def load_from_directory(cls, path: str, key: str) -> MemoryDeck: """Load all plates from directory""" 
+png_files = list(Path(path).glob("*.png")) 
+if not png_files: 
+raise ValueError(f"No PNGs in {path}") 
+first_node, _, _ = decode_plate(Image.open(png_files[0]), key) deck = cls(first_node.deck_id) 
+deck.add_plate(first_node) 
+for png_path in png_files[1:]: 
+try: 
+node, geom, _ = decode_plate(Image.open(png_path), key) 
+deck.add_plate(node, geom) 
+except Exception as e: 
+print(f"Warning: Failed to load {png_path}: {e}") 
+return deck
+# ============================================================================ # SELF-TEST 
+# ============================================================================ 
+if __name__ == "__main__": 
+print("GHMP v0.2 Self-Test") 
+print("=" * 60) 
+# Test ECC encoding 
+print("\n[1] Testing ECC encoding...") 
+node = MemoryNode( 
+node_id="TEST-ECC-001", 
+deck_id="TEST", 
+title="ECC Test", 
+payload_text="Testing error correction", 
+emotion=Emotion(0.5, 0.7, "testing") 
+) 
+key = "test_key" 
+img = encode_plate(node, key, ecc_enabled=True) 
+img.save("test_ecc.png") 
+print("✓ Encoded with ECC") 
+recovered, _, _ = decode_plate(Image.open("test_ecc.png"), key) assert recovered.title == node.title 
+print("✓ Decoded successfully") 
+print("\n[2] Testing gradient modes...") 
+for mode in ["minimal", "embedded", "full"]: 
+img = encode_plate(node, key, gradient_mode=mode) 
+img.save(f"test_{mode}.png") 
+print(f"✓ {mode} mode") 
+print("\n" + "=" * 60) 
+print("All tests passed! ✓") 
+print(f"\nECC available: {ECC_AVAILABLE}")

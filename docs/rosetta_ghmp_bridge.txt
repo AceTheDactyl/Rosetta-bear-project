@@ -1,0 +1,382 @@
+﻿""" 
+rosetta_ghmp_bridge.py - Rosetta Bear GHMP Integration 
+====================================================== 
+Bridges Rosetta Bear therapy sessions to GHMP memory plates. 
+Features: 
+- Automatic session encoding 
+- GPT emotion extraction 
+- Privacy-preserving 24h rolling deletion 
+- Sensor event logging (hugs, touches, movement) 
+USAGE: 
+from rosetta_ghmp_bridge import RosettaSessionEncoder 
+encoder = RosettaSessionEncoder( 
+deck_id="ROSETTA_THERAPY_2025", 
+encryption_key="your_key_here", 
+storage_path="/home/pi/rosetta_memory" 
+) 
+session_id = encoder.start_session("user_123") 
+encoder.add_interaction("user", "I feel anxious") 
+encoder.add_interaction("assistant", "Let's breathe together. [EMOTION: valence=-0.3, arousal=0.7, label=concerned]") 
+encoder.add_sensor_event("hug", {"duration": 5.2}) 
+plate_path = encoder.end_session(summary="Addressed anxiety with breathing") encoder.cleanup_old_sessions() 
+""" 
+from ghmp import MemoryNode, Emotion, Link, encode_plate, decode_plate, MemoryDeck import json 
+import re 
+import hashlib 
+from datetime import datetime, timedelta 
+from pathlib import Path 
+from typing import Dict, Any, List, Optional 
+class RosettaSessionEncoder: 
+""" 
+Production-grade encoder for Rosetta Bear therapy sessions. 
+Handles emotion extraction, privacy management, and GHMP encoding.
+""" 
+def __init__( 
+self, 
+deck_id: str, 
+encryption_key: str, 
+storage_path: str, 
+retention_hours: int = 24, 
+auto_cleanup: bool = True 
+): 
+""" 
+Initialize session encoder. 
+Args: 
+deck_id: Deck identifier for all sessions 
+encryption_key: Key for GHMP plate encryption storage_path: Directory for storing plates 
+retention_hours: Auto-delete after this many hours auto_cleanup: Run cleanup on init 
+""" 
+self.deck_id = deck_id 
+self.key = encryption_key 
+self.storage = Path(storage_path) 
+self.storage.mkdir(parents=True, exist_ok=True) self.retention_hours = retention_hours 
+# Session tracking 
+self.current_session: Optional[Dict] = None 
+self.session_start: Optional[datetime] = None self.session_counter = 0 
+# Privacy log 
+self.privacy_log = self.storage / "privacy_log.txt" self._log_privacy_event("Encoder initialized") 
+if auto_cleanup: 
+self.cleanup_old_sessions() 
+def _log_privacy_event(self, event: str): 
+"""Log privacy-related actions""" 
+with open(self.privacy_log, 'a') as f: 
+f.write(f"{datetime.now().isoformat()} - {event}\n") 
+def start_session(self, user_id: str) -> str: """ 
+Begin new therapy session.
+Args: 
+user_id: User identifier (will be hashed) 
+Returns: 
+session_id for this session 
+""" 
+if self.current_session: 
+raise RuntimeError("Session already active - call end_session() first") 
+self.session_counter += 1 
+user_hash = hashlib.sha256(user_id.encode()).hexdigest()[:8] 
+session_id = f"THERAPY-{datetime.now().strftime('%Y%m%d-%H%M%S')}-{user_hash}- {self.session_counter:04d}" 
+self.current_session = { 
+"session_id": session_id, 
+"user_id_hash": user_hash, 
+"start_time": datetime.now().isoformat(), 
+"interactions": [], 
+"sensor_events": [], 
+"detected_patterns": [], 
+"metadata": {} 
+} 
+self.session_start = datetime.now() 
+self._log_privacy_event(f"Session started: {session_id}") 
+return session_id 
+def add_interaction( 
+self, 
+role: str, 
+content: str, 
+emotion: Optional[Dict[str, Any]] = None, 
+metadata: Optional[Dict] = None 
+): 
+""" 
+Add user or assistant message to current session. 
+Args: 
+role: "user" or "assistant" 
+content: Message text 
+emotion: Optional emotion dict {valence, arousal, label} 
+metadata: Optional additional metadata 
+"""
+if not self.current_session: 
+raise RuntimeError("No active session - call start_session() first") 
+# Try to extract emotion from content if not provided 
+if emotion is None and role == "assistant": 
+extracted = self.extract_gpt_emotion(content) 
+if extracted: 
+emotion = { 
+"valence": extracted.valence, 
+"arousal": extracted.arousal, 
+"label": extracted.label 
+} 
+interaction = { 
+"role": role, 
+"content": content, 
+"timestamp": datetime.now().isoformat(), 
+"emotion": emotion, 
+"metadata": metadata or {} 
+} 
+self.current_session['interactions'].append(interaction) 
+def add_sensor_event( 
+self, 
+event_type: str, 
+data: Dict[str, Any] 
+): 
+""" 
+Log sensor event (hug, touch, movement, etc.). 
+Args: 
+event_type: Type of event ("hug", "touch", "rock", "lift") data: Event-specific data 
+""" 
+if not self.current_session: 
+return # Silently ignore if no session active 
+event = { 
+"type": event_type, 
+"data": data, 
+"timestamp": datetime.now().isoformat() 
+} 
+self.current_session['sensor_events'].append(event)
+def add_detected_pattern(self, pattern: str): 
+""" 
+Add detected behavioral pattern. 
+Args: 
+pattern: Pattern label (e.g., "anxiety_loop", "withdrawal", "engagement") """ 
+if not self.current_session: 
+return 
+if pattern not in self.current_session['detected_patterns']: 
+self.current_session['detected_patterns'].append(pattern) 
+def extract_gpt_emotion(self, response: str) -> Optional[Emotion]: """ 
+Parse [EMOTION: valence=X, arousal=Y, label=Z] tags from GPT. 
+Args: 
+response: GPT response text 
+Returns: 
+Emotion object or None if not found 
+""" 
+pattern = r'\[EMOTION:\s*valence=([-\d.]+),\s*arousal=([\d.]+),\s*label=(\w+)\]' match = re.search(pattern, response) 
+if match: 
+return Emotion( 
+valence=float(match.group(1)), 
+arousal=float(match.group(2)), 
+label=match.group(3) 
+) 
+return None 
+def _calculate_aggregate_emotion(self) -> Emotion: 
+"""Calculate session-level aggregate emotion""" 
+emotions = [ 
+i['emotion'] for i in self.current_session['interactions'] 
+if i.get('emotion') 
+] 
+if not emotions: 
+return Emotion(valence=0.0, arousal=0.5, label="neutral") 
+avg_valence = sum(e['valence'] for e in emotions) / len(emotions) avg_arousal = sum(e['arousal'] for e in emotions) / len(emotions)
+labels = [e['label'] for e in emotions] 
+dominant_label = max(set(labels), key=labels.count) 
+return Emotion( 
+valence=avg_valence, 
+arousal=avg_arousal, 
+label=dominant_label 
+) 
+def end_session( 
+self, 
+summary: str = "", 
+metadata: Optional[Dict] = None 
+) -> str: 
+""" 
+Finalize session and encode as GHMP plate. 
+Args: 
+summary: Optional session summary 
+metadata: Optional additional metadata 
+Returns: 
+Path to saved plate 
+""" 
+if not self.current_session or not self.session_start: 
+raise RuntimeError("No active session") 
+# Calculate metrics 
+duration = (datetime.now() - self.session_start).total_seconds() 
+hug_count = sum(1 for e in self.current_session['sensor_events'] if e['type'] == 'hug') 
+touch_count = sum(1 for e in self.current_session['sensor_events'] if e['type'] == 'touch') 
+# Aggregate emotion 
+aggregate_emotion = self._calculate_aggregate_emotion() 
+# Build payload 
+payload = { 
+"summary": summary, 
+"duration_seconds": duration, 
+"interaction_count": len(self.current_session['interactions']), 
+"hug_count": hug_count, 
+"touch_count": touch_count, 
+"interactions": self.current_session['interactions'],
+"sensor_events": self.current_session['sensor_events'], 
+"detected_patterns": self.current_session['detected_patterns'], "start_time": self.current_session['start_time'], 
+"end_time": datetime.now().isoformat(), 
+"metadata": metadata or {} 
+} 
+# Build MemoryNode 
+node = MemoryNode( 
+node_id=self.current_session['session_id'], 
+deck_id=self.deck_id, 
+title=f"Therapy Session {self.current_session['start_time']}", payload_text=json.dumps(payload, indent=2), 
+tags=["therapy", "rosetta_bear"] + 
+self.current_session['detected_patterns'], 
+emotion=aggregate_emotion, 
+links=[] # Could link to previous session 
+) 
+# Encode to plate 
+img = encode_plate( 
+node, 
+self.key, 
+size=(512, 512), 
+ecc_enabled=True, 
+gradient_mode="embedded" # Optimized for Pi 
+) 
+# Save 
+timestamp = self.current_session['start_time'].replace(':', '-') filename = f"session_{timestamp}.png" 
+output_path = self.storage / filename 
+img.save(output_path) 
+self._log_privacy_event(f"Session encoded: {filename}") 
+# Reset 
+self.current_session = None 
+self.session_start = None 
+return str(output_path) 
+def cleanup_old_sessions(self) -> int: 
+""" 
+Delete plates older than retention window.
+Returns: 
+Number of plates deleted 
+""" 
+cutoff = datetime.now() - timedelta(hours=self.retention_hours) deleted = 0 
+for plate_path in self.storage.glob("session_*.png"): 
+try: 
+# Extract timestamp from filename 
+timestamp_str = plate_path.stem.replace('session_', '').replace('-', ':') 
+plate_time = datetime.fromisoformat(timestamp_str) 
+if plate_time < cutoff: 
+plate_path.unlink() 
+deleted += 1 
+self._log_privacy_event(f"Deleted expired: {plate_path.name}") 
+except Exception as e: 
+print(f"[Warning] Could not process {plate_path}: {e}") 
+if deleted > 0: 
+print(f"[Privacy] Deleted {deleted} expired session(s)") 
+return deleted 
+def export_session( 
+self, 
+session_filename: str, 
+export_path: str, 
+require_consent: bool = True 
+) -> bool: 
+""" 
+Manually export a session before auto-deletion. 
+Args: 
+session_filename: Filename of session to export 
+export_path: Destination path 
+require_consent: If True, logs export action 
+Returns: 
+True if successful 
+""" 
+source = self.storage / session_filename 
+if not source.exists(): 
+print(f"Session not found: {session_filename}")
+return False 
+import shutil 
+shutil.copy(source, export_path) 
+if require_consent: 
+self._log_privacy_event(f"Session exported: {session_filename} → {export_path}") 
+return True 
+def get_session_summary(self, session_filename: str) -> Optional[Dict]: """ 
+Get summary of a session without full decode. 
+Args: 
+session_filename: Filename of session 
+Returns: 
+Summary dict or None 
+""" 
+plate_path = self.storage / session_filename 
+if not plate_path.exists(): 
+return None 
+try: 
+from PIL import Image 
+node, geom, meta = decode_plate(Image.open(plate_path), self.key) payload = json.loads(node.payload_text) 
+return { 
+"session_id": node.node_id, 
+"title": node.title, 
+"start_time": payload['start_time'], 
+"duration_seconds": payload['duration_seconds'], 
+"interaction_count": payload['interaction_count'], 
+"hug_count": payload['hug_count'], 
+"emotion": { 
+"valence": node.emotion.valence, 
+"arousal": node.emotion.arousal, 
+"label": node.emotion.label 
+}, 
+"patterns": payload['detected_patterns'], 
+"tags": node.tags
+} 
+except Exception as e: 
+print(f"Error reading session: {e}") 
+return None 
+def list_sessions(self, days: int = 1) -> List[Dict]: 
+""" 
+List recent sessions with summaries. 
+Args: 
+days: Number of days to look back 
+Returns: 
+List of session summaries 
+""" 
+cutoff = datetime.now() - timedelta(days=days) 
+sessions = [] 
+for plate_path in sorted(self.storage.glob("session_*.png")): 
+try: 
+timestamp_str = plate_path.stem.replace('session_', '').replace('-', ':') 
+plate_time = datetime.fromisoformat(timestamp_str) 
+if plate_time >= cutoff: 
+summary = self.get_session_summary(plate_path.name) 
+if summary: 
+sessions.append(summary) 
+except Exception: 
+continue 
+return sessions 
+# ============================================================================ # EXAMPLE USAGE 
+# ============================================================================ 
+if __name__ == "__main__": 
+print("Rosetta GHMP Bridge - Example Usage") 
+print("=" * 60) 
+# Initialize encoder 
+encoder = RosettaSessionEncoder( 
+deck_id="ROSETTA_THERAPY_DEMO", 
+encryption_key="demo_key_2025",
+storage_path="./demo_memory", 
+retention_hours=24 
+) 
+# Start session 
+session_id = encoder.start_session("demo_user_123") 
+print(f"\n✓ Session started: {session_id}") 
+# Add interactions 
+encoder.add_interaction("user", "I'm feeling anxious today") 
+encoder.add_interaction( 
+"assistant", 
+"I hear you. Let's take a moment together. [EMOTION: valence=-0.3, arousal=0.7, label=concerned]" 
+) 
+# Add sensor events 
+encoder.add_sensor_event("hug", {"duration": 5.2, "pressure": "gentle"}) encoder.add_sensor_event("touch", {"location": "head", "duration": 2.1}) 
+# Add more interactions 
+encoder.add_interaction("user", "That helps. Thank you.") 
+encoder.add_interaction( 
+"assistant", 
+"You're welcome. I'm here whenever you need. [EMOTION: valence=0.5, arousal=0.4, label=supportive]" 
+) 
+# Detect pattern 
+encoder.add_detected_pattern("anxiety_response") 
+encoder.add_detected_pattern("hug_calming") 
+# End session 
+plate_path = encoder.end_session( 
+summary="User expressed anxiety, responded well to comfort and physical contact" ) 
+print(f"✓ Session encoded: {plate_path}") 
+# List sessions 
+print("\n✓ Recent sessions:") 
+for session in encoder.list_sessions(days=7): 
+print(f" - {session['session_id']}") 
+print(f" Duration: {session['duration_seconds']:.1f}s") 
+print(f" Emotion: {session['emotion']['label']} (v={session['emotion'] ['valence']:.2f})") 
+print(f" Hugs: {session['hug_count']}")
+print("\n"+"="*60) 
+print("Democomplete! Check./demo_memory/forgeneratedplates")

@@ -1,0 +1,381 @@
+﻿""" 
+cbs_reasoning_engine.py - Pluggable LLM Reasoning Core ======================================================= 
+Provides a clean abstraction for different LLM backends: - OpenAI (GPT-4, GPT-3.5) 
+- Anthropic (Claude) 
+- Local models (via llama.cpp, Ollama, etc.) 
+- Custom implementations 
+The engine integrates with MemoryManager for context retrieval and handles the full reasoning loop. 
+""" 
+from typing import Dict, List, Optional, Any, Protocol from dataclasses import dataclass 
+from datetime import datetime 
+import json 
+@dataclass 
+class Message: 
+"""Single message in conversation.""" 
+role: str # "user", "assistant", "system" 
+content: str 
+timestamp: datetime = None 
+metadata: Dict[str, Any] = None 
+def __post_init__(self): 
+if self.timestamp is None: 
+self.timestamp = datetime.now() 
+if self.metadata is None: 
+self.metadata = {} 
+class LLMBackend(Protocol): 
+"""Protocol for LLM backend implementations.""" 
+def generate( 
+self, 
+messages: List[Message], 
+max_tokens: int = 1000, 
+temperature: float = 0.7, 
+**kwargs
+) -> str: 
+"""Generate response from messages.""" 
+... 
+def is_available(self) -> bool: 
+"""Check if backend is available/configured.""" 
+... 
+class OpenAIBackend: 
+"""OpenAI GPT backend.""" 
+def __init__(self, api_key: str, model: str = "gpt-4-turbo-preview"): self.api_key = api_key 
+self.model = model 
+self._client = None 
+def is_available(self) -> bool: 
+try: 
+import openai 
+self._client = openai.OpenAI(api_key=self.api_key) 
+return True 
+except ImportError: 
+return False 
+def generate( 
+self, 
+messages: List[Message], 
+max_tokens: int = 1000, 
+temperature: float = 0.7, 
+**kwargs 
+) -> str: 
+if not self._client: 
+import openai 
+self._client = openai.OpenAI(api_key=self.api_key) 
+# Convert Message objects to OpenAI format 
+api_messages = [ 
+{"role": msg.role, "content": msg.content} 
+for msg in messages 
+] 
+response = self._client.chat.completions.create( 
+model=self.model, 
+messages=api_messages, 
+max_tokens=max_tokens,
+temperature=temperature, 
+**kwargs 
+) 
+return response.choices[0].message.content 
+class AnthropicBackend: 
+"""Anthropic Claude backend.""" 
+def __init__(self, api_key: str, model: str = "claude-3-sonnet-20240229"): self.api_key = api_key 
+self.model = model 
+self._client = None 
+def is_available(self) -> bool: 
+try: 
+import anthropic 
+self._client = anthropic.Anthropic(api_key=self.api_key) 
+return True 
+except ImportError: 
+return False 
+def generate( 
+self, 
+messages: List[Message], 
+max_tokens: int = 1000, 
+temperature: float = 0.7, 
+**kwargs 
+) -> str: 
+if not self._client: 
+import anthropic 
+self._client = anthropic.Anthropic(api_key=self.api_key) 
+# Separate system message from conversation 
+system_msg = None 
+conv_messages = [] 
+for msg in messages: 
+if msg.role == "system": 
+system_msg = msg.content 
+else: 
+conv_messages.append({ 
+"role": msg.role, 
+"content": msg.content 
+})
+response = self._client.messages.create( 
+model=self.model, 
+max_tokens=max_tokens, 
+temperature=temperature, 
+system=system_msg or "", 
+messages=conv_messages, 
+**kwargs 
+) 
+return response.content[0].text 
+class LocalBackend: 
+"""Local model backend (Ollama, llama.cpp, etc.).""" 
+def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama2"): self.base_url = base_url 
+self.model = model 
+def is_available(self) -> bool: 
+try: 
+import requests 
+response = requests.get(f"{self.base_url}/api/tags", timeout=2) 
+return response.status_code == 200 
+except: 
+return False 
+def generate( 
+self, 
+messages: List[Message], 
+max_tokens: int = 1000, 
+temperature: float = 0.7, 
+**kwargs 
+) -> str: 
+import requests 
+# Format for Ollama 
+prompt = self._format_messages(messages) 
+response = requests.post( 
+f"{self.base_url}/api/generate", 
+json={ 
+"model": self.model, 
+"prompt": prompt, 
+"stream": False,
+"options": { 
+"temperature": temperature, 
+"num_predict": max_tokens 
+} 
+} 
+) 
+return response.json()["response"] 
+def _format_messages(self, messages: List[Message]) -> str: """Format messages into a single prompt.""" 
+parts = [] 
+for msg in messages: 
+if msg.role == "system": 
+parts.append(f"System: {msg.content}") 
+elif msg.role == "user": 
+parts.append(f"User: {msg.content}") 
+elif msg.role == "assistant": 
+parts.append(f"Assistant: {msg.content}") 
+parts.append("Assistant:") 
+return "\n\n".join(parts) 
+class ReasoningEngine: 
+""" 
+Main reasoning engine that coordinates: 
+- LLM backend 
+- Memory retrieval 
+- Context management 
+- Conversation flow 
+""" 
+def __init__( 
+self, 
+bootstrap_system, 
+memory_manager, 
+backend: LLMBackend, 
+max_context_messages: int = 10 
+): 
+""" 
+Initialize reasoning engine. 
+Args: 
+bootstrap_system: CognitionBootstrap instance 
+memory_manager: MemoryManager instance 
+backend: LLM backend implementation
+max_context_messages: Max messages to keep in context 
+""" 
+self.cbs = bootstrap_system 
+self.mem_mgr = memory_manager 
+self.backend = backend 
+self.max_context_messages = max_context_messages 
+# Conversation state 
+self.conversation: List[Message] = [] 
+self.system_prompt = self._build_system_prompt() 
+# Add system message 
+self.conversation.append(Message( 
+role="system", 
+content=self.system_prompt 
+)) 
+self.cbs.log("✓ Reasoning engine initialized") 
+def _build_system_prompt(self) -> str: 
+"""Build system prompt from identity and config.""" 
+identity = self.cbs.identity 
+# Parse identity payload if JSON 
+try: 
+identity_data = json.loads(identity.payload_text) 
+name = identity_data.get("name", identity.title) 
+purpose = identity_data.get("purpose", "assist users") 
+except: 
+name = identity.title 
+purpose = "assist users" 
+prompt = f"""You are {name}, a self-contained AI system with persistent memory. 
+Identity: {identity.node_id} 
+Purpose: {purpose} 
+Emotion: {identity.emotion.label} (valence: {identity.emotion.valence:.2f}, arousal: {identity.emotion.arousal:.2f}) 
+You have access to: 
+- Working memory: Recent interactions (ephemeral) 
+- Long-term memory: GHMP plates on disk (persistent) 
+- Skills: {len(self.cbs.skills)} loaded capabilities 
+Memory Statistics: 
+- Total plates: {len(self.cbs.memory.plates) if self.cbs.memory else 0}
+- Working memory entries: {len(self.mem_mgr.working_memory)} 
+Network Status: {'online' if self.cbs.online else 'offline'} 
+When responding: 
+1. Consider relevant memories from your past 
+2. Use your skills when appropriate 
+3. Be aware of your emotional state 
+4. Remember that you're operating {'with' if self.cbs.online else 'without'} network access 
+Your memories are stored as geometric holographic memory plates (GHMP), which combine: - Structured data (JSON) 
+- Visual geometry (diamond lattice) 
+- Emotional context (valence/arousal) 
+You can create new memories, retrieve past ones, and reason over your complete history. """ 
+return prompt 
+def respond( 
+self, 
+user_message: str, 
+retrieve_context: bool = True, 
+context_query: Optional[str] = None, 
+save_interaction: bool = True, 
+importance: float = 0.5 
+) -> str: 
+""" 
+Generate response to user message. 
+Args: 
+user_message: User's input 
+retrieve_context: Whether to retrieve relevant memories 
+context_query: Custom query for memory retrieval (defaults to user_message) save_interaction: Save this interaction to memory 
+importance: Importance score for memory storage 
+Returns: 
+Assistant's response 
+""" 
+# Save user message to working memory 
+if save_interaction: 
+self.mem_mgr.add_working_memory( 
+f"User: {user_message}", 
+importance=importance * 0.8, # User messages slightly less important
+tags=["interaction", "user"], 
+emotion_label="neutral" 
+) 
+# Retrieve relevant context if requested 
+context_str = "" 
+if retrieve_context: 
+query = context_query or user_message 
+context_results = self.mem_mgr.retrieve_context( 
+query, 
+max_items=5, 
+include_working=True, 
+include_longterm=True 
+) 
+if context_results: 
+context_str = "\n\n[Relevant memories retrieved:\n" 
+for i, result in enumerate(context_results, 1): 
+source = result['source'] 
+content = result.get('content', result.get('title', 'N/A')) context_str += f"{i}. [{source}] {content[:100]}...\n" context_str += "]\n" 
+# Add user message to conversation 
+user_msg = Message( 
+role="user", 
+content=user_message + context_str 
+) 
+self.conversation.append(user_msg) 
+# Trim conversation if too long (keep system + recent messages) if len(self.conversation) > self.max_context_messages + 1: # Keep system message + last N messages 
+self.conversation = [self.conversation[0]] + \ 
+self.conversation[-(self.max_context_messages):] 
+# Generate response 
+try: 
+response = self.backend.generate( 
+messages=self.conversation, 
+max_tokens=1000, 
+temperature=0.7 
+) 
+except Exception as e: 
+self.cbs.log(f"✗ Generation failed: {e}") 
+response = f"I encountered an error generating a response: {e}"
+# Add assistant response to conversation 
+assistant_msg = Message( 
+role="assistant", 
+content=response 
+) 
+self.conversation.append(assistant_msg) 
+# Save assistant response to working memory 
+if save_interaction: 
+self.mem_mgr.add_working_memory( 
+f"Assistant: {response}", 
+importance=importance, 
+tags=["interaction", "assistant"], 
+emotion_label="helpful" 
+) 
+return response 
+def reset_conversation(self): 
+"""Reset conversation but keep system prompt.""" 
+self.conversation = [self.conversation[0]] # Keep system message self.cbs.log("Conversation reset") 
+def get_conversation_summary(self) -> Dict[str, Any]: 
+"""Get summary of current conversation.""" 
+return { 
+"message_count": len(self.conversation), 
+"user_messages": sum(1 for m in self.conversation if m.role == "user"), "assistant_messages": sum(1 for m in self.conversation if m.role == "assistant"), 
+"start_time": self.conversation[1].timestamp.isoformat() if 
+len(self.conversation) > 1 else None, 
+"last_message": self.conversation[-1].timestamp.isoformat() if 
+len(self.conversation) > 1 else None 
+} 
+def execute_skill(self, skill_id: str, **kwargs) -> Optional[str]: """ 
+Execute a loaded skill. 
+Args: 
+skill_id: ID of skill to execute 
+**kwargs: Parameters for skill execution 
+Returns:
+Skill output or None if skill not found 
+""" 
+if skill_id not in self.cbs.skills: 
+return None 
+skill = self.cbs.skills[skill_id] 
+try: 
+# Parse skill payload 
+skill_data = json.loads(skill.payload_text) 
+skill_type = skill_data.get("skill_type") 
+if skill_type == "greeting": 
+# Execute greeting skill 
+template = skill_data.get("response_template", "Hello!") 
+response = template.format( 
+name=self.cbs.identity.title, 
+purpose=json.loads(self.cbs.identity.payload_text).get("purpose", "") 
+) 
+return response 
+# Add more skill types here as needed 
+return f"Skill {skill_id} executed (type: {skill_type})" 
+except Exception as e: 
+self.cbs.log(f"✗ Skill execution failed: {e}") 
+return None 
+# Factory function for easy backend creation 
+def create_backend( 
+backend_type: str, 
+api_key: Optional[str] = None, 
+model: Optional[str] = None, 
+base_url: Optional[str] = None 
+) -> LLMBackend: 
+""" 
+Create an LLM backend instance. 
+Args: 
+backend_type: "openai", "anthropic", or "local" 
+api_key: API key (for OpenAI/Anthropic) 
+model: Model name 
+base_url: Base URL (for local)
+Returns: 
+LLMBackend instance 
+""" 
+if backend_type == "openai": 
+return OpenAIBackend( 
+api_key=api_key or "", 
+model=model or "gpt-4-turbo-preview" 
+) 
+elif backend_type == "anthropic": 
+return AnthropicBackend( 
+api_key=api_key or "", 
+model=model or "claude-3-sonnet-20240229" 
+) 
+elif backend_type == "local": 
+return LocalBackend( 
+base_url=base_url or "http://localhost:11434", 
+model=model or "llama2" 
+) 
+else: 
+raise ValueError(f"Unknown backend type: {backend_type}") 
+if __name__ == "__main__": 
+print("Reasoning Engine module loaded.") 
+print("Supported backends: openai, anthropic, local")

@@ -1,0 +1,175 @@
+﻿""" 
+cbs_memory_manager.py - Persistent Memory Manager with GHMP ============================================================ 
+Handles: 
+- Working memory (RAM-based, ephemeral) 
+- Long-term memory (GHMP plates on disk) 
+- Memory consolidation (working -> long-term) 
+- Context retrieval for reasoning 
+""" 
+from typing import Dict, List, Optional, Any 
+from dataclasses import dataclass 
+from datetime import datetime 
+from collections import deque 
+import json 
+@dataclass 
+class WorkingMemory: 
+"""Ephemeral working memory entry.""" 
+content: str 
+timestamp: datetime 
+importance: float # 0.0-1.0 
+tags: List[str] 
+emotion_label: str 
+class MemoryManager: 
+""" 
+Manages both working (RAM) and long-term (GHMP) memory. """ 
+def __init__( 
+self, 
+bootstrap_system, 
+working_memory_size: int = 100, 
+consolidation_threshold: float = 0.7 
+): 
+""" 
+Initialize memory manager. 
+Args: 
+bootstrap_system: Reference to CognitionBootstrap instance
+working_memory_size: Max items in working memory 
+consolidation_threshold: Importance threshold for long-term storage """ 
+self.cbs = bootstrap_system 
+self.working_memory: deque = deque(maxlen=working_memory_size) self.consolidation_threshold = consolidation_threshold 
+# Statistics 
+self.stats = { 
+"memories_created": 0, 
+"memories_consolidated": 0, 
+"working_memory_hits": 0, 
+"longterm_memory_hits": 0 
+} 
+def add_working_memory( 
+self, 
+content: str, 
+importance: float = 0.5, 
+tags: List[str] = None, 
+emotion_label: str = "neutral" 
+): 
+"""Add entry to working memory.""" 
+entry = WorkingMemory( 
+content=content, 
+timestamp=datetime.now(), 
+importance=importance, 
+tags=tags or [], 
+emotion_label=emotion_label 
+) 
+self.working_memory.append(entry) 
+self.stats["memories_created"] += 1 
+# Auto-consolidate if important 
+if importance >= self.consolidation_threshold: 
+self.consolidate_memory(entry) 
+def consolidate_memory(self, entry: WorkingMemory) -> str: """ 
+Move working memory to long-term GHMP storage. 
+Args: 
+entry: WorkingMemory to consolidate 
+Returns:
+node_id of created GHMP plate 
+""" 
+title = f"Memory {datetime.now().strftime('%Y%m%d-%H%M%S')}" 
+# Package content with metadata 
+payload = { 
+"content": entry.content, 
+"timestamp": entry.timestamp.isoformat(), 
+"importance": entry.importance, 
+"consolidated_at": datetime.now().isoformat() 
+} 
+node_id = self.cbs.create_memory( 
+title=title, 
+content=json.dumps(payload, indent=2), 
+tags=entry.tags, 
+emotion_label=entry.emotion_label 
+) 
+self.stats["memories_consolidated"] += 1 
+return node_id 
+def retrieve_context( 
+self, 
+query: str, 
+max_items: int = 10, 
+include_working: bool = True, 
+include_longterm: bool = True 
+) -> List[Dict[str, Any]]: 
+""" 
+Retrieve relevant memories for a query. 
+Args: 
+query: Search query (simple keyword match for now) max_items: Max memories to return 
+include_working: Include working memory 
+include_longterm: Include long-term GHMP memory 
+Returns: 
+List of memory dicts sorted by relevance 
+""" 
+results = [] 
+query_lower = query.lower() 
+# Search working memory 
+if include_working:
+for entry in self.working_memory: 
+if query_lower in entry.content.lower(): 
+results.append({ 
+"source": "working", 
+"content": entry.content, 
+"timestamp": entry.timestamp.isoformat(), 
+"importance": entry.importance, 
+"tags": entry.tags 
+}) 
+self.stats["working_memory_hits"] += 1 
+# Search long-term memory 
+if include_longterm and self.cbs.memory: 
+for node_id, node in self.cbs.memory.plates.items(): 
+# Simple keyword match in payload 
+if query_lower in node.payload_text.lower(): 
+results.append({ 
+"source": "longterm", 
+"node_id": node_id, 
+"title": node.title, 
+"content": node.payload_text[:200] + "...", 
+"tags": node.tags, 
+"emotion": node.emotion.label 
+}) 
+self.stats["longterm_memory_hits"] += 1 
+# Sort by timestamp (most recent first) and limit 
+results.sort(key=lambda x: x.get("timestamp", ""), reverse=True) return results[:max_items] 
+def get_recent_context(self, n: int = 5) -> List[str]: 
+"""Get N most recent working memories as strings.""" 
+recent = list(self.working_memory)[-n:] 
+return [entry.content for entry in recent] 
+def get_statistics(self) -> Dict[str, Any]: 
+"""Get memory system statistics.""" 
+return { 
+**self.stats, 
+"working_memory_size": len(self.working_memory), 
+"longterm_plates": len(self.cbs.memory.plates) if self.cbs.memory else 0, "consolidation_threshold": self.consolidation_threshold 
+} 
+def consolidate_session(self, summary: str = "Session summary"): """
+Consolidate current working memory into a single session plate. """ 
+if not self.working_memory: 
+return None 
+# Aggregate working memory 
+session_content = { 
+"summary": summary, 
+"entries": [], 
+"start_time": self.working_memory[0].timestamp.isoformat(), "end_time": self.working_memory[-1].timestamp.isoformat(), "entry_count": len(self.working_memory) 
+} 
+for entry in self.working_memory: 
+session_content["entries"].append({ 
+"content": entry.content, 
+"timestamp": entry.timestamp.isoformat(), 
+"importance": entry.importance, 
+"tags": entry.tags 
+}) 
+# Create session plate 
+node_id = self.cbs.create_memory( 
+title=f"Session {datetime.now().strftime('%Y%m%d-%H%M%S')}", content=json.dumps(session_content, indent=2), 
+tags=["session", "consolidated"], 
+emotion_label="neutral" 
+) 
+# Clear working memory after consolidation 
+self.working_memory.clear() 
+return node_id 
+# Demo usage 
+if __name__ == "__main__": 
+print("Memory Manager module loaded.") 
+print("Use with CognitionBootstrap to manage AI memory.")

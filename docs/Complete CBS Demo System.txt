@@ -1,0 +1,203 @@
+﻿""" 
+cbs_demo_system.py - Complete Self-Contained AI Demo ===================================================== 
+This demonstrates a fully functional self-contained AI that: 1. Boots from GHMP plates (offline) 
+2. Maintains working + long-term memory 
+3. Can update itself when online 
+4. Creates new memories 
+5. Reasons over its memory 
+Run this to see the full system in action. 
+""" 
+import sys 
+import json 
+from pathlib import Path 
+from datetime import datetime 
+def setup_demo_environment(): 
+"""Create a minimal demo environment with GHMP plates.""" from ghmp import MemoryNode, Emotion, encode_plate, MemoryDeck 
+demo_path = Path("./cbs_demo") 
+demo_path.mkdir(exist_ok=True) 
+key = "demo_key_2025" 
+print("Setting up demo environment...") 
+# 1. Create identity plate 
+identity = MemoryNode( 
+node_id="CBS-IDENTITY-001", 
+deck_id="CBS_DEMO", 
+title="Demo AI Assistant", 
+payload_text=json.dumps({ 
+"name": "DemoBot", 
+"purpose": "Demonstrate self-contained AI with GHMP", "version": "0.1.0", 
+"config": { 
+"deck_id": "CBS_DEMO", 
+"max_working_memory": 50, 
+"consolidation_threshold": 0.7
+} 
+}, indent=2), 
+tags=["identity", "system"], 
+emotion=Emotion(0.5, 0.6, "curious"), 
+links=[] 
+) 
+img = encode_plate(identity, key) 
+img.save(demo_path / "identity.png") 
+print("✓ Identity plate created") 
+# 2. Create config.json 
+config = { 
+"deck_id": "CBS_DEMO", 
+"version": "0.1.0", 
+"created": datetime.now().isoformat() 
+} 
+with open(demo_path / "config.json", "w") as f: 
+json.dump(config, f, indent=2) 
+print("✓ Config created") 
+# 3. Create initial memory deck with some memories 
+memory_dir = demo_path / "memory" 
+memory_dir.mkdir(exist_ok=True) 
+memories = [ 
+("Base Knowledge", "I am a self-contained AI system using GHMP memory.", ["knowledge"]), 
+("Capability", "I can boot offline and manage persistent memory.", ["capability"]), 
+("Purpose", "I demonstrate autonomous AI architecture.", ["purpose"]) ] 
+for i, (title, content, tags) in enumerate(memories, 1): 
+node = MemoryNode( 
+node_id=f"MEM-INIT-{i:03d}", 
+deck_id="CBS_DEMO", 
+title=title, 
+payload_text=content, 
+tags=tags, 
+emotion=Emotion(0.3, 0.5, "calm"), 
+links=[] 
+) 
+img = encode_plate(node, key) 
+img.save(memory_dir / f"MEM-INIT-{i:03d}.png")
+print(f"✓ {len(memories)} initial memories created") 
+# 4. Create a sample skill 
+skills_dir = demo_path / "skills" 
+skills_dir.mkdir(exist_ok=True) 
+skill = MemoryNode( 
+node_id="SKILL-GREET", 
+deck_id="CBS_DEMO", 
+title="Greeting Skill", 
+payload_text=json.dumps({ 
+"skill_type": "greeting", 
+"trigger": "hello|hi|greetings", 
+"response_template": "Hello! I'm {name}, {purpose}", 
+"examples": [ 
+"Hello! I'm DemoBot, I demonstrate self-contained AI." ] 
+}, indent=2), 
+tags=["skill", "greeting"], 
+emotion=Emotion(0.7, 0.6, "friendly"), 
+links=[] 
+) 
+img = encode_plate(skill, key) 
+img.save(skills_dir / "SKILL-GREET.png") 
+print("✓ Sample skill created") 
+print(f"\n✓ Demo environment ready at: {demo_path}") 
+return str(demo_path), key 
+def run_demo(): 
+"""Run complete CBS demo.""" 
+print("="*60) 
+print("COGNITION BOOTSTRAP SYSTEM - FULL DEMO") 
+print("="*60) 
+# Setup 
+demo_path, key = setup_demo_environment() 
+print("\n" + "="*60) 
+print("PHASE 1: COLD BOOT (OFFLINE)") 
+print("="*60) 
+# Import after setup
+from cbs_boot_loader import CognitionBootstrap 
+from cbs_memory_manager import MemoryManager 
+from cbs_update_manager import UpdateManager 
+# Boot system 
+cbs = CognitionBootstrap( 
+memory_path=demo_path, 
+key=key, 
+boot_mode="cold" 
+) 
+if not cbs.boot(): 
+print("Boot failed!") 
+return 1 
+print("\n" + "="*60) 
+print("PHASE 2: MEMORY OPERATIONS") 
+print("="*60) 
+# Initialize memory manager 
+mem_mgr = MemoryManager(cbs) 
+# Add some working memories 
+print("\nAdding working memories...") 
+mem_mgr.add_working_memory( 
+"User asked about my capabilities", 
+importance=0.6, 
+tags=["interaction", "capabilities"] 
+) 
+mem_mgr.add_working_memory( 
+"Explained GHMP memory system", 
+importance=0.8, 
+tags=["explanation", "ghmp"] 
+) 
+mem_mgr.add_working_memory( 
+"User seemed interested in offline AI", 
+importance=0.9, # High importance -> auto-consolidate tags=["interaction", "interest"], 
+emotion_label="enthusiastic" 
+) 
+print(f"Working memory: {len(mem_mgr.working_memory)} entries") # Retrieve context
+print("\nRetrieving context for 'offline'...") 
+results = mem_mgr.retrieve_context("offline", max_items=5) 
+for i, result in enumerate(results, 1): 
+print(f"{i}. [{result['source']}] {result.get('content', result.get('title', 'N/A'))[:60]}...") 
+# Get statistics 
+print("\nMemory Statistics:") 
+stats = mem_mgr.get_statistics() 
+for key, value in stats.items(): 
+print(f" {key}: {value}") 
+print("\n" + "="*60) 
+print("PHASE 3: SELF-UPDATE SYSTEM") 
+print("="*60) 
+# Initialize update manager 
+update_mgr = UpdateManager(cbs) 
+# Check for updates 
+print("\nChecking for updates...") 
+update_status = update_mgr.check_for_updates() 
+print(f"Status: {json.dumps(update_status, indent=2)}") 
+# Create backup 
+print("\nCreating system backup...") 
+backup_path = update_mgr.backup_system() 
+print(f"Backup: {backup_path}") 
+# List backups 
+print("\nAvailable backups:") 
+backups = update_mgr.list_backups() 
+for backup in backups: 
+print(f" - {backup['name']} (created: {backup['created']})") 
+print("\n" + "="*60) 
+print("PHASE 4: SESSION CONSOLIDATION") 
+print("="*60) 
+# Consolidate session 
+print("\nConsolidating session to long-term memory...") 
+session_id = mem_mgr.consolidate_session( 
+summary="Demo session showing CBS capabilities" 
+) 
+print(f"Session consolidated: {session_id}")
+print("\n" + "="*60) 
+print("FINAL SYSTEM STATE") 
+print("="*60) 
+# Show final context 
+context = cbs.get_context() 
+print("\nSystem Context:") 
+print(json.dumps(context, indent=2)) 
+# Save boot log 
+cbs.save_boot_log() 
+print("\n" + "="*60) 
+print("DEMO COMPLETE") 
+print("="*60) 
+print(f"\nAll artifacts saved to: {demo_path}") 
+print("\nYou can:") 
+print(" 1. Inspect GHMP plates with image viewer") 
+print(" 2. Boot again with: python cbs_boot_loader.py --memory ./cbs_demo --key demo_key_2025") 
+print(" 3. Decode any plate manually with ghmp.py") 
+return 0 
+if __name__ == "__main__": 
+try: 
+sys.exit(run_demo()) 
+except KeyboardInterrupt: 
+print("\n\nDemo interrupted") 
+sys.exit(1) 
+except Exception as e: 
+print(f"\n\nDemo failed: {e}") 
+import traceback 
+traceback.print_exc() 
+sys.exit(1)

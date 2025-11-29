@@ -1,0 +1,299 @@
+﻿""" 
+cbs_interactive_demo.py - Interactive Demo with Real LLM ========================================================= 
+This demonstrates the COMPLETE system: 
+1. Boot from GHMP 
+2. Initialize reasoning engine with real LLM 
+3. Interactive chat loop 
+4. Memory consolidation 
+5. Skill execution 
+Usage: 
+# With OpenAI 
+python cbs_interactive_demo.py --backend openai --api-key YOUR_KEY 
+# With Anthropic 
+python cbs_interactive_demo.py --backend anthropic --api-key YOUR_KEY 
+# With local Ollama 
+python cbs_interactive_demo.py --backend local --model llama2 
+# Offline mode (no LLM, just memory/skills) 
+python cbs_interactive_demo.py --offline 
+""" 
+import sys 
+import json 
+import argparse 
+from pathlib import Path 
+from datetime import datetime 
+def setup_demo_environment(): 
+"""Create demo environment (reuse from cbs_demo_system.py).""" from ghmp import MemoryNode, Emotion, encode_plate 
+demo_path = Path("./cbs_demo") 
+demo_path.mkdir(exist_ok=True) 
+key = "demo_key_2025" 
+print("Setting up demo environment...") 
+# Identity
+identity = MemoryNode( 
+node_id="CBS-IDENTITY-001", 
+deck_id="CBS_DEMO", 
+title="DemoBot", 
+payload_text=json.dumps({ 
+"name": "DemoBot", 
+"purpose": "demonstrate self-contained AI with GHMP memory", 
+"version": "0.1.0", 
+"personality": "helpful, curious, memory-aware", 
+"config": { 
+"deck_id": "CBS_DEMO", 
+"max_working_memory": 50, 
+"consolidation_threshold": 0.7 
+} 
+}, indent=2), 
+tags=["identity", "system"], 
+emotion=Emotion(0.5, 0.6, "curious"), 
+links=[] 
+) 
+img = encode_plate(identity, key) 
+img.save(demo_path / "identity.png") 
+# Config 
+config = { 
+"deck_id": "CBS_DEMO", 
+"version": "0.1.0", 
+"created": datetime.now().isoformat(), 
+"reasoning": { 
+"max_context_messages": 10, 
+"default_temperature": 0.7 
+} 
+} 
+with open(demo_path / "config.json", "w") as f: 
+json.dump(config, f, indent=2) 
+# Memory deck 
+memory_dir = demo_path / "memory" 
+memory_dir.mkdir(exist_ok=True) 
+memories = [ 
+("Core Knowledge", "I am a self-contained AI system that uses GHMP plates for persistent memory.", ["knowledge"]), 
+("Memory System", "My memory is stored as geometric holographic plates - visual PNGs with embedded data.", ["knowledge", "ghmp"]),
+("Offline Capability", "I can boot and operate completely offline. No network required.", ["capability"]), 
+("Skills System", "I can load and execute skills from GHMP plates.", ["capability", "skills"]), 
+] 
+for i, (title, content, tags) in enumerate(memories, 1): 
+node = MemoryNode( 
+node_id=f"MEM-INIT-{i:03d}", 
+deck_id="CBS_DEMO", 
+title=title, 
+payload_text=content, 
+tags=tags, 
+emotion=Emotion(0.3, 0.5, "calm"), 
+links=[] 
+) 
+img = encode_plate(node, key) 
+img.save(memory_dir / f"MEM-INIT-{i:03d}.png") 
+# Skills 
+skills_dir = demo_path / "skills" 
+skills_dir.mkdir(exist_ok=True) 
+greeting_skill = MemoryNode( 
+node_id="SKILL-GREET", 
+deck_id="CBS_DEMO", 
+title="Greeting Skill", 
+payload_text=json.dumps({ 
+"skill_type": "greeting", 
+"trigger": "hello|hi|greetings", 
+"response_template": "Hello! I'm {name}. {purpose}", 
+"examples": ["Hello! I'm DemoBot. I demonstrate self-contained AI."] }, indent=2), 
+tags=["skill", "greeting"], 
+emotion=Emotion(0.7, 0.6, "friendly"), 
+links=[] 
+) 
+img = encode_plate(greeting_skill, key) 
+img.save(skills_dir / "SKILL-GREET.png") 
+print(f"✓ Demo environment ready at: {demo_path}") 
+return str(demo_path), key 
+def run_interactive_demo(args):
+"""Run interactive demo with LLM.""" 
+print("="*60) 
+print("COGNITION BOOTSTRAP SYSTEM - INTERACTIVE DEMO") print("="*60) 
+# Setup if needed 
+demo_path = Path("./cbs_demo") 
+if not demo_path.exists() or not (demo_path / "identity.png").exists(): demo_path, key = setup_demo_environment() 
+else: 
+demo_path = "./cbs_demo" 
+key = "demo_key_2025" 
+# Import components 
+from cbs_boot_loader import CognitionBootstrap 
+from cbs_memory_manager import MemoryManager 
+from cbs_reasoning_engine import ReasoningEngine, create_backend 
+# Boot system 
+print("\n" + "="*60) 
+print("BOOTING SYSTEM...") 
+print("="*60 + "\n") 
+cbs = CognitionBootstrap( 
+memory_path=demo_path, 
+key=key, 
+boot_mode="cold" 
+) 
+if not cbs.boot(): 
+print("✗ Boot failed!") 
+return 1 
+# Initialize memory manager 
+mem_mgr = MemoryManager(cbs) 
+# Initialize reasoning engine 
+if args.offline: 
+print("\n✓ Running in OFFLINE mode (no LLM)") 
+engine = None 
+else: 
+print("\n" + "="*60) 
+print("INITIALIZING REASONING ENGINE...") 
+print("="*60 + "\n") 
+try:
+backend = create_backend( 
+backend_type=args.backend, 
+api_key=args.api_key, 
+model=args.model, 
+base_url=args.base_url 
+) 
+if not backend.is_available(): 
+print(f"✗ Backend '{args.backend}' not available") 
+print(" Install required package or check configuration") return 1 
+engine = ReasoningEngine( 
+bootstrap_system=cbs, 
+memory_manager=mem_mgr, 
+backend=backend, 
+max_context_messages=10 
+) 
+print(f"✓ Reasoning engine ready (backend: {args.backend})") 
+except Exception as e: 
+print(f"✗ Failed to initialize reasoning engine: {e}") return 1 
+# Interactive loop 
+print("\n" + "="*60) 
+print("INTERACTIVE MODE") 
+print("="*60) 
+print("\nCommands:") 
+print(" /stats - Show memory statistics") 
+print(" /context - Show recent context") 
+print(" /skills - List available skills") 
+print(" /save - Consolidate session to long-term memory") print(" /backup - Create system backup") 
+print(" /reset - Reset conversation") 
+print(" /quit - Exit (auto-saves session)") 
+print("\nType your message or command:\n") 
+try: 
+while True: 
+try: 
+user_input = input("You: ").strip() 
+if not user_input: 
+continue
+# Handle commands 
+if user_input.startswith("/"): 
+if user_input == "/quit": 
+print("\nSaving session and exiting...") 
+session_id = mem_mgr.consolidate_session( 
+summary="Interactive demo session" 
+) 
+print(f"✓ Session saved: {session_id}") 
+break 
+elif user_input == "/stats": 
+stats = mem_mgr.get_statistics() 
+print("\nMemory Statistics:") 
+for key, value in stats.items(): 
+print(f" {key}: {value}") 
+print() 
+elif user_input == "/context": 
+recent = mem_mgr.get_recent_context(n=5) 
+print("\nRecent Context:") 
+for i, ctx in enumerate(recent, 1): 
+print(f"{i}. {ctx[:80]}...") 
+print() 
+elif user_input == "/skills": 
+print("\nLoaded Skills:") 
+for skill_id, skill in cbs.skills.items(): 
+print(f" - {skill_id}: {skill.title}") 
+print() 
+elif user_input == "/save": 
+session_id = mem_mgr.consolidate_session( 
+summary="Manual save during interactive demo" ) 
+print(f"✓ Session consolidated: {session_id}\n") 
+elif user_input == "/backup": 
+from cbs_update_manager import UpdateManager update_mgr = UpdateManager(cbs) 
+backup_path = update_mgr.backup_system() 
+print(f"✓ Backup created: {backup_path}\n") 
+elif user_input == "/reset": 
+if engine: 
+engine.reset_conversation()
+mem_mgr.working_memory.clear() 
+print("✓ Conversation and working memory reset\n") 
+else: 
+print(f"Unknown command: {user_input}\n") 
+continue 
+# Handle regular messages 
+if args.offline or engine is None: 
+# Offline mode: just save to memory 
+mem_mgr.add_working_memory( 
+f"User: {user_input}", 
+importance=0.5, 
+tags=["interaction", "user"] 
+) 
+print("Bot: [Offline mode - message saved to memory]\n") else: 
+# Online mode: use reasoning engine 
+response = engine.respond( 
+user_message=user_input, 
+retrieve_context=True, 
+importance=0.6 
+) 
+print(f"Bot: {response}\n") 
+except KeyboardInterrupt: 
+print("\n\nInterrupted. Saving session...") 
+session_id = mem_mgr.consolidate_session( 
+summary="Interrupted demo session" 
+) 
+print(f"✓ Session saved: {session_id}") 
+break 
+except EOFError: 
+break 
+finally: 
+# Cleanup 
+cbs.save_boot_log() 
+if engine: 
+summary = engine.get_conversation_summary() 
+print("\nConversation Summary:") 
+print(json.dumps(summary, indent=2)) 
+print("\n" + "="*60)
+print("SESSION COMPLETE") 
+print("="*60) 
+print(f"\nAll artifacts saved to: {demo_path}") 
+return 0 
+def main(): 
+"""Main entry point.""" 
+parser = argparse.ArgumentParser( 
+description="CBS Interactive Demo with LLM" 
+) 
+parser.add_argument( 
+"--backend", 
+choices=["openai", "anthropic", "local"], 
+default="openai", 
+help="LLM backend to use" 
+) 
+parser.add_argument( 
+"--api-key", 
+help="API key for OpenAI/Anthropic" 
+) 
+parser.add_argument( 
+"--model", 
+help="Model name (e.g., gpt-4-turbo-preview, claude-3-sonnet-20240229, llama2)" ) 
+parser.add_argument( 
+"--base-url", 
+default="http://localhost:11434", 
+help="Base URL for local backend (Ollama)" 
+) 
+parser.add_argument( 
+"--offline", 
+action="store_true", 
+help="Run in offline mode (no LLM)" 
+) 
+args = parser.parse_args() 
+# Validate 
+if not args.offline and not args.api_key and args.backend in ["openai",
+"anthropic"]: 
+print(f"Error: --api-key required for {args.backend} backend") print("Or use --offline for offline mode") 
+return 1 
+try: 
+return run_interactive_demo(args) 
+except Exception as e: 
+print(f"\n✗ Demo failed: {e}") 
+import traceback 
+traceback.print_exc() 
+return 1 
+if __name__ == "__main__": 
+sys.exit(main())
