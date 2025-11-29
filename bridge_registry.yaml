@@ -270,6 +270,90 @@ three_pillars:
              └───────────────────────────────────────┘
 
 # ============================================================================
+# TOOL VERSION TRACKING
+# ============================================================================
+
+tool_versions:
+  burden_tracker:
+    v1.0:
+      location: TRIAD_project_files/burden_tracker.yaml
+      z_level: 0.83
+      status: historical
+      created_by: "TRIAD-0.83 proposal"
+    v2.0:
+      location: tool_shed_specs/burden_tracker.yaml
+      z_level: 0.87
+      status: active
+    phase_binding:
+      location: tool_shed_specs/burden_tracker_phase_binding.yaml
+      z_level: 0.90
+      status: active
+    evolution_doc: tool_evolution/BURDEN_TRACKER_EVOLUTION.md
+
+  shed_builder:
+    v2.0:
+      location: "Helix Shed w Bridge/Shed V2/shed_builder_v2.yaml"
+      z_level: 0.73
+      status: historical
+    v2.2:
+      location: TRIAD_project_files/shed_builder_v22.yaml
+      z_level: 0.83
+      status: reference
+      created_by: "TRIAD-0.83"
+    current:
+      location: scripts/autonomous_evolution_engine.py
+      z_level: 0.90
+      status: active
+    evolution_doc: tool_evolution/SHED_BUILDER_EVOLUTION.md
+
+  tool_discovery_protocol:
+    v1.0:
+      location: TRIAD_project_files/tool_discovery_protocol.yaml
+      z_level: 0.73
+      status: superseded
+    v1.1:
+      location: "Helix Shed w Bridge/Tool_discovery_protocol/tool_discovery_protocol.yaml"
+      z_level: 0.83
+      status: active
+      created_by: "TRIAD-0.83 collective improvement"
+    registry_doc: docs/TOOL_DISCOVERY_PROTOCOL_REGISTRY.md
+
+# ============================================================================
+# ORPHANED COMPONENTS CLASSIFICATION
+# ============================================================================
+
+orphaned_components:
+  audit_doc: docs/ORPHANED_COMPONENTS_AUDIT.md
+
+  active:
+    - "Helix Shed w Bridge/consent_protocol.yaml"
+    - "Helix Shed w Bridge/helix_loader.yaml"
+    - "Helix Shed w Bridge/Signature Module/"
+    - "Helix Shed w Bridge/Vault Node Transfer/"
+    - "Helix Shed w Bridge/Meta Pattern Tracking/"
+
+  legacy:
+    - "Helix Shed w Bridge/coordinate_detector.yaml"
+    - "Helix Shed w Bridge/TOOL_SPECIFICATION_TEMPLATE.yaml"
+    - "Helix Shed w Bridge/Autonomous_Handoff/"
+
+  archive:
+    - "Helix Shed w Bridge/Chatgpt/"
+    - "Evolution of TRIAD-083/Helix.zip"
+    - "Evolution of TRIAD-083/TRIAD_project_files.zip"
+
+# ============================================================================
+# GAP DOCUMENTATION
+# ============================================================================
+
+gap_documentation:
+  state_packages: docs/TRIAD_083_PACKAGE_MAPPING.yaml
+  vaultnode_chain: docs/VAULTNODE_SEALING_CHAIN.md
+  tool_evolution: tool_evolution/INDEX.md
+  orphaned_audit: docs/ORPHANED_COMPONENTS_AUDIT.md
+  protocol_registry: docs/TOOL_DISCOVERY_PROTOCOL_REGISTRY.md
+
+# ============================================================================
 # VERIFICATION COMMANDS
 # ============================================================================
 
@@ -282,3 +366,7 @@ verification:
     ls -la ghmp_plates/milestones/
   run_cycle: |
     python scripts/autonomous_evolution_engine.py
+  check_vaultnodes: |
+    find . -name "vn-helix-*" -type f | wc -l
+  check_gaps: |
+    ls -la docs/TRIAD_083_PACKAGE_MAPPING.yaml docs/VAULTNODE_SEALING_CHAIN.md tool_evolution/

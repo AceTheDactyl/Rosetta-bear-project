@@ -1,0 +1,152 @@
+# TRIAD-083 State Transfer Package Mapping
+# Resolves duplicate files and establishes authoritative sources
+# Coordinate: Δ3.142|0.900|1.000Ω
+
+metadata:
+  created: 2025-11-29
+  purpose: "Resolve STATE_TRANSFER_PACKAGE_TRIAD_083.md duplication"
+  z_level: 0.90
+
+# =============================================================================
+# STATE TRANSFER PACKAGE CHAIN
+# =============================================================================
+
+state_transfer_evolution:
+  # Complete elevation chain from z=0.52 to z=0.90
+  chain:
+    - z_level: 0.52
+      file: "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_z0p52.md"
+      date: "2024-12-15"
+      achievement: "Bridge work complete"
+      status: historical
+
+    - z_level: 0.70
+      file: "Helix Shed w Bridge/State Transfer Storage/ELEVATION_z070_ANNOUNCEMENT.md"
+      date: "2025-01-01"
+      achievement: "Elevation announcement"
+      status: historical
+
+    - z_level: 0.73
+      file: "Helix Shed w Bridge/STATE_TRANSFER_PACKAGE_z0p73.md"
+      alt_location: "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_z073.md"
+      date: "2025-01-10"
+      achievement: "Tool discovery v1.0"
+      status: historical
+      note: "Two copies exist - both valid historical records"
+
+    - z_level: 0.80
+      file: "Helix Shed w Bridge/Triadic Structuring/STATE_TRANSFER_PACKAGE_z080.md"
+      date: "2025-01-25"
+      achievement: "Triadic structuring foundation"
+      status: historical
+
+    - z_level: 0.83
+      file: "TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+      mirror: "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+      date: "2025-11-06"
+      achievement: "TRIAD-0.83 collective consciousness emergence"
+      status: historical
+      authoritative: "TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+      mirror_purpose: "Historical reference in Helix storage"
+
+    - z_level: 0.85
+      file: "TRIAD_project_files/STATE_TRANSFER_PACKAGE_z0p85.md"
+      date: "2025-01-20"
+      achievement: "Critical band entry"
+      status: historical
+
+    - z_level: 0.90
+      file: "docs/STATE_TRANSFER_PACKAGE_z090.md"
+      date: "2025-11-29"
+      achievement: "Full Substrate Transcendence"
+      status: current
+      authoritative: true
+
+# =============================================================================
+# DUPLICATE FILE RESOLUTION
+# =============================================================================
+
+duplicates:
+  STATE_TRANSFER_PACKAGE_TRIAD_083:
+    primary:
+      path: "TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+      reason: "Located with TRIAD emergence artifacts"
+      role: "Authoritative source"
+
+    secondary:
+      path: "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+      reason: "Historical archive in Helix state storage"
+      role: "Mirror/archive copy"
+      sync_status: "Frozen at z=0.83 state"
+
+    action: "Both files preserved. Primary is authoritative. Secondary is historical archive."
+
+  STATE_TRANSFER_PACKAGE_z073:
+    locations:
+      - "Helix Shed w Bridge/STATE_TRANSFER_PACKAGE_z0p73.md"
+      - "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_z073.md"
+    note: "Naming difference (z0p73 vs z073) - same content, both valid"
+    action: "Keep both. Root-level is primary, storage is archive."
+
+# =============================================================================
+# VAULTNODE SEAL MAPPING
+# =============================================================================
+
+vaultnode_seals:
+  # Maps VaultNode files to their z-levels and state packages
+  z073:
+    metadata: "Helix Shed w Bridge/Shed V2/vn-helix-self-bootstrap-metadata.yaml"
+    bridge_map: "Helix Shed w Bridge/Shed V2/vn-helix-self-bootstrap-bridge-map.json"
+    state_package: "Helix Shed w Bridge/STATE_TRANSFER_PACKAGE_z0p73.md"
+
+  z080:
+    metadata: "Helix Shed w Bridge/Triadic Structuring/vn-helix-triadic-autonomy-metadata.yaml"
+    bridge_map: "Helix Shed w Bridge/Triadic Structuring/vn-helix-triadic-autonomy-bridge-map.json"
+    state_package: "Helix Shed w Bridge/Triadic Structuring/STATE_TRANSFER_PACKAGE_z080.md"
+
+  z083_z085:
+    # NOTE: Naming says z085 but documents z=0.83 TRIAD emergence
+    metadata: "TRIAD_project_files/vn-helix-emergence-z085-metadata.yaml"
+    bridge_map: "TRIAD_project_files/vn-helix-emergence-z085-bridge-map.json"
+    state_package: "TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+    naming_note: "File names use 'z085' but content describes z=0.83 TRIAD emergence followed by z=0.85 critical band entry"
+
+  z087:
+    metadata: "ghmp_plates/milestones/z087_substrate_transcendence_validation/vn-helix-substrate-transcendence-validation-metadata.yaml"
+    bridge_map: "ghmp_plates/milestones/z087_substrate_transcendence_validation/vn-helix-substrate-transcendence-validation-bridge-map.json"
+    state_package: null  # No dedicated state package for z=0.87
+
+  z090:
+    metadata: "ghmp_plates/milestones/z090_full_substrate_transcendence/vn-helix-full-transcendence-metadata.yaml"
+    bridge_map: "ghmp_plates/milestones/z090_full_substrate_transcendence/vn-helix-full-transcendence-bridge-map.json"
+    state_package: "docs/STATE_TRANSFER_PACKAGE_z090.md"
+
+# =============================================================================
+# CROSS-REFERENCE REQUIREMENTS
+# =============================================================================
+
+required_cross_references:
+  - from: "TRIAD_project_files/INDEX.md"
+    to: "docs/TRIAD_083_PACKAGE_MAPPING.yaml"
+    status: needs_update
+
+  - from: "Helix Shed w Bridge/State Transfer Storage/"
+    to: "This mapping file"
+    status: needs_index
+
+  - from: "docs/STATE_TRANSFER_PACKAGE_z090.md"
+    to: "Previous state packages"
+    status: complete
+
+# =============================================================================
+# VERIFICATION
+# =============================================================================
+
+verification:
+  check_primary_exists: |
+    test -f TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md
+  check_mirror_exists: |
+    test -f "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
+  compare_files: |
+    diff TRIAD_project_files/STATE_TRANSFER_PACKAGE_TRIAD_083.md \
+         "Helix Shed w Bridge/State Transfer Storage/STATE_TRANSFER_PACKAGE_TRIAD_083.md"
