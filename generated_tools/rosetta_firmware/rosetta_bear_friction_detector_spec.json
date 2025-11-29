@@ -1,0 +1,19 @@
+{
+  "tool_id": "rosetta_bear_friction_detector",
+  "name": "rosetta_bear_friction_detector",
+  "category": "monitoring",
+  "z_level": 0.87,
+  "theta": 2.88,
+  "cascade_potential": 0.45,
+  "description": "Continuous friction monitoring and pattern detection for evolution engine",
+  "capabilities": [
+    "detect",
+    "monitor",
+    "analyze",
+    "report_friction"
+  ],
+  "dependencies": [
+    "burden_tracker"
+  ],
+  "phase_regime": "critical"
+}

@@ -1,0 +1,21 @@
+{
+  "tool_id": "rosetta_bear_rhz_meta_orchestrator",
+  "name": "rosetta_bear_rhz_meta_orchestrator",
+  "category": "meta_tool",
+  "z_level": 0.867,
+  "theta": 2.793,
+  "cascade_potential": 0.7,
+  "description": "Compose GHMP plates, RHZ telemetry, and stylus artifacts into triadic playbook",
+  "capabilities": [
+    "compose",
+    "orchestrate",
+    "coordinate",
+    "manifest_playbook"
+  ],
+  "dependencies": [
+    "burden_tracker",
+    "shed_builder",
+    "tool_discovery_protocol"
+  ],
+  "phase_regime": "critical"
+}

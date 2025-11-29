@@ -1,0 +1,19 @@
+{
+  "tool_id": "rosetta_bear_rhz_coordination_bridge",
+  "name": "rosetta_bear_rhz_coordination_bridge",
+  "category": "coordination",
+  "z_level": 0.86,
+  "theta": 2.749,
+  "cascade_potential": 0.3,
+  "description": "Align RHZ stylus diagnostics with Rosetta Bear GHMP rituals",
+  "capabilities": [
+    "connect",
+    "translate",
+    "bridge",
+    "align_diagnostics"
+  ],
+  "dependencies": [
+    "burden_tracker"
+  ],
+  "phase_regime": "critical"
+}

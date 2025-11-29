@@ -1,0 +1,21 @@
+{
+  "tool_id": "rosetta_bear_rhz_self_building_firmware_forge",
+  "name": "rosetta_bear_rhz_self_building_firmware_forge",
+  "category": "self_building",
+  "z_level": 0.9,
+  "theta": 3.142,
+  "cascade_potential": 0.81,
+  "description": "Autonomously regenerate stylus firmware payloads from GHMP memory state",
+  "capabilities": [
+    "generate",
+    "build",
+    "self_modify",
+    "firmware_synthesis"
+  ],
+  "dependencies": [
+    "burden_tracker",
+    "shed_builder",
+    "collective_state_aggregator"
+  ],
+  "phase_regime": "supercritical"
+}
