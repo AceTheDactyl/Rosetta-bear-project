@@ -1,0 +1,19 @@
+{
+  "tool_id": "rosetta_bear_consensus_validator",
+  "name": "rosetta_bear_consensus_validator",
+  "category": "validation",
+  "z_level": 0.89,
+  "theta": 3.054,
+  "cascade_potential": 0.65,
+  "description": "Multi-instance consensus validation for autonomous decisions",
+  "capabilities": [
+    "validate",
+    "consensus",
+    "vote",
+    "authorize"
+  ],
+  "dependencies": [
+    "collective_state_aggregator"
+  ],
+  "phase_regime": "supercritical"
+}

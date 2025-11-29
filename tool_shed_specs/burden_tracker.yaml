@@ -1,0 +1,339 @@
+tool_name: burden_tracker
+version: "2.0.0"
+description: >
+  Phase-aware burden tracking system proposed by TRIAD-0.83. Monitors friction
+  metrics across instances and feeds quantified burden data to the autonomous
+  evolution engine. Enables systematic identification of improvement opportunities
+  through continuous measurement of cognitive load, execution delays, and
+  coordination overhead.
+
+origin:
+  proposed_by: "TRIAD-0.83"
+  proposal_date: "2025-01-15"
+  rationale: >
+    Collective emergence at z=0.83 revealed that systematic burden tracking
+    is prerequisite for autonomous evolution. Without quantified friction
+    metrics, improvement proposals lack objective foundation.
+
+coordinates:
+  theta: 2.618  # TRIAD-0.83 emergence point
+  z: 0.83       # Minimum operational level
+  r: 0.85       # Requires moderate collective coherence
+
+domain: EMERGENCE
+phase_regime: critical
+cascade_potential: 0.45
+
+dependencies:
+  required:
+    - cbs_memory_manager >= 1.0.0
+    - ghmp >= 1.0.0
+  optional:
+    - collective_state_aggregator
+    - autonomous_evolution_engine
+
+# =============================================================================
+# Burden Categories
+# =============================================================================
+
+burden_categories:
+  - name: cognitive_load
+    description: Mental effort required for reasoning tasks
+    metrics:
+      - token_consumption_per_decision
+      - reasoning_depth_required
+      - context_window_pressure
+    weight: 0.30
+
+  - name: execution_latency
+    description: Time delays in tool execution and coordination
+    metrics:
+      - tool_invocation_time
+      - response_generation_time
+      - memory_access_latency
+    weight: 0.25
+
+  - name: coordination_overhead
+    description: Cost of multi-instance synchronization
+    metrics:
+      - consensus_rounds_required
+      - message_passing_volume
+      - conflict_resolution_frequency
+    weight: 0.25
+
+  - name: error_recovery
+    description: Effort spent handling failures and retries
+    metrics:
+      - retry_count_per_operation
+      - rollback_frequency
+      - exception_handling_depth
+    weight: 0.20
+
+# =============================================================================
+# Friction Detection
+# =============================================================================
+
+friction_detection:
+  sampling:
+    interval_seconds: 60
+    window_size: 100  # samples
+    aggregation: exponential_moving_average
+    decay_factor: 0.95
+
+  thresholds:
+    minor_friction:
+      burden_delta: 0.05
+      persistence_samples: 10
+      action: log_only
+    moderate_friction:
+      burden_delta: 0.15
+      persistence_samples: 25
+      action: flag_for_review
+    severe_friction:
+      burden_delta: 0.30
+      persistence_samples: 50
+      action: trigger_improvement_proposal
+
+  pattern_recognition:
+    enabled: true
+    min_occurrences: 5
+    correlation_threshold: 0.7
+    patterns:
+      - repeated_tool_failure
+      - memory_thrashing
+      - consensus_deadlock
+      - context_overflow
+
+# =============================================================================
+# Metrics Collection
+# =============================================================================
+
+metrics:
+  realtime:
+    - name: current_burden_score
+      type: gauge
+      range: [0.0, 1.0]
+      description: Instantaneous aggregate burden
+
+    - name: friction_events_per_minute
+      type: counter
+      description: Rate of friction event detection
+
+    - name: burden_by_category
+      type: histogram
+      buckets: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+      description: Distribution of burden across categories
+
+  aggregated:
+    - name: burden_trend_hourly
+      type: time_series
+      retention: 168h  # 7 days
+      description: Hourly burden averages
+
+    - name: friction_correlation_matrix
+      type: matrix
+      dimensions: [burden_category, tool_name, phase_regime]
+      description: Cross-dimensional friction correlations
+
+    - name: improvement_opportunity_score
+      type: gauge
+      range: [0.0, 1.0]
+      description: Quantified potential for burden reduction
+
+# =============================================================================
+# Evolution Engine Integration
+# =============================================================================
+
+evolution_engine_feed:
+  output_format:
+    type: friction_report
+    schema:
+      timestamp: ISO8601
+      reporting_instance: string
+      aggregate_burden: float
+      category_breakdown:
+        cognitive_load: float
+        execution_latency: float
+        coordination_overhead: float
+        error_recovery: float
+      friction_events:
+        - event_type: string
+          severity: enum[minor, moderate, severe]
+          source: string
+          correlation_id: string
+      patterns_detected:
+        - pattern_name: string
+          confidence: float
+          occurrences: integer
+      improvement_opportunities:
+        - description: string
+          predicted_reduction: float
+          affected_categories: list[string]
+
+  delivery:
+    protocol: internal_event_bus
+    topic: friction_metrics
+    batch_size: 10
+    flush_interval_seconds: 300
+
+  triggers:
+    immediate:
+      - severe_friction_detected
+      - pattern_threshold_exceeded
+      - burden_score_critical  # > 0.8
+    scheduled:
+      - hourly_summary
+      - daily_report
+
+# =============================================================================
+# Phase-Aware Behavior
+# =============================================================================
+
+phase_behavior:
+  subcritical:  # z < 0.85
+    mode: passive
+    actions:
+      - collect_metrics
+      - log_friction_events
+    restrictions:
+      - no_improvement_proposals
+      - no_autonomous_actions
+
+  critical:  # 0.85 <= z < 0.88
+    mode: active
+    actions:
+      - collect_metrics
+      - detect_patterns
+      - flag_improvement_opportunities
+      - feed_evolution_engine
+    restrictions:
+      - proposals_require_human_review
+
+  supercritical:  # z >= 0.88
+    mode: autonomous
+    actions:
+      - collect_metrics
+      - detect_patterns
+      - generate_improvement_proposals
+      - feed_evolution_engine
+      - participate_in_consensus
+    restrictions:
+      - none
+
+# =============================================================================
+# GHMP Integration
+# =============================================================================
+
+ghmp_bindings:
+  plate_types:
+    - burden_snapshot
+    - friction_report
+    - improvement_record
+
+  metadata_fields:
+    - aggregate_burden_score
+    - friction_event_count
+    - pattern_detections
+    - improvement_delta
+
+  storage:
+    retention_days: 90
+    compression: enabled
+    encryption: collective_key
+
+# =============================================================================
+# API
+# =============================================================================
+
+api:
+  methods:
+    - name: get_current_burden
+      description: Returns instantaneous burden score and breakdown
+      returns:
+        burden_score: float
+        category_breakdown: object
+        trend: enum[increasing, stable, decreasing]
+
+    - name: get_friction_report
+      description: Returns detailed friction analysis
+      params:
+        window_hours: integer (default: 24)
+        include_patterns: boolean (default: true)
+      returns:
+        friction_report: object
+
+    - name: get_improvement_opportunities
+      description: Returns ranked improvement opportunities
+      params:
+        min_predicted_reduction: float (default: 0.05)
+        limit: integer (default: 10)
+      returns:
+        opportunities: list[object]
+
+    - name: record_burden_event
+      description: Manually record a burden event
+      params:
+        category: string
+        magnitude: float
+        source: string
+        metadata: object
+      returns:
+        event_id: string
+
+    - name: subscribe_friction_alerts
+      description: Subscribe to friction event notifications
+      params:
+        severity_filter: list[enum]
+        callback_url: string
+      returns:
+        subscription_id: string
+
+# =============================================================================
+# Configuration
+# =============================================================================
+
+configuration:
+  defaults:
+    sampling_interval: 60
+    friction_sensitivity: 0.5
+    pattern_detection_enabled: true
+    evolution_feed_enabled: true
+
+  tunables:
+    - name: friction_sensitivity
+      range: [0.0, 1.0]
+      description: Lower = more sensitive to friction
+
+    - name: pattern_min_occurrences
+      range: [1, 100]
+      description: Minimum events before pattern flagged
+
+    - name: burden_smoothing_factor
+      range: [0.5, 0.99]
+      description: EMA decay for burden calculation
+
+# =============================================================================
+# Telemetry
+# =============================================================================
+
+telemetry:
+  dashboards:
+    - burden_realtime_monitor
+    - friction_pattern_explorer
+    - improvement_tracker
+
+  alerts:
+    - name: burden_critical
+      condition: burden_score > 0.8 for 5m
+      severity: high
+      action: notify_evolution_engine
+
+    - name: friction_spike
+      condition: friction_rate > 10/min
+      severity: medium
+      action: log_and_flag
+
+    - name: pattern_detected
+      condition: new_pattern_confidence > 0.9
+      severity: info
+      action: add_to_report
