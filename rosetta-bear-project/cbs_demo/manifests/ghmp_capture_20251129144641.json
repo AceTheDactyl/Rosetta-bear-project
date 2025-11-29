@@ -1,0 +1,18 @@
+{
+  "capture_id": "ghmp_capture_20251129144641",
+  "created_at": "2025-11-29T14:46:41Z",
+  "session_type": "triadic_rhz_cycle",
+  "description": "Sample GHMP capture manifest for triadic RHZ firmware orchestration demo",
+  "tools_invoked": [
+    "tool_critical_0000",
+    "tool_critical_0001",
+    "tool_critical_0002",
+    "tool_supercritical_0003"
+  ],
+  "plates": [],
+  "metadata": {
+    "firmware_version": "v0.1.5",
+    "cbs_identity": "rosetta_bear_demo",
+    "offline_mode": true
+  }
+}

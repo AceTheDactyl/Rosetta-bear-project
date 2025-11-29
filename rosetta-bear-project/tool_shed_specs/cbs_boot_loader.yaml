@@ -1,0 +1,58 @@
+name: cbs_boot_loader
+version: "1.0.0"
+description: >
+  Cognition Bootstrap System (CBS) boot loader. Prepares the working directory,
+  loads identity plates, and maintains configuration/diagnostic files used by
+  other CBS components.
+
+module: cbs_boot_loader
+class: CognitionBootstrap
+
+parameters:
+  base_path:
+    type: string
+    required: true
+    description: Root directory for CBS runtime data
+  encryption_key:
+    type: string
+    required: true
+    description: Passphrase for GHMP plate encryption/decryption
+  config_filename:
+    type: string
+    default: config.json
+    description: Filename for persistent configuration
+
+methods:
+  boot:
+    description: Execute the full bootstrap routine
+    returns: CognitionBootstrap
+  summary:
+    description: Return a compact snapshot of the bootstrap state
+    returns: dict
+
+properties:
+  memory_dir:
+    type: Path
+    description: Directory containing long-term memory plates
+  skills_dir:
+    type: Path
+    description: Directory for skill plates
+  backups_dir:
+    type: Path
+    description: Directory for system backups
+  updates_dir:
+    type: Path
+    description: Directory for update artifacts
+
+required_dirs:
+  - memory
+  - skills
+  - backups
+  - updates
+  - logs
+
+tags:
+  - cbs
+  - boot
+  - initialization
+  - ghmp

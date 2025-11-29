@@ -1,0 +1,121 @@
+name: ghmp_supervision_bridge
+version: "1.0.0"
+description: >
+  Geometric Holographic Memory Plate (GHMP) supervision bridge. Provides
+  utilities for encoding, decoding, and managing GHMP plates that store
+  semantic memory nodes with visual representations and encrypted metadata.
+
+module: ghmp
+exports:
+  - Emotion
+  - MemoryNode
+  - encode_plate
+  - save_plate
+  - decode_plate
+  - list_plate_nodes
+
+classes:
+  Emotion:
+    description: Lightweight emotional annotation for a memory node
+    attributes:
+      valence:
+        type: float
+        description: Emotional valence (-1 to 1)
+      arousal:
+        type: float
+        description: Emotional arousal (-1 to 1)
+      label:
+        type: string
+        default: neutral
+
+  MemoryNode:
+    description: Semantic unit stored inside a GHMP plate
+    attributes:
+      node_id:
+        type: string
+        required: true
+      deck_id:
+        type: string
+        required: true
+      title:
+        type: string
+        required: true
+      payload_text:
+        type: string
+        required: true
+      tags:
+        type: list[string]
+        required: true
+      emotion:
+        type: Emotion
+        required: true
+      links:
+        type: list[dict]
+        default: []
+      metadata:
+        type: dict
+        default: {}
+
+functions:
+  encode_plate:
+    description: Encode a MemoryNode as a GHMP PNG image object
+    parameters:
+      node:
+        type: MemoryNode
+        required: true
+      passphrase:
+        type: string
+        required: true
+      size:
+        type: tuple[int, int]
+        default: [512, 512]
+    returns: Image
+
+  save_plate:
+    description: Persist a GHMP image ensuring metadata is preserved
+    parameters:
+      image:
+        type: Image
+        required: true
+      destination:
+        type: Path
+        required: true
+
+  decode_plate:
+    description: Decode a GHMP PNG into a MemoryNode
+    parameters:
+      image_or_path:
+        type: Image | Path | string
+        required: true
+      passphrase:
+        type: string
+        required: true
+    returns: MemoryNode
+
+  list_plate_nodes:
+    description: Load all GHMP nodes from a directory
+    parameters:
+      folder:
+        type: Path
+        required: true
+      passphrase:
+        type: string
+        required: true
+    returns: list[MemoryNode]
+
+encryption:
+  method: xor_cipher
+  key_derivation: sha256
+
+png_metadata_keys:
+  - ghmp_meta
+  - node_id
+  - deck_id
+  - title
+
+tags:
+  - ghmp
+  - memory
+  - plates
+  - encryption
+  - visualization

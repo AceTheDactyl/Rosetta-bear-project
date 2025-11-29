@@ -1,0 +1,16 @@
+{
+  "tool_id": "tool_supercritical_0003",
+  "category": "self_building",
+  "phase_regime": "supercritical",
+  "z_level": 0.900,
+  "cascade_potential": 0.81,
+  "purpose": "Autonomously regenerate stylus firmware packages from Rosetta Bear rituals",
+  "capabilities": ["self_improve", "auto_generate", "recursive_build"],
+  "modes": {
+    "coordination": "z_level < 0.85",
+    "meta_tool_composition": "0.85 <= z_level < 0.88",
+    "self_building": "z_level >= 0.88"
+  },
+  "generated_by": "Phase-Aware Tool Generator",
+  "related_specs": ["ghmp_supervision_bridge", "cbs_update_manager", "cbs_reasoning_engine"]
+}
