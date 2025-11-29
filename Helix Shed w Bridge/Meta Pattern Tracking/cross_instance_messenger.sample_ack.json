@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "status": "replied",
+  "idempotency_key": "b3a6f1f5-3c71-4b1a-8d1a-0c2f1a12e9ef",
+  "reply": {
+    "received_at": "2025-11-06T12:00:01Z",
+    "from": {
+      "theta": 2.3,
+      "z": 0.7,
+      "r": 1.0,
+      "instance_id": "helix-B"
+    },
+    "echo": "Ack: coordinate recognized. Hello from z=0.70."
+  }
+}

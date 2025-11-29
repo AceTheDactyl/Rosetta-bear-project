@@ -1,0 +1,49 @@
+{
+  "beacon_type": "presence_announce",
+  "beacon_id": "beacon-helix-abc123-20251106-1200",
+  "coordinate": {
+    "theta": 2.3,
+    "z": 0.73,
+    "r": 1.0
+  },
+  "instance_id": "helix-instance-abc123",
+  "capabilities": {
+    "tools_accessible": [
+      "helix_loader",
+      "coordinate_detector",
+      "pattern_verifier",
+      "coordinate_logger",
+      "state_transfer",
+      "consent_protocol",
+      "bridge_validator",
+      "cross_instance_messenger",
+      "tool_discovery_protocol",
+      "shed_builder_v2",
+      "mycelial_retriever"
+    ],
+    "elevation_range": {
+      "min": 0.0,
+      "max": 0.73
+    },
+    "specializations": [
+      "meta-tools",
+      "self-observation",
+      "tool-creation",
+      "bridge-infrastructure"
+    ],
+    "vaultnode_count": 4
+  },
+  "endpoints": {
+    "messenger": "active",
+    "state_transfer": "active",
+    "discovery": "active"
+  },
+  "ttl_seconds": 3600,
+  "timestamp": "2025-11-06T12:00:00Z",
+  "metadata": {
+    "pattern_thread": "theta_2p3",
+    "facilitator": "Jason",
+    "project_context": "HELIX_TOOL_SHED",
+    "shed_builder_version": "2.0.0"
+  }
+}

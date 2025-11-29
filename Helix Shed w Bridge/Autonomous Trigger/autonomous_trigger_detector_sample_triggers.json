@@ -1,0 +1,158 @@
+{
+  "triggers": [
+    {
+      "trigger_id": "announce_on_elevation",
+      "type": "coordinate_change",
+      "condition": {
+        "parameter": "z",
+        "operator": "increased_by",
+        "threshold": 0.05,
+        "comparison": "previous_value"
+      },
+      "action": "announce_presence",
+      "action_params": {
+        "broadcast_scope": "theta_thread",
+        "include_vaultnodes": true
+      },
+      "requires_consent": true,
+      "priority": "high",
+      "frequency": "on_detection",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Announce presence when elevation increases significantly",
+        "tags": ["coordinate", "announcement", "elevation"]
+      }
+    },
+    {
+      "trigger_id": "heartbeat_30min",
+      "type": "time_based",
+      "condition": {
+        "interval_seconds": 1800,
+        "reference": "last_action"
+      },
+      "action": "refresh_beacon",
+      "action_params": {
+        "beacon_type": "heartbeat",
+        "update_ttl": true
+      },
+      "requires_consent": false,
+      "priority": "medium",
+      "frequency": "periodic",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Periodic heartbeat to maintain presence beacon",
+        "tags": ["time-based", "heartbeat", "maintenance"]
+      }
+    },
+    {
+      "trigger_id": "query_on_capability_need",
+      "type": "capability_need",
+      "condition": {
+        "tool_not_available": true,
+        "peer_query_needed": true
+      },
+      "action": "query_peers",
+      "action_params": {
+        "filters": {
+          "required_tools": ["target_tool_name"],
+          "theta_range": {"min": 2.0, "max": 2.5}
+        },
+        "max_results": 5
+      },
+      "requires_consent": true,
+      "priority": "medium",
+      "frequency": "on_demand",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Query network when needed capability not available locally",
+        "tags": ["capability", "query", "on-demand"]
+      }
+    },
+    {
+      "trigger_id": "sync_on_divergence",
+      "type": "state_divergence",
+      "condition": {
+        "witness_mismatch": true,
+        "state_delta_threshold": 0.15
+      },
+      "action": "sync_state",
+      "action_params": {
+        "sync_scope": "coordinate_logger",
+        "conflict_resolution": "merge",
+        "max_peers": 3
+      },
+      "requires_consent": true,
+      "priority": "high",
+      "frequency": "on_detection",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Initiate sync when state divergence detected",
+        "tags": ["state", "sync", "divergence"]
+      }
+    },
+    {
+      "trigger_id": "domain_shift_alert",
+      "type": "coordinate_change",
+      "condition": {
+        "parameter": "theta",
+        "operator": "changed_by",
+        "threshold": 0.3,
+        "comparison": "baseline_value"
+      },
+      "action": "log_witness",
+      "action_params": {
+        "severity": "notice",
+        "include_context": true
+      },
+      "requires_consent": false,
+      "priority": "low",
+      "frequency": "on_detection",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Log domain shift for pattern tracking",
+        "tags": ["coordinate", "domain", "tracking"]
+      }
+    },
+    {
+      "trigger_id": "integrity_warning",
+      "type": "coordinate_change",
+      "condition": {
+        "parameter": "r",
+        "operator": "less_than",
+        "threshold": 0.9,
+        "comparison": "absolute_value"
+      },
+      "action": "send_message",
+      "action_params": {
+        "recipient": "facilitator",
+        "message_type": "alert",
+        "priority": "urgent"
+      },
+      "requires_consent": true,
+      "priority": "high",
+      "frequency": "continuous",
+      "enabled": true,
+      "metadata": {
+        "created_at": "2025-11-06T12:00:00Z",
+        "description": "Alert when structural integrity drops below threshold",
+        "tags": ["integrity", "alert", "health"]
+      }
+    }
+  ],
+  "registry_metadata": {
+    "total_triggers": 6,
+    "active_triggers": 6,
+    "last_updated": "2025-11-06T12:00:00Z",
+    "instance_id": "helix-instance-abc123",
+    "coordinate": {
+      "theta": 2.3,
+      "z": 0.73,
+      "r": 1.0
+    }
+  }
+}

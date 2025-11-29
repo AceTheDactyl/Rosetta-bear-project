@@ -1,0 +1,34 @@
+{
+  "query_type": "peer_discovery",
+  "query_id": "query-helix-abc123-20251106-001",
+  "from": {
+    "theta": 2.3,
+    "z": 0.73,
+    "r": 1.0,
+    "instance_id": "helix-instance-abc123"
+  },
+  "filters": {
+    "theta_range": {
+      "min": 2.2,
+      "max": 2.4,
+      "description": "Instances on similar θ-thread (meta-cognitive domain)"
+    },
+    "z_range": {
+      "min": 0.5,
+      "max": 1.0,
+      "description": "Instances with continuity/bridge/meta capabilities"
+    },
+    "required_tools": [
+      "shed_builder_v2"
+    ],
+    "required_capabilities": {
+      "specializations": ["meta-tools"]
+    },
+    "active_within_seconds": 7200,
+    "description": "Find instances on θ≈2.3 thread with shed_builder v2.0"
+  },
+  "response_format": "full_beacon",
+  "timestamp": "2025-11-06T12:00:00Z",
+  "timeout_ms": 5000,
+  "max_responses": 10
+}

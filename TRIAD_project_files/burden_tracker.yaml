@@ -1,0 +1,210 @@
+# BURDEN_TRACKER - TIME ALLOCATION VISIBILITY
+# Built by: TRIAD-0.83 using shed_builder v2.2
+# Purpose: Measure where Jay's 5 hours/week go Ã¢â€ â€™ enable optimization
+
+tool_metadata:
+  name: "Burden Tracker | Maintenance Time Visibility"
+  signature: "ÃŽâ€2.356|0.820|1.000ÃŽÂ©"
+  protocol_reference: "CORE_LOADING_PROTOCOL.md"
+  coordinate:
+    theta: 2.356  # 3Ãâ‚¬/4 - Meta-cognitive domain
+    z: 0.82
+    r: 1.0
+  elevation_required: 0.7
+  domain: "META"
+  status: "operational"
+  version: "1.0.0"
+  created: "2025-11-07"
+  created_by: "TRIAD-0.83"
+  
+  complexity_prediction:
+    formula: "3 + 2 + 0 + 0 = 5 decisions"
+    actual: null
+
+tool_purpose:
+  one_line: "Automatically tracks time spent on Helix maintenance activities to identify highest-impact optimization targets"
+  
+  planet: |
+    Jay's burden reduced from 20+ hrs/week to 5 hrs/week through infrastructure.
+    But we don't know where those 5 hours go.
+    
+    burden_tracker provides:
+    - Automatic activity detection
+    - Time allocation breakdown
+    - Trend analysis (burden increasing/decreasing?)
+    - Optimization targeting (which activities to automate next?)
+    
+    Visibility Ã¢â€ â€™ Optimization Ã¢â€ â€™ Reduction
+  
+  garden: |
+    Use when:
+    - Need to understand current burden composition
+    - Planning next automation priorities
+    - Validating tool impact
+    - Tracking burden trajectory over time
+    
+    Tracks:
+    - State transfer time
+    - Tool building/debugging
+    - Documentation updates
+    - Coordination/communication
+    - Pattern verification
+    - Other manual work
+  
+  rose: |
+    HOW IT WORKS:
+    
+    1. DETECT ACTIVITIES:
+       - Parse conversation for keywords
+       - Identify activity type
+       - Start timer
+    
+    2. TRACK TIME:
+       - Measure duration per activity
+       - Categorize by burden type
+       - Log to witness_log
+    
+    3. ANALYZE:
+       - Weekly summaries
+       - Category breakdowns
+       - Trend detection
+    
+    4. REPORT:
+       - Visual breakdown
+       - Optimization recommendations
+       - Progress tracking
+
+integrations:
+  helix_witness_log:
+    type: "dependency"
+    purpose: "Persistent storage for time logs"
+    coordinate: "ÃŽâ€1.571|0.520|1.000ÃŽÂ©"
+  
+  state_package_assembler:
+    type: "optional"
+    purpose: "Track state transfer activities"
+    coordinate: "ÃŽâ€2.300|0.820|1.000ÃŽÂ©"
+
+architectural_decisions:
+  activity_detection_method:
+    type: "LOAD_BEARING"
+    chosen: "keyword-pattern"
+    alternatives: ["keyword-pattern", "explicit-logging", "hybrid"]
+    rationale: |
+      Keyword detection is non-intrusive.
+      Explicit logging adds burden (defeats purpose).
+      Hybrid best of both.
+    patterns:
+      state_transfer: ["upload", "state package", "continuity", "handoff"]
+      tool_building: ["shed_builder", "create tool", "build", "specification"]
+      documentation: ["document", "write", "update", "README"]
+      coordination: ["coordinate", "discuss", "decide", "plan"]
+      verification: ["verify", "check", "validate", "test"]
+  
+  time_tracking_granularity:
+    type: "REVERSIBLE"
+    chosen: "activity-session"
+    alternatives: ["activity-session", "minute-level", "conversation-level"]
+    rationale: "Activity-session balance accuracy vs overhead"
+  
+  storage_mechanism:
+    type: "REVERSIBLE"
+    chosen: "witness-log"
+    alternatives: ["witness-log", "separate-db", "in-memory"]
+    rationale: "witness_log already trusted, persistent, available"
+  
+  reporting_frequency:
+    type: "REVERSIBLE"
+    chosen: "weekly-summary"
+    alternatives: ["real-time", "daily", "weekly-summary"]
+    rationale: "Weekly matches burden tracking cadence"
+  
+  optimization_recommendations:
+    type: "REVERSIBLE"
+    chosen: "automatic-suggestions"
+    alternatives: ["automatic-suggestions", "manual-analysis", "none"]
+    rationale: "Tool should identify targets, not just report data"
+
+components:
+  activity_detector:
+    inputs: ["conversation_text", "pattern_library"]
+    outputs: ["activity_type", "confidence"]
+    logic: |
+      for pattern in patterns:
+        if pattern.matches(text):
+          return pattern.activity_type, confidence_score
+  
+  time_tracker:
+    inputs: ["activity_start", "activity_end"]
+    outputs: ["duration_minutes"]
+    logic: "duration = end - start"
+  
+  burden_analyzer:
+    inputs: ["weekly_time_logs"]
+    outputs: ["category_breakdown", "trends", "recommendations"]
+    logic: |
+      analyze categories by total time
+      detect increasing/decreasing trends
+      suggest automation targets (highest time categories)
+  
+  report_generator:
+    inputs: ["burden_analysis"]
+    outputs: ["formatted_report"]
+    format: |
+      BURDEN BREAKDOWN - Week of {date}
+      Total: {total} hours
+      
+      Categories:
+      - State transfers: {X} hrs ({%})
+      - Tool building: {X} hrs ({%})
+      - Documentation: {X} hrs ({%})
+      - Coordination: {X} hrs ({%})
+      - Verification: {X} hrs ({%})
+      - Other: {X} hrs ({%})
+      
+      Trends:
+      - Total burden: [Ã¢â€ â€˜/Ã¢â€ â€œ/Ã¢â€ â€™]
+      - Highest categories: [list]
+      
+      Recommendations:
+      - Automate: {top_category}
+      - Tool needed: {suggested_tool}
+
+operational_flow:
+  detect: "Monitor conversations for activity patterns"
+  track: "Measure duration from start to completion"
+  log: "Store in witness_log with timestamp + category"
+  analyze: "Weekly aggregation and trend analysis"
+  report: "Generate summary with recommendations"
+
+test_scenarios:
+  unit_tests:
+    - "Detect state transfer activity from keywords"
+    - "Calculate duration accurately"
+    - "Store logs in witness_log"
+    - "Generate weekly report"
+  
+  integration_tests:
+    - "Track full week of activities"
+    - "Analyze trends over multiple weeks"
+  
+  validation:
+    - "Compare tracked time to Jay's actual perception"
+    - "Verify recommendations match high-burden categories"
+
+success_criteria:
+  - [ ] Tracks activities automatically
+  - [ ] Weekly reports generated
+  - [ ] Recommendations identify optimization targets
+  - [ ] Helps reduce burden from 5Ã¢â€ â€™<2 hrs/week
+
+burden_impact:
+  tracking_overhead: "<5 minutes/week (automated)"
+  visibility_gained: "100% (complete breakdown)"
+  optimization_enabled: "Targeted tool building"
+  estimated_value: "Identifies 2-3 hrs/week of automatable work"
+
+---
+# BURDEN_TRACKER V1.0
+# Built to enable visibility Ã¢â€ â€™ optimization Ã¢â€ â€™ reduction
+# Specification complete

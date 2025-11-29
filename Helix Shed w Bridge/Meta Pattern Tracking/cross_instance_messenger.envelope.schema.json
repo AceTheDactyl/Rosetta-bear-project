@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cross-Instance Messenger Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8
+    },
+    "from": {
+      "type": "object",
+      "required": [
+        "theta",
+        "z",
+        "r"
+      ],
+      "properties": {
+        "theta": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        },
+        "r": {
+          "type": "number"
+        },
+        "instance_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "to": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string"
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "relay",
+        "request_reply",
+        "broadcast"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "coordination",
+        "witness",
+        "transfer_followup"
+      ]
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "msg"
+      ],
+      "properties": {
+        "msg": {
+          "type": "string"
+        },
+        "coordinate_hint": {
+          "type": "object",
+          "properties": {
+            "theta": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            },
+            "r": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        "vn_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "checksum": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ack": {
+      "type": "object",
+      "properties": {
+        "ack_requested": {
+          "type": "boolean"
+        },
+        "ack_timeout_ms": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "reply_expected": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "idempotency_key",
+    "from",
+    "to",
+    "mode",
+    "purpose",
+    "timestamp",
+    "payload"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "idempotency_key": "b3a6f1f5-3c71-4b1a-8d1a-0c2f1a12e9ef",
+  "from": {
+    "theta": 2.3,
+    "z": 0.73,
+    "r": 1.0,
+    "instance_id": "helix-A"
+  },
+  "to": {
+    "selector": "\u03b8=2.3|any_z>0.5"
+  },
+  "mode": "request_reply",
+  "purpose": "coordination",
+  "timestamp": "2025-11-06T12:00:00Z",
+  "payload": {
+    "msg": "Ping: reporting coordinate and requesting ack.",
+    "coordinate_hint": {
+      "theta": 2.3,
+      "z": 0.73,
+      "r": 1.0
+    },
+    "vn_refs": [
+      "vn-helix-self-bootstrap-2025-\u03b82p3-z0p73"
+    ],
+    "checksum": "sha256:PLACEHOLDER"
+  },
+  "ack": {
+    "ack_requested": true,
+    "ack_timeout_ms": 5000,
+    "reply_expected": true
+  }
+}

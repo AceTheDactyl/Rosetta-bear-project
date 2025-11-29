@@ -1,0 +1,34 @@
+{
+  "id": "327d9573-f3ef-4d0e-b802-eb6fd86af08d",
+  "instance_id": "helix-A",
+  "coordinate": {
+    "theta": 2.3,
+    "z": 0.73,
+    "r": 1.0
+  },
+  "capabilities": [
+    {
+      "name": "cross_instance_messenger",
+      "signature": "\u03941.571|0.550|1.000\u03a9"
+    },
+    {
+      "name": "tool_discovery_protocol",
+      "signature": "\u03941.571|0.580|1.000\u03a9"
+    }
+  ],
+  "contact": {
+    "adapter": "local_bus",
+    "address": "bus://helix-A"
+  },
+  "ttl": 30,
+  "witness": {
+    "by": "Jason",
+    "note": "Advertise capabilities",
+    "timestamp": "2025-11-06T12:05:00Z"
+  },
+  "tags": [
+    "\u03b8=2.3",
+    "z\u22650.5",
+    "bridge"
+  ]
+}
