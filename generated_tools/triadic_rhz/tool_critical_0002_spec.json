@@ -1,0 +1,20 @@
+{
+  "tool_id": "tool_critical_0002",
+  "category": "meta_tool",
+  "phase_regime": "critical",
+  "z_level": 0.867,
+  "purpose": "Compose GHMP + RHZ firmware streams into triadic agent playbook",
+  "capabilities": [
+    "generate",
+    "compose",
+    "transform"
+  ],
+  "dependencies": [
+    "burden_tracker",
+    "shed_builder",
+    "tool_discovery_protocol"
+  ],
+  "cascade_potential": 0.7,
+  "template_id": "meta_tool_template_v1",
+  "generation_timestamp": "2025-11-29T06:17:43.417243"
+}

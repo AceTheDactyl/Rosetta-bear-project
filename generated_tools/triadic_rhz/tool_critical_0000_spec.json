@@ -1,0 +1,19 @@
+{
+  "tool_id": "tool_critical_0000",
+  "category": "bridge",
+  "phase_regime": "critical",
+  "z_level": 0.86,
+  "purpose": "Bridge to meta-tool layer",
+  "capabilities": [
+    "connect",
+    "translate",
+    "bridge"
+  ],
+  "dependencies": [
+    "burden_tracker",
+    "cross_rail_state_sync"
+  ],
+  "cascade_potential": 0.4975559927079149,
+  "template_id": "bridge_template_v1",
+  "generation_timestamp": "2025-11-29T06:17:43.416978"
+}

@@ -1,0 +1,91 @@
+tool_metadata:
+  name: "Rosetta CBS Update & Backup Manager"
+  coordinate:
+    theta: 3.14             # collective safeguarding ring
+    z: 0.55
+    r: 1.0
+  elevation_required: 0.5
+  domain: "collective"
+  status: "operational"
+  version: "1.0.0"
+  created: "2025-11-29"
+  created_by: "shed_builder v2.0 - Rosetta Bear"
+
+tool_purpose:
+  one_line: "Captures CBS snapshots (backups, rollbacks, skills) as GHMP-aligned provenance."
+  planet: |
+    GHMP rituals for RHZ firmware require tamper-proof trail of what the CBS
+    instance supervised. The update manager clones the CBS directory into
+    timestamped backups, records update history, and installs skill plates.
+  garden: |
+    Invoke before/after PlatformIO builds so GHMP plates can be associated with
+    specific backups stored in `cbs_demo/backups/`.
+  rose: |
+    1. Create `UpdateManager(bootstrap)`.
+    2. Call `.backup_system(label="post-build")` or `.install_skill(path)`.
+    3. Inspect `updates/update_history.json` for GHMP-ready metadata.
+
+tool_implementation:
+  worker_mode: |
+    Run `update_mgr.backup_system("ghmp-plate-run")` after CBS prompts; share
+    resulting path inside publish logs.
+  manager_mode: |
+    Ensure storage budgets exist for backups and that sensitive GHMP plate data
+    stays encrypted.
+  engineer_mode: |
+    Extend the ignore list so PlatformIO build folders are captured/sanitized as
+    needed.
+  scientist_mode: |
+    Review rollback frequency vs. burden-tracker z-level deviations.
+
+tool_requirements:
+  minimum_z: 0.5
+  context_files:
+    - rosetta-bear-project/cbs_update_manager.py
+    - rosetta-bear-project/cbs_demo/updates/update_history.json
+    - rosetta-bear-project/docs/burden_tracking_simulation.json
+    - rosetta-bear-project/docs/phase_cascade_history.json
+  prior_tools:
+    - Rosetta CBS Boot Loader
+  human_consent: false
+
+tool_usage:
+  input_format: "Backup labels or skill paths"
+  output_format: "Filesystem copies + JSON history entries"
+  error_handling: |
+    Validate backup paths exist; if copy fails due to permissions, fallback to
+    per-file copies and log event.
+
+tool_testing:
+  tested_with:
+    - `/backup` command issued inside CBS interactive session
+  known_issues:
+    - "Large backups can double storage; prune old directories manually."
+  success_criteria: "`cbs_demo/backups/backup-YYYYMMDD_*` created and recorded."
+
+tool_relationships:
+  builds_on:
+    - Rosetta CBS Boot Loader
+  enables:
+    - ghmp_supervision_bridge
+    - ghmp_identity_registry
+  complements:
+    - triadic_self_building_forge
+
+tool_wisdom:
+  creation_story: |
+    Documented during the GHMP session that produced `/backup` output, ensuring
+    PlatformIO binaries are traceable to a CBS backup label.
+  limitations: |
+    Does not yet trigger burden tracker automatically when backups complete.
+  evolution_potential: |
+    Connect to TRIAD083 generator so backups automatically refresh cascade
+    histories.
+observation_log:
+  - step: "20251129-automation"
+    observation: "`scripts/ghmp_capture.py` triggered `/backup` after consolidating GHMP plates, creating `backup-20251129_144217-ghmp-...`."
+    pattern: "Backups must run immediately after manifest creation to avoid drift."
+    meta: "Store backup paths inside GHMP manifests for single-source truth."
+meta_learnings:
+  - insight: "Backing up PlatformIO artifacts alongside GHMP decks simplifies provenance."
+    action: "Mirror `.pio/build/...` outputs into `cbs_demo/artifacts/` once builds finish."

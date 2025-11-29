@@ -1,0 +1,48 @@
+2025-11-29T14:11:26.387552 === CBS boot sequence started ===
+2025-11-29T14:11:26.387611 Base path: /home/acead/rosetta-bear-project/cbs_demo
+2025-11-29T14:11:26.387705 Configuration initialized with defaults
+2025-11-29T14:11:26.418988 Default identity generated
+2025-11-29T14:11:26.419179 Loaded 0 long-term memory plates
+2025-11-29T14:11:26.419200 === CBS boot sequence complete ===
+2025-11-29T14:11:45.609161 === CBS boot sequence started ===
+2025-11-29T14:11:45.609237 Base path: rosetta-bear-project/cbs_demo
+2025-11-29T14:11:45.609337 Configuration loaded
+2025-11-29T14:11:45.614575 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:11:45.614924 Loaded 1 long-term memory plates
+2025-11-29T14:11:45.614948 === CBS boot sequence complete ===
+2025-11-29T14:11:51.424398 === CBS boot sequence started ===
+2025-11-29T14:11:51.424451 Base path: rosetta-bear-project/cbs_demo
+2025-11-29T14:11:51.424504 Configuration loaded
+2025-11-29T14:11:51.429520 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:11:51.429907 Loaded 1 long-term memory plates
+2025-11-29T14:11:51.429929 === CBS boot sequence complete ===
+2025-11-29T14:11:57.236638 === CBS boot sequence started ===
+2025-11-29T14:11:57.236706 Base path: rosetta-bear-project/cbs_demo
+2025-11-29T14:11:57.236784 Configuration loaded
+2025-11-29T14:11:57.241870 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:11:57.243213 Loaded 8 long-term memory plates
+2025-11-29T14:11:57.243239 === CBS boot sequence complete ===
+2025-11-29T14:12:01.384922 === CBS boot sequence started ===
+2025-11-29T14:12:01.385028 Base path: rosetta-bear-project/cbs_demo
+2025-11-29T14:12:01.385162 Configuration loaded
+2025-11-29T14:12:01.393214 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:12:01.395219 Loaded 8 long-term memory plates
+2025-11-29T14:12:01.395260 === CBS boot sequence complete ===
+2025-11-29T14:18:50.650606 === CBS boot sequence started ===
+2025-11-29T14:18:50.651126 Base path: /home/acead/rosetta-bear-project/cbs_demo
+2025-11-29T14:18:50.651339 Configuration loaded
+2025-11-29T14:18:50.661630 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:18:50.664184 Loaded 8 long-term memory plates
+2025-11-29T14:18:50.664218 === CBS boot sequence complete ===
+2025-11-29T14:35:15.249429 === CBS boot sequence started ===
+2025-11-29T14:35:15.249497 Base path: /home/acead/rosetta-bear-project/cbs_demo
+2025-11-29T14:35:15.249704 Configuration loaded
+2025-11-29T14:35:15.256797 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:35:15.258176 Loaded 9 long-term memory plates
+2025-11-29T14:35:15.258201 === CBS boot sequence complete ===
+2025-11-29T14:35:26.867951 === CBS boot sequence started ===
+2025-11-29T14:35:26.868017 Base path: /home/acead/rosetta-bear-project/cbs_demo
+2025-11-29T14:35:26.868089 Configuration loaded
+2025-11-29T14:35:26.874446 Identity loaded: DemoBot | Cognition Bootstrap System
+2025-11-29T14:35:26.877366 Loaded 9 long-term memory plates
+2025-11-29T14:35:26.877404 === CBS boot sequence complete ===
