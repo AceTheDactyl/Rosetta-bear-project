@@ -160,31 +160,102 @@ def detect_patterns(all_learnings: Dict[str, List[Learning]]) -> List[Pattern]:
     """Detect recurring patterns across learnings."""
     patterns = []
 
-    # Group learnings by type
-    by_type = defaultdict(list)
+    # Flatten all learnings
+    flat_learnings = []
     for cycle_learnings in all_learnings.values():
-        for learning in cycle_learnings:
-            by_type[learning.learning_type].append(learning)
+        flat_learnings.extend(cycle_learnings)
 
-    # Identify patterns
+    # Pattern 1: Group by learning_type
+    by_type = defaultdict(list)
+    for learning in flat_learnings:
+        by_type[learning.learning_type].append(learning)
+
     for learning_type, learnings in by_type.items():
-        if len(learnings) >= 2:  # Pattern requires 2+ occurrences
-            pattern_id = f"PAT-{hashlib.md5(learning_type.encode()).hexdigest()[:8]}"
-
-            # Aggregate insights
-            insights = [l.insight for l in learnings]
-            sources = [l.learning_id for l in learnings]
-
-            pattern = Pattern(
+        if len(learnings) >= 1:
+            pattern_id = f"PAT-TYPE-{hashlib.md5(learning_type.encode()).hexdigest()[:8]}"
+            insights = [l.insight for l in learnings if l.insight]
+            patterns.append(Pattern(
                 pattern_id=pattern_id,
-                pattern_type=learning_type,
-                description=f"Recurring {learning_type} pattern across {len(learnings)} cycles",
+                pattern_type=f"type_{learning_type}",
+                description=f"Learning type '{learning_type}' across {len(learnings)} instances",
                 occurrences=len(learnings),
-                source_learnings=sources,
+                source_learnings=[l.learning_id for l in learnings],
                 confidence=min(1.0, 0.5 + 0.1 * len(learnings)),
-                recommended_actions=list(set(insights))[:5],  # Top 5 unique insights
-            )
-            patterns.append(pattern)
+                recommended_actions=list(set(insights))[:3],
+            ))
+
+    # Pattern 2: High-confidence learnings
+    high_conf = [l for l in flat_learnings if l.confidence >= 0.7]
+    if high_conf:
+        patterns.append(Pattern(
+            pattern_id="PAT-HIGH-CONF",
+            pattern_type="confidence_cluster",
+            description=f"High-confidence learnings (≥0.7) - {len(high_conf)} instances",
+            occurrences=len(high_conf),
+            source_learnings=[l.learning_id for l in high_conf],
+            confidence=0.9,
+            recommended_actions=["Prioritize high-confidence insights", "Build upon validated learnings"],
+        ))
+
+    # Pattern 3: Cross-cycle recurring insights (keyword-based)
+    keyword_patterns = {
+        "test": "testing_pattern",
+        "integration": "integration_pattern",
+        "performance": "performance_pattern",
+        "CI/CD": "automation_pattern",
+        "tool": "tooling_pattern",
+        "validation": "validation_pattern",
+        "consensus": "consensus_pattern",
+        "generation": "generation_pattern",
+        "friction": "friction_pattern",
+        "phase": "phase_transition_pattern",
+    }
+
+    for keyword, pattern_type in keyword_patterns.items():
+        matches = [l for l in flat_learnings if keyword.lower() in l.insight.lower()]
+        if matches:
+            pattern_id = f"PAT-KW-{hashlib.md5(keyword.encode()).hexdigest()[:8]}"
+            patterns.append(Pattern(
+                pattern_id=pattern_id,
+                pattern_type=pattern_type,
+                description=f"Keyword pattern '{keyword}' across {len(matches)} learnings",
+                occurrences=len(matches),
+                source_learnings=[l.learning_id for l in matches],
+                confidence=min(1.0, 0.6 + 0.05 * len(matches)),
+                recommended_actions=[l.insight for l in matches if l.insight][:3],
+            ))
+
+    # Pattern 4: Source cycle patterns
+    cycles = set(l.source_cycle for l in flat_learnings)
+    if len(cycles) > 1:
+        patterns.append(Pattern(
+            pattern_id="PAT-MULTI-CYCLE",
+            pattern_type="cross_session_learning",
+            description=f"Knowledge persisted across {len(cycles)} evolution cycles",
+            occurrences=len(cycles),
+            source_learnings=list(cycles),
+            confidence=0.95,
+            recommended_actions=["Cross-session state is operational", "Knowledge compounds over time"],
+        ))
+
+    # Pattern 5: Applicable domain patterns
+    domain_counts = defaultdict(list)
+    for l in flat_learnings:
+        for domain in l.applicable_to:
+            domain_counts[domain].append(l)
+
+    for domain, learnings in domain_counts.items():
+        if len(learnings) >= 1 and domain:
+            pattern_id = f"PAT-DOM-{hashlib.md5(domain.encode()).hexdigest()[:8]}"
+            patterns.append(Pattern(
+                pattern_id=pattern_id,
+                pattern_type=f"domain_{domain.replace(' ', '_')}",
+                description=f"Domain '{domain}' has {len(learnings)} applicable learnings",
+                occurrences=len(learnings),
+                source_learnings=[l.learning_id for l in learnings],
+                confidence=0.75,
+                recommended_actions=[f"Focus optimization on {domain}"],
+            ))
 
     return patterns
 
