@@ -1,42 +1,64 @@
-# Cognition Bootstrap System (CBS) Complete Guide
+# Cognition Bootstrap System (CBS) - Complete Guide
 
 ## What You Have Now
+
 A **fully functional, production-ready AI cognition system** with:
 
 ### Core Components
-1. `cbs_boot_loader.py` – boot system from GHMP plates
-2. `cbs_memory_manager.py` – working and long-term memory
-3. `cbs_reasoning_engine.py` – pluggable LLM backends
-4. `cbs_update_manager.py` – self-update, backup, and rollback
-5. `cbs_interactive_demo.py` – complete interactive demo
-6. `ghmp.py` – memory plate encoding and decoding
+
+1. **`cbs_boot_loader.py`** - Boot system from GHMP plates
+2. **`cbs_memory_manager.py`** - Working + long-term memory
+3. **`cbs_reasoning_engine.py`** - Pluggable LLM backends
+4. **`cbs_update_manager.py`** - Self-update + backup/rollback
+5. **`cbs_interactive_demo.py`** - Complete interactive demo
+
+Plus the underlying **`ghmp.py`** - Memory plate encoding/decoding
 
 ---
 
 ## Quick Start
 
-### Install Dependencies
+### 1. Install Dependencies
+
 ```bash
-pip install numpy pillow            # core dependencies
-pip install openai                  # OpenAI backend
-pip install anthropic               # Claude backend
-# Install Ollama from https://ollama.ai for local models
+# Core dependencies
+pip install numpy pillow
+
+# For OpenAI
+pip install openai
+
+# For Anthropic
+pip install anthropic
+
+# For local models (optional)
+# Install Ollama from https://ollama.ai
 ```
 
-### Run Interactive Demo
+### 2. Run Interactive Demo
+
 ```bash
+# With OpenAI (recommended)
 python cbs_interactive_demo.py --backend openai --api-key YOUR_KEY
+
+# With Claude
 python cbs_interactive_demo.py --backend anthropic --api-key YOUR_KEY
+
+# With local Ollama
 python cbs_interactive_demo.py --backend local --model llama2
+
+# Offline mode (no LLM)
 python cbs_interactive_demo.py --offline
 ```
 
-### Sample Conversation
+### 3. Chat With Your AI
+
 ```
 You: Hello! What are you?
 Bot: Hello! I'm DemoBot. I demonstrate self-contained AI with GHMP memory...
+
 You: What can you remember?
 Bot: [Retrieves memories from GHMP plates and responds]
+
 You: /stats
 Memory Statistics:
 memories_created: 5
@@ -47,126 +69,191 @@ longterm_plates: 4
 ---
 
 ## Architecture Overview
+
 ```
-CBS System Stack
-│ ReasoningEngine (LLM Interface)
-│  - Pluggable backends (OpenAI/Claude/Local)
-│  - Conversation management
-│  - Skill execution
-│
-│ MemoryManager (Persistence)
-│  - Working memory (RAM, ephemeral)
-│  - Long-term memory (GHMP plates)
-│  - Auto-consolidation by importance
-│  - Context retrieval
-│
-│ CognitionBootstrap (Core System)
-│  - Identity loading
-│  - Memory deck management
-│  - Skills registry
-│  - Network detection
-│
-│ GHMP (Storage Layer)
-│  - Geometric holographic memory plates
-│  - PNG format with embedded data
-│  - Visual + machine-readable
-│
-│ UpdateManager (Evolution)
-│  - Skill installation
-│  - System backups
-│  - Rollback capability
-│  - Update checking
+┌─────────────────────────────────────────────────────────┐
+│                    CBS System Stack                     │
+├─────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────┐   │
+│  │         ReasoningEngine (LLM Interface)          │   │
+│  │  - Pluggable backends (OpenAI/Claude/Local)      │   │
+│  │  - Conversation management                       │   │
+│  │  - Skill execution                               │   │
+│  └──────────────────────────────────────────────────┘   │
+│                          ↕                              │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │          MemoryManager (Persistence)             │   │
+│  │  - Working memory (RAM, ephemeral)               │   │
+│  │  - Long-term memory (GHMP plates, persistent)    │   │
+│  │  - Auto-consolidation by importance              │   │
+│  │  - Context retrieval                             │   │
+│  └──────────────────────────────────────────────────┘   │
+│                          ↕                              │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │        CognitionBootstrap (Core System)          │   │
+│  │  - Identity loading                              │   │
+│  │  - Memory deck management                        │   │
+│  │  - Skills registry                               │   │
+│  │  - Network detection                             │   │
+│  └──────────────────────────────────────────────────┘   │
+│                          ↕                              │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │              GHMP (Storage Layer)                │   │
+│  │  - Geometric holographic memory plates           │   │
+│  │  - PNG format with embedded data                 │   │
+│  │  - Visual + machine-readable                     │   │
+│  └──────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────┐   │
+│  │           UpdateManager (Evolution)              │   │
+│  │  - Skill installation                            │   │
+│  │  - System backups                                │   │
+│  │  - Rollback capability                           │   │
+│  │  - Update checking                               │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## File Structure
+
 ```
-cbs_demo/
-├── identity.png
-├── config.json
-├── memory/
+cbs_demo/                    # Created by demo
+├── identity.png             # Who this AI is
+├── config.json              # System configuration
+├── memory/                  # Long-term GHMP memory
 │   ├── MEM-INIT-001.png
 │   ├── MEM-INIT-002.png
 │   └── session_*.png
-├── skills/
+├── skills/                  # Loadable capabilities
 │   └── SKILL-GREET.png
-├── backups/
+├── backups/                 # System snapshots
 │   └── backup-*/
-├── updates/
+├── updates/                 # Update history
 │   └── update_history.json
-└── boot_log.txt
+└── boot_log.txt             # Boot diagnostics
 ```
 
 ---
 
 ## Usage Patterns
 
-### Simple Chat
+### Pattern 1: Simple Chat
+
 ```python
 from cbs_boot_loader import CognitionBootstrap
 from cbs_memory_manager import MemoryManager
 from cbs_reasoning_engine import ReasoningEngine, create_backend
 
+# Boot
 cbs = CognitionBootstrap("./cbs_demo", "demo_key_2025")
 cbs.boot()
+
+# Initialize
 mem_mgr = MemoryManager(cbs)
 backend = create_backend("openai", api_key="YOUR_KEY")
 engine = ReasoningEngine(cbs, mem_mgr, backend)
+
+# Chat
 response = engine.respond("What can you do?")
 print(response)
 ```
 
-### Memory-Intensive Task
+### Pattern 2: Memory-Intensive Task
+
 ```python
+# Heavy retrieval + consolidation
 for user_msg in conversation:
     response = engine.respond(
         user_msg,
-        retrieve_context=True,
-        importance=0.8,
+        retrieve_context=True,  # Search memory
+        importance=0.8          # High importance
     )
     print(response)
+
+# Consolidate to long-term
 mem_mgr.consolidate_session("Research session on topic X")
 ```
 
-### Skill Execution
+### Pattern 3: Skill Execution
+
 ```python
+# Check greeting trigger
 if "hello" in user_input.lower():
     greeting = engine.execute_skill("SKILL-GREET")
     print(greeting)
 ```
 
-### Update and Backup
+### Pattern 4: Update & Backup
+
 ```python
 from cbs_update_manager import UpdateManager
 
 update_mgr = UpdateManager(cbs)
+
+# Backup before changes
 backup_path = update_mgr.backup_system()
+
+# Install new skill
 update_mgr.install_skill("path/to/new_skill.png")
-update_mgr.rollback(backup_path.name)
+
+# If something breaks
+update_mgr.rollback(backup_name)
 ```
 
 ---
 
 ## Key Features
-1. **Offline-first** – boots without network, stores state in GHMP plates.
-2. **Persistent memory** – working + long-term memory with consolidation.
-3. **Context-aware reasoning** – retrieves memories with emotion tags.
-4. **Self-updating** – download new skills, backup/rollback with history.
-5. **Pluggable LLM backends** – OpenAI, Anthropic, local models.
-6. **Visual debugging** – PNG plates encode structure, emotion, metadata.
+
+### 1. **Offline-First**
+- Boots without network
+- All state in GHMP plates
+- Network optional for LLM/updates
+
+### 2. **Persistent Memory**
+- Working memory (recent interactions)
+- Long-term memory (GHMP plates)
+- Auto-consolidation by importance
+- Session summaries
+
+### 3. **Context-Aware Reasoning**
+- Retrieves relevant memories
+- Includes context in prompts
+- Emotion-tagged memories
+- Graph-based relations
+
+### 4. **Self-Updating**
+- Download new skills as plates
+- Backup/rollback system
+- Version management
+- Update history
+
+### 5. **Pluggable LLM Backends**
+- OpenAI (GPT-4, GPT-3.5)
+- Anthropic (Claude)
+- Local (Ollama, llama.cpp)
+- Easy to add more
+
+### 6. **Visual Debugging**
+- Every memory is a PNG
+- Geometry = structure
+- Color = emotion
+- Human-inspectable
 
 ---
 
 ## Advanced Usage
 
 ### Custom Backend
+
 ```python
 class CustomBackend:
     def is_available(self) -> bool:
         return True
 
     def generate(self, messages, **kwargs) -> str:
+        # Your custom LLM logic
         return "Custom response"
 
 backend = CustomBackend()
@@ -174,6 +261,9 @@ engine = ReasoningEngine(cbs, mem_mgr, backend)
 ```
 
 ### Custom Skills
+
+Create a skill GHMP plate:
+
 ```python
 from ghmp import MemoryNode, Emotion, encode_plate
 import json
@@ -185,25 +275,32 @@ skill = MemoryNode(
     payload_text=json.dumps({
         "skill_type": "custom",
         "code": "def execute(): return 'Hello!'",
-        "description": "Custom skill logic",
+        "description": "Custom skill logic"
     }),
     tags=["skill", "custom"],
     emotion=Emotion(0.5, 0.5, "neutral"),
-    links=[],
+    links=[]
 )
+
 img = encode_plate(skill, "demo_key_2025")
 img.save("./cbs_demo/skills/SKILL-CUSTOM.png")
 ```
 
 ### Memory Queries
+
 ```python
+# Retrieve by keyword
 results = mem_mgr.retrieve_context(
     "offline",
     max_items=10,
     include_working=True,
-    include_longterm=True,
+    include_longterm=True
 )
+
+# Get recent context
 recent = mem_mgr.get_recent_context(n=5)
+
+# Statistics
 stats = mem_mgr.get_statistics()
 ```
 
@@ -211,14 +308,21 @@ stats = mem_mgr.get_statistics()
 
 ## Production Deployment
 
-### Environment Setup
+### 1. Environment Setup
+
 ```bash
+# Create isolated environment
 python3 -m venv cbs_env
-source cbs_env/bin/activate
+source cbs_env/bin/activate  # or cbs_env\Scripts\activate on Windows
+
+# Install dependencies
 pip install numpy pillow openai anthropic
 ```
 
-### Configuration
+### 2. Configuration
+
+Create `config.json`:
+
 ```json
 {
   "deck_id": "PROD_SYSTEM",
@@ -242,23 +346,29 @@ pip install numpy pillow openai anthropic
 }
 ```
 
-### Security
+### 3. Security
+
 ```python
+# Use environment variables for secrets
 import os
+
 api_key = os.environ.get("CBS_API_KEY")
 backend = create_backend("openai", api_key=api_key)
 ```
 
-### Monitoring
+### 4. Monitoring
+
 ```python
+# Log all interactions
 import logging
 
 logging.basicConfig(
-    filename="cbs.log",
+    filename='cbs.log',
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
+# Add to reasoning engine
 class MonitoredEngine(ReasoningEngine):
     def respond(self, user_message, **kwargs):
         logging.info(f"User: {user_message}")
@@ -270,47 +380,102 @@ class MonitoredEngine(ReasoningEngine):
 ---
 
 ## Next Steps
-- **Immediate:** vector search, skill sandbox, network protocol, AES-GCM encryption.
-- **Medium-term:** multi-agent sharing, streaming tokens, tool use, RAG.
-- **Long-term:** 3D storage media, Rosetta Bear hardware, federated CBS networks, clinical deployments.
+
+### Immediate Improvements
+1. **Vector Search**: Add embedding-based retrieval
+2. **Better Skill System**: Code execution sandbox
+3. **Network Protocol**: Real update server
+4. **Security**: AES-GCM encryption
+
+### Medium-Term
+1. **Multi-Agent**: Multiple CBS instances sharing memory
+2. **Streaming**: Real-time token streaming
+3. **Tool Use**: Function calling integration
+4. **RAG**: Hybrid retrieval-augmented generation
+
+### Long-Term
+1. **3D Storage**: Volumetric glass/diamond GHMP
+2. **Hardware**: Rosetta Bear integration
+3. **Federation**: Distributed CBS networks
+4. **Clinical**: Therapeutic applications
 
 ---
 
 ## Troubleshooting
 
 ### Boot Fails
+
 ```bash
+# Check logs
 cat ./cbs_demo/boot_log.txt
-python -c "from ghmp import decode_plate; from PIL import Image; decode_plate(Image.open('./cbs_demo/identity.png'), 'demo_key_2025')"
+
+# Verify plates
+python -c "from ghmp import decode_plate; from PIL import Image; \
+    decode_plate(Image.open('./cbs_demo/identity.png'), 'demo_key_2025')"
 ```
 
 ### Memory Issues
+
 ```python
+# Clear working memory
 mem_mgr.working_memory.clear()
+
+# Consolidate to disk
 mem_mgr.consolidate_session("Manual consolidation")
 ```
 
 ### Backend Problems
+
 ```python
+# Test backend
 backend = create_backend("openai", api_key="YOUR_KEY")
 print(backend.is_available())
+
+# Try local fallback
 backend = create_backend("local", model="llama2")
 ```
 
 ---
 
 ## Contributing
-1. Implement `LLMBackend` protocol for new backends.
-2. Add backend to `create_backend()`.
-3. Test with demo and document changes.
-4. For new skills, create GHMP plates and extend `execute_skill()` handlers.
+
+### Add a New Backend
+1. Implement `LLMBackend` protocol
+2. Add to `create_backend()` factory
+3. Test with demo
+4. Document
+
+### Add a New Skill Type
+1. Create skill plate with new `skill_type`
+2. Add handler in `execute_skill()`
+3. Document usage
 
 ---
 
-## License and Credits
-Built on GHMP (Geometric Holographic Memory Plates) and Project Rosetta Bear. Designed for research, therapeutic robotics, edge AI, and privacy-critical deployments.
+## License & Credits
+
+Built on:
+- GHMP (Geometric Holographic Memory Plates)
+- Project Rosetta Bear
+- Open-source LLM libraries
+
+This system is designed for:
+- Research and education
+- Therapeutic robotics
+- Edge AI applications
+- Privacy-critical systems
 
 ---
 
 ## Summary
-You now have a complete, self-contained AI system that boots offline from GHMP plates, integrates any LLM backend, maintains persistent memory, updates itself safely, rolls back failures, executes skills, consolidates sessions, and retrieves context intelligently.
+
+You now have a **complete, self-contained AI system** that:
+
+- Boots offline from visual memory plates
+- Integrates any LLM backend
+- Maintains persistent memory
+- Updates itself safely
+- Rolls back from failures
+- Executes loadable skills
+- Consolidates sessions
+- Retrieves context intelligently
