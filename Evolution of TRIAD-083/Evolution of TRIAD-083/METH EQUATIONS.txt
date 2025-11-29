@@ -1,0 +1,319 @@
+
+
+
++---------------+---------------+---------------+---------------+---------------+
+|  ∂ψ/∂t = iℏ(H0 + H_int)  |  H0 = -ℏ²/2m ∇² + V(x)  |  Hint = g ϕ(x) σ(x) + λ ψ(x) χ(x)  |  β(g) ∂g/∂t = -g³/16π² + g²/8π² + g/16π²  |  β(g) ∂g/∂t A(x) = -g³/16π² A(x) + g²/8π² A(x) - g/16π² A(x) |
+|               |               |               |               |               |
+|  (Time-dependent  |  (Free Hamiltonian)  |  (Interaction  |  (Beta function  |  (Beta function  |
+|  Schrödinger equation) |               |  Hamiltonian)    |  for coupling    |  for gauge field) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x √-g R(x)  |  ∫ d^4x |F(x)|²  |  ∫ d^2x F(x)  |  ∫ d^2x D(x)  |  ∫ d^3x φ(x)  |
+|  (Einstein-Hilbert  |  (Yang-Mills action) |  (Field integral)  |  (Field integral)  |  (Field integral)  |
+|  action)          |               |               |               |               |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^3x A(x)  |  ∫ d^2x φ(x)  |  ∫ d^2x A(x)  |  ∫ d^2x B(x)  |  ∫ d^2x T(x)  |
+|  (Gauge field    |  (Scalar field)    |  (Gauge field)    |  (Tensor field)   |  (Tensor field)   |
+|  integral)        |               |               |               |               |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∫ d^4x G(x, x') ψ(x')  |  ∫ d^4x φ(x)  |  ∫ d^4x A(x)  |  ∫ d^4x G(x)  |  ∫ d^4x H(x)  |
+|  (Green's function) |  (Scalar field)    |  (Gauge field)    |  (Gravitational  |  (Higgs field)   |
+|               |               |               |  field integral) |               |
++---------------+---------------+---------------+---------------+---------------+
+|  ∆ψ(x) + k²ψ(x) = 0  |  (∂μ - ieAμ)²φ(x) = m²φ(x)  |  ∂μ F^μν = g J^ν  |  Rμν - 1/2 R gμν = 8πG Tμν  |  (∂μ + m)ψ(x) = 0 |
+
+ — 2:48 PMThursday, November 13, 2025 2:48 PM
+|  (Klein-Gordon equation) |  (Klein-Gordon equation) |  (Gauge field  |  (Einstein's field  |  (Dirac equation) |
+|               |  for scalar field) |  equation of motion) |  equations)    |               |
++---------------+---------------+---------------+---------------+---------------+
+|  Fμν = ∂μ Aν - ∂ν Aμ  |  Dμν = ∂μ Bν - ∂ν Bμ  |  Tμν = (∂μ φ)(∂ν φ) - gμν L  |  J^ν = ψ(x) γ^ν ψ(x)  |  L = -1/4 Fμν F^μν - 1/2 (∂μ φ)^2 - V(φ) |
+|  (Gauge field)    |  (Tensor field)   |  (Stress-energy tensor) |  (Current density) |  (Lagrangian density) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ F^μν = g J^ν  |  ∂μ G^μν = 8πG T^μν  |  ∂μ φ(x) = i[g Aμ(x) + ∂μ]φ(x)  |  ∂μ Aν(x) - ∂ν Aμ(x) = i[g Fμν(x)]  |  ∂μ H(x) = -∂μ V(x)  |
+|  (Gauge field  |  (Gravitational  |  (Scalar field  |  (Gauge field  |  (Higgs field  |
+|  equation of motion) |  equation of motion) |  equation of motion) |  equation of motion) |  equation of motion) |
++---------------+---------------+---------------+---------------+---------------+
+|  gμν = ημν + hμν  |  Rμν = ∂μ Γν^λ - ∂ν Γμ^λ + Γμ^λ Γν^λ - Γν^λ Γμ^λ  |  Tμν = (∂μ φ)(∂ν φ) - gμν L  |  J^ν = ψ(x) γ^ν ψ(x)  |  L = -1/4 Fμν F^μν - 1/2 (∂μ φ)^2 - V(φ) |
+|  (Metric tensor)  |  (Riemann tensor)  |  (Stress-energy tensor) |  (Current density) |  (Lagrangian density) |
++---------------+---------------+---------------+---------------+---------------+
+|  ϕ(x) = ∫ d^4x G(x, x') ϕ(x')  |  σ(x) = ∫ d^4x G(x, x') σ(x')  |  τ(x) = ∫ d^4x G(x, x') τ(x')  |  υ(x) = ∫ d^4x G(x, x') υ(x')  |  ϕ(x) = ∫ d^4x G(x, x') ϕ(x')  |
+|  (Sigma field)  |  (Tau field)    |  (Upsilon field) |  (Phi field)    |  (Phi field)    |
+|               |               |               |               |               |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^2x ω(x)  |  ∫ d^2x ρ(x)  |  ∫ d^2x σ(x)  |  ∫ d^2x τ(x)  |  ∫ d^2x υ(x)  |
+ — 2:48 PMThursday, November 13, 2025 2:48 PM
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
+
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  Δx Δp ≥ ħ/2  |  ΔE Δt ≥ ħ/2  |  [x, p] = iħ  |  [L_x, L_y] = iħL_z  |  [J_x, J_y] = iħJz  |
+|  (Heisenberg uncertainty principle) |  (Time-energy uncertainty principle) |  (Commutation relations) |  (Angular momentum commutation relations) |  (Total angular momentum commutation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = e^(iS(x)/ħ)  |  φ(x) = e^(iΦ(x)/ħ)  |  A(x) = e^(iα(x)/ħ)  |  G(x) = e^(iγ(x)/ħ)  |  H(x) = e^(iη(x)/ħ)  |
+|  (Wave function in terms of action) |  (Field in terms of phase) |  (Gauge field in terms of gauge parameter) |  (Gravitational field in terms of gravitational parameter) |  (Higgs field in terms of Higgs parameter) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), A_μ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
+
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n Hn(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δGμ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  Δx Δp ≥ ħ/2  |  ΔE Δt ≥ ħ/2  |  [x, p] = iħ  |  [L_x, L_y] = iħL_z  |  [J_x, J_y] = iħJ_z  |
+|  (Heisenberg uncertainty principle) |  (Time-energy uncertainty principle) |  (Commutation relations) |  (Angular momentum commutation relations) |  (Total angular momentum commutation relations) |
++---------------+---------------+---------------+---------------+---------------+
+
+|  ψ(x) = e^(iS(x)/ħ)  |  φ(x) = e^(iΦ(x)/ħ)  |  A(x) = e^(iα(x)/ħ)  |  G(x) = e^(iγ(x)/ħ)  |  H(x) = e^(iη(x)/ħ)  |
+|  (Wave function in terms of action) |  (Field in terms of phase) |  (Gauge field in terms of gauge parameter) |  (Gravitational field in terms of gravitational parameter) |  (Higgs field in terms of Higgs parameter) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n Hn(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), A_μ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n Hn(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δGμ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n H_n(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  Δx Δp ≥ ħ/2  |  ΔE Δt ≥ ħ/2  |  [x, p] = iħ  |  [L_x, L_y] = iħL_z  |  [J_x, J_y] = iħJz  |
+|  (Heisenberg uncertainty principle) |  (Time-energy uncertainty principle) |  (Commutation relations) |  (Angular momentum commutation relations) |  (Total angular momentum commutation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = e^(iS(x)/ħ)  |  φ(x) = e^(iΦ(x)/ħ)  |  A(x) = e^(iα(x)/ħ)  |  G(x) = e^(iγ(x)/ħ)  |  H(x) = e^(iη(x)/ħ)  |
+|  (Wave function in terms of action) |  (Field in terms of phase) |  (Gauge field in terms of gauge parameter) |  (Gravitational field in terms of gravitational parameter) |  (Higgs field in terms of Higgs parameter) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), A_μ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n Hn(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δGμ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n H_n(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n Hn(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), A_μ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n Hn(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δGμ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n H_n(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n H_n(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n Hn(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δGμ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ∑_n c_n ψ_n(x)  |  φ(x) = ∑_n a_n φ_n(x)  |  A(x) = ∑_n b_n A_n(x)  |  G(x) = ∑_n d_n G_n(x)  |  H(x) = ∑_n e_n H_n(x)  |
+|  (Wave function expansion) |  (Field expansion) |  (Gauge field expansion) |  (Gravitational field expansion) |  (Higgs field expansion) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) ψ(x) = 1  |  ∫ d^4x φ(x) φ(x) = 1  |  ∫ d^4x A(x) A(x) = 1  |  ∫ d^4x G(x) G(x) = 1  |  ∫ d^4x H(x) H*(x) = 1  |
+|  (Wave function normalization) |  (Field normalization) |  (Gauge field normalization) |  (Gravitational field normalization) |  (Higgs field normalization) |
++---------------+---------------+---------------+---------------+---------------+
+|  [ψ(x), ψ(y)] = δ(x-y)  |  [φ(x), φ(y)] = δ(x-y)  |  [A(x), A(y)] = δ(x-y)  |  [G(x), G(y)] = δ(x-y)  |  [H(x), H(y)] = δ(x-y)  |
+|  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |  (Commuation relations) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∂μ ψ(x) = i[ψ(x), Aμ(x)]  |  ∂μ φ(x) = i[φ(x), Aμ(x)]  |  ∂μ Aν(x) = i[Aν(x), Aμ(x)]  |  ∂μ Gμν(x) = i[Gμν(x), Aμ(x)]  |  ∂μ H(x) = i[H(x), Aμ(x)]  |
+|  (Derivatives of wave functions) |  (Derivatives of fields) |  (Gauge field derivatives) |  (Gravitational field derivatives) |  (Higgs field derivatives) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∑_n c_n ψ_n(x) = ψ(x)  |  ∑_n a_n φ_n(x) = φ(x)  |  ∑_n b_n A_n(x) = A(x)  |  ∑_n d_n G_n(x) = G(x)  |  ∑_n e_n H_n(x) = H(x)  |
+|  (Wave function decomposition) |  (Field decomposition) |  (Gauge field decomposition) |  (Gravitational field decomposition) |  (Higgs field decomposition) |
++---------------+---------------+---------------+---------------+---------------+
+|  ψ(x) = ψ_0(x) + ∑_n c_n ψ_n(x)  |  φ(x) = φ_0(x) + ∑_n a_n φ_n(x)  |  A(x) = A_0(x) + ∑_n b_n A_n(x)  |  G(x) = G_0(x) + ∑_n d_n G_n(x)  |  H(x) = H_0(x) + ∑_n e_n H_n(x)  |
+|  (Wave function perturbation) |  (Field perturbation) |  (Gauge field perturbation) |  (Gravitational field perturbation) |  (Higgs field perturbation) |
++---------------+---------------+---------------+---------------+---------------+
+|  ∫ d^4x ψ(x) δψ(x) = 0  |  ∫ d^4x φ(x) δφ(x) = 0  |  ∫ d^4x A(x) δA(x) = 0  |  ∫ d^4x G(x) δG(x) = 0  |  ∫ d^4x H(x) δH*(x) = 0  |
+|  (Wave function variation) |  (Field variation) |  (Gauge field variation) |  (Gravitational field variation) |  (Higgs field variation) |
++---------------+---------------+---------------+---------------+---------------+
+|  δS = ∫ d^4x δL(x)  |  δT^μν = ∂μ δT^ν - ∂ν δT^μ  |  δJ^ν = ∂μ δJ^ν - ∂ν δJ^μ  |  δF^μν = ∂μ δF^ν - ∂ν δF^μ  |  δGμν = ∂μ δGν - ∂ν δG_μ  |
+|  (Action variation) |  (Stress-energy variation) |  (Current variation) |  (Gauge field variation) |  (Gravitational field variation) |
++---------------+---------------+---------------+---------------+---------------+
+
+
+This expanded diagram includes all the equations from the following areas:
+
+
+Quantum Mechanics: The time-dependent Schrödinger equation, Klein-Gordon equation, and Dirac equation.,
+Quantum Field Theory: The interaction Hamiltonian, gauge field equations of motion, and the Higgs field equation of motion.,
+General Relativity: The Einstein-Hilbert action, gravitational field integral, and Einstein's field equations.,
+Gauge Theory: The gauge field equation of motion, the interaction between gauge fields and scalar fields, and the gauge field integral.,
+Higgs Mechanism: The Higgs field equation of motion, the Higgs field integral, and the interaction between the Higgs field and gauge fields.,
+Feynman Diagrams: The use of Feynman diagrams to represent the interactions between particles and fields.,
+Action Principle: The action principle and the Euler-Lagrange equations.,
+Conservation Laws: The conservation of energy, charge, and momentum.,
+Gauge Invariance: The gauge invariance of the theory and the Ward-Takahashi identities.,
+General Covariance: The general covariance of the theory and the general coordinate transformations.,
+Perturbation Theory: The use of perturbation theory to study the behavior of particles and fields.,
+Variational Principles: The use of variational principles to derive the equations of motion for particles and fields.,
+Symmetries: The role of symmetries in physics, including Lorentz invariance, gauge invariance, and general covariance.,
+
+This diagram provides a comprehensive framework for understanding the behavior of particles and fields in a wide range of physical systems, from the smallest subatomic particles to the largest structures in the universe.
