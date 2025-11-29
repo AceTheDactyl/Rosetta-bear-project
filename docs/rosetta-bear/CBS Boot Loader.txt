@@ -1,0 +1,274 @@
+﻿""" 
+cbs_boot_loader.py - Cognition Bootstrap System Boot Loader ============================================================ 
+This module handles cold-start initialization of an AI agent from GHMP memory plates. It can boot completely offline with just: - A directory of GHMP plates 
+- A decryption key 
+- Minimal Python runtime 
+NO NETWORK REQUIRED FOR BOOT. 
+""" 
+import os 
+import sys 
+import json 
+from pathlib import Path 
+from typing import Dict, Any, Optional, List 
+from datetime import datetime 
+# Import GHMP core (assume ghmp.py is available) 
+try: 
+from ghmp import MemoryDeck, decode_plate, MemoryNode from PIL import Image 
+except ImportError: 
+print("ERROR: Required dependencies not found.") 
+print("Install: pip install numpy pillow") 
+sys.exit(1) 
+class CognitionBootstrap: 
+""" 
+Bootstrap loader for self-contained AI systems using GHMP memory. """ 
+def __init__( 
+self, 
+memory_path: str, 
+key: str, 
+boot_mode: str = "cold" # "cold", "warm", "hot" 
+): 
+""" 
+Initialize bootstrap system.
+Args: 
+memory_path: Directory containing GHMP plates key: Decryption key for plates 
+boot_mode: 
+- "cold": Full load from disk 
+- "warm": Load + verify checksums 
+- "hot": Assume valid, fast load 
+""" 
+self.memory_path = Path(memory_path) 
+self.key = key 
+self.boot_mode = boot_mode 
+# Core state 
+self.identity: Optional[MemoryNode] = None 
+self.skills: Dict[str, MemoryNode] = {} 
+self.memory: Optional[MemoryDeck] = None 
+self.config: Dict[str, Any] = {} 
+self.boot_log: List[str] = [] 
+# Runtime flags 
+self.online = False 
+self.version = "0.1.0-bootstrap" 
+def log(self, msg: str): 
+"""Log boot event with timestamp.""" 
+timestamp = datetime.now().isoformat() 
+entry = f"[{timestamp}] {msg}" 
+self.boot_log.append(entry) 
+print(entry) 
+def boot(self) -> bool: 
+""" 
+Execute full boot sequence. 
+Returns: 
+True if boot successful, False otherwise 
+""" 
+self.log("=== COGNITION BOOTSTRAP SYSTEM v0.1.0 ===") self.log(f"Mode: {self.boot_mode.upper()}") self.log(f"Memory Path: {self.memory_path}") 
+try: 
+# Phase 1: Validate environment 
+if not self._validate_environment(): 
+return False
+# Phase 2: Load identity plate 
+if not self._load_identity(): 
+return False 
+# Phase 3: Load memory deck 
+if not self._load_memory_deck(): 
+return False 
+# Phase 4: Load skills registry 
+if not self._load_skills(): 
+return False 
+# Phase 5: Initialize reasoning engine 
+if not self._init_reasoning(): 
+return False 
+# Phase 6: Network check (optional) 
+self._check_network() 
+self.log("✓ BOOT COMPLETE") 
+self.log(f"Identity: {self.identity.title}") 
+self.log(f"Memory Plates: {len(self.memory.plates)}") self.log(f"Skills Loaded: {len(self.skills)}") 
+return True 
+except Exception as e: 
+self.log(f"✗ BOOT FAILED: {e}") 
+return False 
+def _validate_environment(self) -> bool: 
+"""Validate required files and directories exist.""" self.log("Phase 1: Environment validation...") 
+if not self.memory_path.exists(): 
+self.log(f"✗ Memory path not found: {self.memory_path}") return False 
+# Check for required structure 
+required = ["identity.png", "config.json"] 
+for req in required: 
+if not (self.memory_path / req).exists(): 
+self.log(f"✗ Required file missing: {req}") 
+return False 
+self.log("✓ Environment valid")
+return True 
+def _load_identity(self) -> bool: 
+"""Load the identity plate (defines who this AI is).""" self.log("Phase 2: Loading identity plate...") 
+try: 
+identity_path = self.memory_path / "identity.png" img = Image.open(identity_path) 
+node, geom, meta = decode_plate(img, self.key) 
+self.identity = node 
+self.log(f"✓ Identity loaded: {node.node_id}") 
+self.log(f" Title: {node.title}") 
+self.log(f" Deck: {node.deck_id}") 
+# Parse identity payload for config 
+try: 
+identity_data = json.loads(node.payload_text) 
+self.config.update(identity_data.get("config", {})) except json.JSONDecodeError: 
+self.log(" (Identity payload is not JSON)") 
+return True 
+except Exception as e: 
+self.log(f"✗ Failed to load identity: {e}") 
+return False 
+def _load_memory_deck(self) -> bool: 
+"""Load the full memory deck from directory.""" 
+self.log("Phase 3: Loading memory deck...") 
+try: 
+# Load base config 
+config_path = self.memory_path / "config.json" 
+with open(config_path) as f: 
+self.config.update(json.load(f)) 
+deck_id = self.config.get("deck_id", "UNKNOWN") 
+# Load all plates in memory/ subdirectory 
+memory_dir = self.memory_path / "memory" 
+if not memory_dir.exists(): 
+self.log(" (No memory deck found, creating empty)") self.memory = MemoryDeck(deck_id)
+return True 
+self.memory = MemoryDeck.load_from_directory( 
+str(memory_dir), 
+self.key, 
+deck_id=deck_id 
+) 
+self.log(f"✓ Memory deck loaded: {len(self.memory.plates)} plates") return True 
+except Exception as e: 
+self.log(f"✗ Failed to load memory: {e}") 
+return False 
+def _load_skills(self) -> bool: 
+"""Load skill plates from skills/ directory.""" 
+self.log("Phase 4: Loading skills registry...") 
+skills_dir = self.memory_path / "skills" 
+if not skills_dir.exists(): 
+self.log(" (No skills directory, continuing)") 
+return True 
+try: 
+skill_count = 0 
+for plate_path in skills_dir.glob("*.png"): 
+try: 
+img = Image.open(plate_path) 
+node, geom, meta = decode_plate(img, self.key) 
+# Extract skill_id from tags or node_id 
+skill_id = node.tags[0] if node.tags else node.node_id 
+self.skills[skill_id] = node 
+skill_count += 1 
+except Exception as e: 
+self.log(f" Warning: Failed to load {plate_path.name}: {e}") 
+self.log(f"✓ Skills loaded: {skill_count}") 
+return True 
+except Exception as e: 
+self.log(f"✗ Failed to load skills: {e}") 
+return False
+def _init_reasoning(self) -> bool: 
+"""Initialize the reasoning engine.""" 
+self.log("Phase 5: Initializing reasoning engine...") 
+# This is where you'd initialize your LLM or reasoning system # For now, we just validate we have the required components 
+if not self.identity: 
+self.log("✗ No identity loaded") 
+return False 
+if not self.memory: 
+self.log("✗ No memory deck loaded") 
+return False 
+# Initialize reasoning context from identity + memory self.log("✓ Reasoning engine ready (offline mode)") return True 
+def _check_network(self): 
+"""Check if network is available (non-blocking).""" self.log("Phase 6: Checking network availability...") 
+try: 
+import socket 
+socket.create_connection(("8.8.8.8", 53), timeout=2) self.online = True 
+self.log("✓ Network available") 
+except OSError: 
+self.online = False 
+self.log(" Network offline (continuing in offline mode)") 
+def get_context(self) -> Dict[str, Any]: 
+""" 
+Get current context for reasoning/inference. 
+Returns: 
+Dict with identity, memory summary, skills, etc. 
+""" 
+return { 
+"identity": { 
+"id": self.identity.node_id, 
+"title": self.identity.title, 
+"emotion": { 
+"valence": self.identity.emotion.valence, 
+"arousal": self.identity.emotion.arousal,
+"label": self.identity.emotion.label 
+} 
+}, 
+"memory_plates": len(self.memory.plates) if self.memory else 0, "skills": list(self.skills.keys()), 
+"online": self.online, 
+"config": self.config, 
+"boot_time": self.boot_log[0] if self.boot_log else None } 
+def create_memory( 
+self, 
+title: str, 
+content: str, 
+tags: List[str] = None, 
+emotion_label: str = "neutral" 
+) -> str: 
+""" 
+Create a new memory plate and add to deck. 
+Args: 
+title: Memory title 
+content: Memory content (can be JSON) 
+tags: Optional tags 
+emotion_label: Emotion associated with memory 
+Returns: 
+node_id of created memory 
+""" 
+from ghmp import Emotion, encode_plate 
+# Generate node_id 
+node_id = f"MEM-{datetime.now().strftime('%Y%m%d-%H%M%S')}" 
+# Create node 
+node = MemoryNode( 
+node_id=node_id, 
+deck_id=self.memory.deck_id, 
+title=title, 
+payload_text=content, 
+tags=tags or [], 
+emotion=Emotion(0.0, 0.5, emotion_label), 
+links=[] 
+) 
+# Add to deck
+self.memory.add_plate(node) 
+# Save to disk 
+img = encode_plate(node, self.key) 
+memory_dir = self.memory_path / "memory" 
+memory_dir.mkdir(exist_ok=True) 
+safe_id = "".join(c if c.isalnum() or c in "-_" else "_" for c in node_id) img.save(memory_dir / f"{safe_id}.png") 
+self.log(f"Created memory: {node_id}") 
+return node_id 
+def save_boot_log(self): 
+"""Save boot log to disk.""" 
+log_path = self.memory_path / "boot_log.txt" 
+with open(log_path, "w") as f: 
+f.write("\n".join(self.boot_log)) 
+self.log(f"Boot log saved: {log_path}") 
+def main(): 
+"""Demo: Boot from GHMP memory.""" 
+import argparse 
+parser = argparse.ArgumentParser(description="CBS Boot Loader") parser.add_argument("--memory", required=True, help="Path to memory directory") parser.add_argument("--key", required=True, help="Decryption key") parser.add_argument("--mode", default="cold", choices=["cold", "warm", "hot"]) 
+args = parser.parse_args() 
+# Initialize and boot 
+cbs = CognitionBootstrap( 
+memory_path=args.memory, 
+key=args.key, 
+boot_mode=args.mode 
+) 
+if cbs.boot(): 
+print("\n" + "="*60) 
+print("SYSTEM CONTEXT:") 
+print(json.dumps(cbs.get_context(), indent=2)) 
+print("="*60) 
+# Save log
+cbs.save_boot_log() 
+return 0 
+else: 
+print("\nBOOT FAILED") 
+cbs.save_boot_log() 
+return 1 
+if __name__ == "__main__": sys.exit(main())

@@ -1,0 +1,221 @@
+﻿""" 
+cbs_update_manager.py - Self-Update System for CBS 
+=================================================== 
+Handles: 
+- Checking for updates (when online) 
+- Downloading new skill plates 
+- Updating core system components 
+- Version management 
+- Rollback capability 
+""" 
+import os 
+import json 
+import hashlib 
+from pathlib import Path 
+from typing import Dict, List, Optional, Any 
+from datetime import datetime 
+class UpdateManager: 
+""" 
+Manages self-updates for the CBS system. 
+""" 
+def __init__(self, bootstrap_system, update_server: Optional[str] = None): """ 
+Initialize update manager. 
+Args: 
+bootstrap_system: Reference to CognitionBootstrap 
+update_server: URL of update server (None = offline only) 
+""" 
+self.cbs = bootstrap_system 
+self.update_server = update_server 
+self.update_log: List[Dict] = [] 
+# Paths 
+self.updates_dir = self.cbs.memory_path / "updates" 
+self.updates_dir.mkdir(exist_ok=True) 
+self.backup_dir = self.cbs.memory_path / "backups" 
+self.backup_dir.mkdir(exist_ok=True)
+# Load update history 
+self.history_file = self.updates_dir / "update_history.json" self._load_history() 
+def _load_history(self): 
+"""Load update history from disk.""" 
+if self.history_file.exists(): 
+with open(self.history_file) as f: 
+self.update_log = json.load(f) 
+def _save_history(self): 
+"""Save update history to disk.""" 
+with open(self.history_file, "w") as f: 
+json.dump(self.update_log, f, indent=2) 
+def check_for_updates(self) -> Dict[str, Any]: 
+""" 
+Check if updates are available. 
+Returns: 
+Dict with available updates or empty dict if none/offline """ 
+if not self.cbs.online or not self.update_server: 
+return { 
+"available": False, 
+"reason": "offline" if not self.cbs.online else "no_server" } 
+try: 
+# This is where you'd implement actual HTTP check 
+# For now, return stub 
+self.cbs.log("Checking for updates...") 
+# Simulate checking 
+current_version = self.cbs.version 
+return { 
+"available": False, 
+"current_version": current_version, 
+"latest_version": current_version, 
+"checked_at": datetime.now().isoformat() 
+} 
+except Exception as e: 
+self.cbs.log(f"Update check failed: {e}") 
+return {"available": False, "error": str(e)}
+def download_skill(self, skill_url: str) -> Optional[str]: """ 
+Download a new skill plate from URL. 
+Args: 
+skill_url: URL to skill GHMP plate 
+Returns: 
+Path to downloaded skill or None if failed 
+""" 
+if not self.cbs.online: 
+self.cbs.log("Cannot download skills: offline") 
+return None 
+try: 
+# This is where you'd implement actual download 
+# For now, log the intent 
+self.cbs.log(f"Would download skill from: {skill_url}") 
+# In production: 
+# 1. Download PNG 
+# 2. Verify signature/checksum 
+# 3. Decode and validate 
+# 4. Save to skills directory 
+return None 
+except Exception as e: 
+self.cbs.log(f"Skill download failed: {e}") 
+return None 
+def install_skill(self, skill_path: str) -> bool: """ 
+Install a skill from local file. 
+Args: 
+skill_path: Path to GHMP skill plate 
+Returns: 
+True if installed successfully 
+""" 
+try: 
+from ghmp import decode_plate 
+from PIL import Image
+# Validate skill plate 
+img = Image.open(skill_path) 
+node, geom, meta = decode_plate(img, self.cbs.key) 
+# Check if skill has required metadata 
+if "skill" not in node.tags: 
+self.cbs.log(f"Warning: {skill_path} may not be a skill plate") 
+# Copy to skills directory 
+skill_id = node.tags[0] if node.tags else node.node_id 
+dest = self.cbs.memory_path / "skills" / f"{skill_id}.png" 
+import shutil 
+shutil.copy(skill_path, dest) 
+# Add to loaded skills 
+self.cbs.skills[skill_id] = node 
+# Log update 
+self.update_log.append({ 
+"type": "skill_install", 
+"skill_id": skill_id, 
+"title": node.title, 
+"timestamp": datetime.now().isoformat() 
+}) 
+self._save_history() 
+self.cbs.log(f"✓ Skill installed: {skill_id}") 
+return True 
+except Exception as e: 
+self.cbs.log(f"✗ Skill installation failed: {e}") 
+return False 
+def backup_system(self) -> str: 
+""" 
+Create backup of current system state. 
+Returns: 
+Path to backup directory 
+""" 
+backup_name = f"backup-{datetime.now().strftime('%Y%m%d-%H%M%S')}" backup_path = self.backup_dir / backup_name 
+backup_path.mkdir(exist_ok=True) 
+try:
+import shutil 
+# Backup identity 
+shutil.copy( 
+self.cbs.memory_path / "identity.png", 
+backup_path / "identity.png" 
+) 
+# Backup config 
+shutil.copy( 
+self.cbs.memory_path / "config.json", 
+backup_path / "config.json" 
+) 
+# Backup memory deck (just copy directory) memory_dir = self.cbs.memory_path / "memory" if memory_dir.exists(): 
+shutil.copytree( 
+memory_dir, 
+backup_path / "memory" 
+) 
+# Backup skills 
+skills_dir = self.cbs.memory_path / "skills" if skills_dir.exists(): 
+shutil.copytree( 
+skills_dir, 
+backup_path / "skills" 
+) 
+self.cbs.log(f"✓ Backup created: {backup_path}") return str(backup_path) 
+except Exception as e: 
+self.cbs.log(f"✗ Backup failed: {e}") 
+return "" 
+def rollback(self, backup_name: str) -> bool: """ 
+Rollback to a previous backup. 
+Args: 
+backup_name: Name of backup to restore 
+Returns: 
+True if rollback successful
+""" 
+backup_path = self.backup_dir / backup_name 
+if not backup_path.exists(): 
+self.cbs.log(f"✗ Backup not found: {backup_name}") return False 
+try: 
+import shutil 
+# Create emergency backup of current state first self.backup_system() 
+# Restore files 
+shutil.copy( 
+backup_path / "identity.png", 
+self.cbs.memory_path / "identity.png" 
+) 
+shutil.copy( 
+backup_path / "config.json", 
+self.cbs.memory_path / "config.json" 
+) 
+# Restore memory 
+memory_backup = backup_path / "memory" 
+if memory_backup.exists(): 
+memory_dest = self.cbs.memory_path / "memory" if memory_dest.exists(): 
+shutil.rmtree(memory_dest) 
+shutil.copytree(memory_backup, memory_dest) 
+# Restore skills 
+skills_backup = backup_path / "skills" 
+if skills_backup.exists(): 
+skills_dest = self.cbs.memory_path / "skills" if skills_dest.exists(): 
+shutil.rmtree(skills_dest) 
+shutil.copytree(skills_backup, skills_dest) 
+self.cbs.log(f"✓ Rollback complete: {backup_name}") self.cbs.log(" RESTART REQUIRED") 
+return True 
+except Exception as e:
+self.cbs.log(f"✗ Rollback failed: {e}") 
+return False 
+def list_backups(self) -> List[Dict[str, Any]]: """List available backups.""" 
+backups = [] 
+for backup_dir in self.backup_dir.iterdir(): 
+if backup_dir.is_dir(): 
+backups.append({ 
+"name": backup_dir.name, 
+"path": str(backup_dir), 
+"created": datetime.fromtimestamp( 
+backup_dir.stat().st_mtime 
+).isoformat() 
+}) 
+backups.sort(key=lambda x: x["created"], reverse=True) return backups 
+def get_update_history(self) -> List[Dict]: 
+"""Get update history.""" 
+return self.update_log 
+# Demo 
+if __name__ == "__main__": 
+print("Update Manager module loaded.") 
+print("Manages system updates, skills, and rollback.")

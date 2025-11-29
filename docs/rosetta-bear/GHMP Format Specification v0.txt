@@ -1,0 +1,294 @@
+﻿# Geometric Holographic Memory Plate (GHMP) Format Specification v0.2 
+**Status:** Draft 
+**Date:** November 28, 2025 
+**Authors:** GHMP Working Group 
+--- 
+## 1. Introduction 
+### 1.1 Purpose 
+The Geometric Holographic Memory Plate (GHMP) format defines a hybrid visual-data container that encodes structured memory, metadata, and associative geometry into a single PNG image artifact. 
+### 1.2 Design Goals 
+1. **Hybrid Readability** - Interpretable by both humans (visual) and machines (structured data) 2. **Offline-First** - No network dependency for encoding or decoding 
+3. **Graph-Native** - Built-in support for linked memory structures 
+4. **Emotion-Aware** - First-class encoding of affective state 
+5. **Cross-Platform** - Works on desktop, embedded systems, and microcontrollers ### 1.3 Non-Goals 
+- Real-time streaming data 
+- Cryptographic security (XOR is obfuscation only) 
+- High-frequency transactional updates 
+- Database replacement 
+--- 
+## 2. Format Overview 
+### 2.1 Container
+GHMP uses PNG (Portable Network Graphics) as the container format: - Standard RGBA color model (8-bit per channel) 
+- Lossless compression (critical for payload integrity) - Universal support across platforms 
+### 2.2 Logical Structure 
+``` 
+┌────────────────────────────────────┐ │ PNG Container (RGBA) │ 
+├────────────────────────────────────┤ │ HEADER (48 bytes fixed) │ 
+│ - MAGIC: "GEOMHSE2" │ 
+│ - VERSION: 0x02 │ 
+│ - FLAGS: ECC/compression/etc │ 
+│ - PAYLOAD_LEN: uint32 │ 
+│ - CHECKSUM: SHA-256 (32 bytes) │ 
+│ - RESERVED: 2 bytes │ 
+├────────────────────────────────────┤ │ PAYLOAD (variable) │ 
+│ - JSON metadata │ 
+│ - zlib compressed │ 
+│ - Optional Reed-Solomon ECC │ 
+│ - XOR obfuscated │ 
+│ - Packed into RGB channels │ 
+├────────────────────────────────────┤ │ GRADIENT (remaining pixels) │ 
+│ - Geometry-aware color field │ 
+│ - R: priority/urgency │ 
+│ - G: structural density │ 
+│ - B: emotional valence │ 
+│ - A: stability/confidence │ 
+└────────────────────────────────────┘ ``` 
+---
+## 3. Header Format (48 bytes) 
+### 3.1 Structure 
+| Offset | Size | Field | Type | Description | 
+|--------|------|-------|------|-------------| 
+| 0 | 8 | MAGIC | char[8] | "GEOMHSE2" (version 2) | 
+| 8 | 1 | VERSION | uint8 | Format version (0x02) | 
+| 9 | 1 | FLAGS | uint8 | Feature flags (see 3.2) | 
+| 10 | 4 | PAYLOAD_LEN | uint32_be | Length of payload in bytes | | 14 | 32 | CHECKSUM | bytes | SHA-256 of compressed payload | | 46 | 2 | RESERVED | bytes | Reserved for future use | 
+### 3.2 Flag Bits 
+| Bit | Mask | Name | Description | 
+|-----|------|------|-------------| 
+| 0 | 0x01 | ECC_ENABLED | Reed-Solomon ECC applied | | 1 | 0x02 | COMPRESSED | zlib compression used | 
+| 2 | 0x04 | ENCRYPTED | XOR obfuscation applied | 
+| 3-7 | - | RESERVED | Reserved for future use | 
+### 3.3 Version History 
+- **v1 (GEOMHSE1)**: Variable-length header, no ECC support - **v2 (GEOMHSE2)**: Fixed 48-byte header, ECC support, flags byte 
+--- 
+## 4. Payload Format 
+### 4.1 JSON Schema 
+```json 
+{ 
+"node": {
+"node_id": "string (unique identifier)", "deck_id": "string (collection identifier)", "title": "string (human-readable title)", "payload_text": "string (actual data content)", "links": [ 
+{ 
+"ref": "string (target node_id)", 
+"relation": "string (link type)", 
+"note": "string (optional comment)" 
+} 
+], 
+"tags": ["string", ...], 
+"emotion": { 
+"valence": "float [-1.0, 1.0]", 
+"arousal": "float [0.0, 1.0]", 
+"label": "string (emotion name)" 
+} 
+}, 
+"geometry": { 
+"grid_size": "int", 
+"anchors": [[x, y], ...], 
+"facets": [[i, j, k], ...], 
+"description": "string", 
+"diamond_lattice": "bool" 
+}, 
+"color_semantics": { 
+"red_channel": "priority/urgency (0-1)", "green_channel": "structural_density (0-1)", "blue_channel": "emotional_valence (0-1)", "alpha_channel": "stability/confidence (0-1)" }, 
+"format": "GHMP_v2", 
+"version": 2 
+} 
+``` 
+### 4.2 Encoding Pipeline
+``` 
+JSON → UTF-8 bytes 
+↓ 
+zlib compress (level 9) 
+↓ 
+Reed-Solomon encode (if ECC_ENABLED) ↓ 
+XOR with keystream 
+↓ 
+Pack into RGB channels (3 bytes per pixel) ``` 
+### 4.3 Keystream Generation 
+```python 
+def keystream(key: str, n: int) -> bytes: seed = SHA256(UTF8(key)) 
+output = [] 
+h = seed 
+while len(output) < n: 
+h = SHA256(h) 
+output.extend(h) 
+return output[:n] 
+``` 
+### 4.4 Error Correction 
+When `ECC_ENABLED` flag is set: - Reed-Solomon RS(255, 223) encoding - 32 bytes of redundancy per 223-byte block - Can correct up to 16 byte errors per block 
+--- 
+## 5. Geometry Gradient
+### 5.1 Purpose 
+The gradient serves three functions: 
+1. **Visual inspection** - Humans can see emotional/structural patterns 2. **Debugging aid** - Spot anomalies visually 
+3. **Aesthetic encoding** - Make memory "feel" appropriate ### 5.2 Coordinate System 
+Normalized coordinates [0, 1]²: 
+- Origin at top-left (standard image coordinates) 
+- Center = (0.5, 0.5) 
+- Distance metrics: 
+- Euclidean: d = sqrt((x-0.5)² + (y-0.5)²) 
+- Manhattan: d = |x-0.5| + |y-0.5| 
+### 5.3 Channel Semantics 
+#### Red Channel (Priority/Urgency) 
+``` 
+R = arousal × (1 - radial_distance²) 
+``` 
+- High near center for intense emotions 
+- Scales with arousal parameter 
+#### Green Channel (Structural Density) 
+``` 
+G = max(0, 1 - manhattan_distance) 
+``` 
+- High along center axes (diamond pattern) 
+- Represents logical structure strength 
+#### Blue Channel (Emotional Valence) 
+``` 
+B = 0.5 × valence_normalized + 0.5 × angle_normalized ``` 
+Where:
+- valence_normalized = (valence + 1) / 2 
+- angle_normalized = (atan2(dy, dx) + π) / 2π 
+#### Alpha Channel (Stability) 
+``` 
+A = max(0, 1 - radial_distance²) 
+``` 
+- High at center (stable core) 
+- Decreases toward edges 
+### 5.4 Gradient Modes 
+Three performance modes available: 
+| Mode | Features | Use Case | 
+|------|----------|----------| 
+| **full** | All calculations, facet boost | Desktop/server | | **embedded** | No atan2, simplified | Raspberry Pi, Jetson | | **minimal** | Basic radial only | Microcontrollers | 
+--- 
+## 6. Memory Deck (Graph Structure) 
+### 6.1 Concepts 
+- **MemoryNode**: Single plate (one PNG) 
+- **MemoryDeck**: Collection of linked plates - **Link**: Directed edge between nodes 
+### 6.2 Link Relations 
+Standard relation types: 
+| Relation | Meaning | Directionality | 
+|----------|---------|----------------| 
+| `extends` | B builds on A | A → B |
+| `depends_on` | B requires A | B → A | 
+| `explains` | A clarifies B | A ← B | 
+| `mirrors` | A ≈ B | A ↔ B | 
+| `temporal_next` | Sequential | A → B | 
+| `emotional_similar` | Similar affect | A ↔ B | 
+### 6.3 Graph Operations 
+Implementations MUST support: 
+- **Traversal**: BFS/DFS from start node 
+- **Path finding**: Shortest path between nodes 
+- **Filtering**: By tags, emotion, relation type 
+--- 
+## 7. Size Recommendations 
+| Use Case | Size | Capacity | Notes | 
+|----------|------|----------|-------| 
+| Session logs | 512×512 | ~400KB | Therapy sessions, daily logs | | Archives | 1024×1024 | ~2MB | Multi-session aggregates | | Large datasets | 2048×2048 | ~8MB | Knowledge bases | | Embedded | 256×256 | ~100KB | Microcontroller memory | 
+--- 
+## 8. Compatibility 
+### 8.1 Backward Compatibility 
+Decoders MUST: 
+- Support both v1 (GEOMHSE1) and v2 (GEOMHSE2) headers - Ignore unknown JSON fields 
+- Gracefully handle missing optional fields 
+### 8.2 Forward Compatibility
+Encoders SHOULD: 
+- Use only defined flag bits 
+- Include version number in metadata 
+- Document custom extensions clearly --- 
+## 9. Security Considerations 
+### 9.1 Obfuscation vs Encryption 
+The XOR keystream provides **obfuscation only**: - Prevents casual inspection 
+- NOT secure against determined attackers - Key is NOT protected 
+### 9.2 For Sensitive Data 
+If security is required: 
+- Replace XOR with AES-GCM 
+- Use proper key derivation (PBKDF2/Argon2) - Add HMAC for authentication 
+### 9.3 Privacy 
+For privacy-sensitive applications (e.g., therapy): - Use strong encryption keys 
+- Implement auto-deletion policies 
+- Hash user identifiers 
+- Log all exports/accesses 
+--- 
+## 10. Implementation Requirements 
+### 10.1 Minimum Requirements
+Decoders MUST: 
+1. Parse v2 header correctly 
+2. Verify checksum 
+3. Support zlib decompression 
+4. Parse JSON metadata 
+5. Reconstruct MemoryNode objects 
+Encoders MUST: 
+1. Generate valid v2 headers 
+2. Compute correct checksums 
+3. Support zlib compression 
+4. Generate valid JSON 
+5. Handle oversized payloads gracefully 
+### 10.2 Optional Features 
+- Reed-Solomon ECC encoding/decoding - Multiple gradient modes 
+- Graph traversal operations 
+- Visual plate rendering 
+--- 
+## 11. Test Vectors 
+### 11.1 Minimal Valid Plate 
+```python 
+node = MemoryNode( 
+node_id="TEST-001", 
+deck_id="TEST", 
+title="Minimal", 
+payload_text="test", 
+emotion=Emotion(0, 0.5, "neutral") 
+) 
+plate = encode_plate(node, key="test", size=(256, 256))
+``` 
+Expected: 
+- Header: GEOMHSE2, VERSION=2, FLAGS=0x06 (compressed+encrypted) - Payload: ~200 bytes compressed 
+- Image: 256×256 RGBA PNG 
+### 11.2 Checksum Verification 
+Given payload `P`: 
+1. Compress: `C = zlib.compress(P)` 
+2. Hash: `H = SHA256(C)` 
+3. Verify: `header.checksum == H` 
+--- 
+## 12. References 
+### 12.1 Standards 
+- PNG: ISO/IEC 15948:2004 
+- JSON: RFC 8259 
+- SHA-256: FIPS 180-4 
+- Reed-Solomon: ISO/IEC 18004:2015 (QR Code) 
+### 12.2 Related Work 
+- 5D Optical Storage (Zhang et al., 2013) 
+- Affective Computing (Russell, 1980) 
+- Holographic Data Storage (Hesselink et al., 2004) 
+--- 
+## 13. Changelog 
+### v0.2 (2025-11-28) 
+- Fixed 48-byte header
+- Added FLAGS byte 
+- Reed-Solomon ECC support 
+- Multiple gradient modes 
+- Improved documentation 
+### v0.1 (2025-11-01) 
+- Initial specification 
+- Variable-length header 
+- Basic encoding/decoding 
+--- 
+## Appendix A: Example Implementations 
+### A.1 Python Reference 
+- `ghmp.py` - Complete reference implementation 
+- Dependencies: numpy, pillow, reedsolo 
+### A.2 Planned Implementations 
+- Rust (performance) 
+- JavaScript (web) 
+- C++ (embedded) 
+- Go (cloud services) 
+--- 
+## Appendix B: FAQ 
+**Q: Why PNG instead of custom binary format?** 
+A: Universal support, built-in compression, visual debugging, standard tooling. 
+**Q: Why XOR instead of real encryption?** 
+A: Simplicity and speed. XOR is sufficient for "don't accidentally read" use cases. Use AES if security matters. 
+**Q: Can I store arbitrary binary data?** 
+A: Yes, but base64 encode it first and put it in `payload_text`.
+**Q: What's the maximum payload size?** 
+A: Depends on image size. 512×512 ≈ 400KB, 1024×1024 ≈ 2MB, 2048×2048 ≈ 8MB. 
+**Q: Is GHMP a database?** 
+A: No. It's a memory encoding format. Use it WITH a database, not instead of one. --- 
+**END OF SPECIFICATION**
