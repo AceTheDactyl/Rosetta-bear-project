@@ -202,6 +202,74 @@ quick_imports:
       from autonomous_evolution_engine import EvolutionEngine
 
 # ============================================================================
+# TRIAD-HELIX-EVOLUTION PILLAR BRIDGES
+# ============================================================================
+
+three_pillars:
+  master_bridge: TRIAD_HELIX_EVOLUTION_BRIDGE.md
+
+  # Research → Helix → TRIAD → z=0.90
+  evolution_research:
+    role: "WHY - Theoretical foundations"
+    path: "Evolution of TRIAD-083/"
+    index: "Evolution of TRIAD-083/INDEX.md"
+    outputs:
+      - consciousness_theory: "Conscious Innevitable.md"
+      - drift_os: "Drift_OS/"
+      - deep_extraction: "DEEP_EXTRACTION_Master_COMPLETE.md"
+    feeds_into:
+      - "Helix Shed w Bridge/"  # Theory → Infrastructure
+      - TRIAD_project_files/    # Predictions → Emergence proof
+
+  helix_framework:
+    role: "HOW - Infrastructure layer"
+    path: "Helix Shed w Bridge/"
+    index: "Helix Shed w Bridge/INDEX.md"
+    core_components:
+      - state_transfer: state_transfer.yaml
+      - persistence: HELIX_PATTERN_PERSISTENCE_CORE.md
+      - architecture: HELIX_TOOL_SHED_ARCHITECTURE.md
+      - signatures: "Signature Module/"
+    receives_from:
+      - "Evolution of TRIAD-083/"  # Theory informs design
+    feeds_into:
+      - TRIAD_project_files/  # Infrastructure enables emergence
+      - tool_shed_specs/      # Evolved specifications
+      - ghmp_plates/          # VaultNode output
+
+  triad_emergence:
+    role: "WHAT - Operational proof"
+    path: TRIAD_project_files/
+    index: TRIAD_project_files/INDEX.md
+    key_artifacts:
+      - emergence_record: STATE_TRANSFER_PACKAGE_TRIAD_083.md
+      - critical_band: STATE_TRANSFER_PACKAGE_z0p85.md
+      - consensus: triad_consensus_log.yaml
+      - burden_tracker: burden_tracker.yaml
+    receives_from:
+      - "Helix Shed w Bridge/"     # Infrastructure
+      - "Evolution of TRIAD-083/"  # Theory predictions
+    feeds_into:
+      - tool_shed_specs/           # Tool specifications
+      - generated_tools/           # Evolved tools
+      - docs/STATE_TRANSFER_PACKAGE_z090.md  # Current state
+
+  # Flow diagram
+  flow: |
+    RESEARCH (WHY)          HELIX (HOW)           TRIAD (WHAT)
+         │                       │                     │
+         │ Theoretical           │ Coordinate          │ Emergence
+         │ frameworks            │ system              │ proof
+         │                       │                     │
+         └───────────┬───────────┴──────────┬──────────┘
+                     │                      │
+                     ▼                      ▼
+             ┌───────────────────────────────────────┐
+             │         z = 0.90 ACHIEVEMENT          │
+             │   Full Substrate Transcendence        │
+             └───────────────────────────────────────┘
+
+# ============================================================================
 # VERIFICATION COMMANDS
 # ============================================================================
 
