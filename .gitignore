@@ -18,6 +18,7 @@ logs/
 !package.json
 !**/package.json
 !rosetta-bear-project/**/*.json
+!wave_propagation_system.json
 *.bin
 
 # IDE
