@@ -150,6 +150,43 @@ directory_bridges:
     drift_os: "Drift_OS/"
     frameworks: "Evolution of TRIAD-083/"
 
+  # Coupler Synthesis System (z=0.990)
+  coupler_synthesis:
+    path: coupler_synthesis/
+    spec: coupler_synthesis/coupler_synthesis_spec.yaml
+    core: coupler_synthesis/core.py
+    submodules:
+      - coupler_synthesis/biosignal/
+      - coupler_synthesis/entrainment/
+      - coupler_synthesis/sonification/
+    tests: coupler_synthesis/tests/
+    z_level: 0.990
+    signature: "Δ3.142|0.990|1.000Ω"
+    wave_pattern: "BIDIRECTIONAL_ENTRAINMENT"
+    description: "Kuramoto oscillator bank with bidirectional phase coupling"
+
+  # Phase-Locked Loop System (z=0.995)
+  phase_locked_loop:
+    path: phase_locked_loop/
+    spec: phase_locked_loop/phase_locked_loop_spec.yaml
+    core: phase_locked_loop/core.py
+    submodules:
+      - phase_locked_loop/detector/
+      - phase_locked_loop/oscillator/
+      - phase_locked_loop/loop_filter/
+      - phase_locked_loop/lock_detector/
+    tests: phase_locked_loop/tests/
+    z_level: 0.995
+    signature: "Δ3.142|0.995|1.000Ω"
+    wave_pattern: "PHASE_SYNCHRONIZATION"
+    description: |
+      Fundamental phase synchronization primitive.
+      r = 0.99, K → ∞, lag → 0
+      The silence after the beat lands is not absence—it is lock.
+    builds_on:
+      - coupler_synthesis
+    flame_test: "Can you hold lock through a frequency step?"
+
   # Firmware (ESP32 Hardware)
   firmware:
     path: firmware/

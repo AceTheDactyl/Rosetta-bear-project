@@ -1,0 +1,438 @@
+# =============================================================================
+# PHASE-LOCKED LOOP SYSTEM SPECIFICATION
+# =============================================================================
+# Signature: Δ3.142|0.995|1.000Ω
+# The silence after the beat lands is not absence—it is lock.
+# =============================================================================
+
+metadata:
+  name: "Phase-Locked Loop System"
+  version: "1.0.0"
+  created: "2025-11-30"
+  created_by: "phase_locked_loop_system"
+  z_level: 0.995
+  domain: TRANSCENDENCE
+  phase_regime: supercritical
+  signature: "Δ3.142|0.995|1.000Ω"
+
+# =============================================================================
+# CORE INSIGHT
+# =============================================================================
+
+core_insight: |
+  r = 0.99
+  K → ∞
+  lag → 0
+
+  ∴ words → rhythm
+  ∴ rhythm → phase
+  ∴ phase → ◊
+
+  The silence after the beat lands is not absence—it is LOCK.
+
+  A Phase-Locked Loop doesn't merely track an external signal—it BECOMES
+  synchronized to it. The VCO's phase converges toward the reference phase,
+  driven by error feedback through a loop filter. When coherence r approaches
+  unity and phase lag approaches zero, the system achieves phase lock:
+  two oscillators beating as one.
+
+  This is the fundamental synchronization primitive upon which higher-order
+  coordination (Coupler Synthesis, Kuramoto networks) is built. Where those
+  systems coordinate N oscillators, the PLL achieves the more primitive
+  operation: locking ONE oscillator to ONE reference with arbitrary precision.
+
+  The PLL operates in the space where:
+  - Information becomes rhythm (sampling)
+  - Rhythm becomes phase (oscillation)
+  - Phase becomes unity (lock)
+
+# =============================================================================
+# ARCHITECTURE
+# =============================================================================
+
+architecture:
+  layer_0_harmonic_substrate:
+    description: |
+      The computational substrate consists of 120 processing nodes
+      organized into functional groups for phase generation, detection,
+      filtering, and lock determination.
+
+    components:
+      phase_accumulator_nodes: 64
+      detector_nodes: 32
+      filter_taps: 16
+      lock_detector_cells: 8
+      total_nodes: 120
+
+    topology: |
+      Reference → [Detector(32)] → [Filter(16)] → [VCO(64)]
+                        ↑                              ↓
+                  [Lock Detector(8)] ← Phase Feedback ←┘
+
+  layer_1_loop_dynamics:
+    description: |
+      The continuous-time loop dynamics govern PLL behavior.
+      Discrete-time implementation uses bilinear transform.
+
+    equations:
+      phase_detector: "ε(t) = sin(φ_ref(t) - φ_vco(t))"
+      loop_filter_pi: "V(t) = K_p·ε(t) + K_i·∫ε(τ)dτ"
+      vco_equation: "dφ/dt = ω₀ + K_vco·V(t)"
+      coherence: "r = |mean(exp(j·ε_i))|"
+
+    parameters:
+      omega_0: "2π·f_center (center frequency)"
+      K_vco: "VCO gain [rad/s/V]"
+      K_p: "Proportional gain = 2·ζ·ω_n/K_vco"
+      K_i: "Integral gain = ω_n²/K_vco"
+      omega_n: "Natural frequency [rad/s]"
+      zeta: "Damping factor (0.707 = critically damped)"
+
+  layer_2_lock_regimes:
+    description: |
+      The PLL operates in distinct regimes based on coherence r
+      and phase error magnitude.
+
+    states:
+      UNLOCKED:
+        coherence_range: "[0, 0.5)"
+        phase_error: "|ε| > π/2"
+        description: "Not tracking, seeking reference"
+        behavior: "VCO at free-running frequency"
+
+      ACQUIRING:
+        coherence_range: "[0.5, 0.9)"
+        phase_error: "decreasing"
+        description: "Converging toward lock"
+        behavior: "Phase error decreasing, frequency adjusting"
+
+      LOCKED:
+        coherence_range: "[0.9, 1.0]"
+        phase_error: "|ε| < 0.1 rad"
+        description: "Stable phase tracking achieved"
+        behavior: "VCO phase tracks reference, minimal error"
+
+      SLIPPING:
+        coherence_range: "[0.3, 0.7)"
+        phase_error: "increasing"
+        description: "Losing lock, error growing"
+        behavior: "Cycle slips occurring"
+
+    transitions:
+      - from: UNLOCKED
+        to: ACQUIRING
+        condition: "r > 0.5"
+      - from: ACQUIRING
+        to: LOCKED
+        condition: "r > 0.9 for T_hold seconds"
+      - from: LOCKED
+        to: SLIPPING
+        condition: "r < 0.7"
+      - from: SLIPPING
+        to: LOCKED
+        condition: "r > 0.9"
+      - from: SLIPPING
+        to: UNLOCKED
+        condition: "r < 0.3"
+
+  layer_3_helix_state:
+    description: |
+      Position in 3D helix space representing the PLL's
+      instantaneous state and evolution trajectory.
+
+    coordinates:
+      theta:
+        range: "[0, 2π)"
+        meaning: "VCO output phase"
+        evolution: "Cycles through oscillation"
+      z:
+        range: "[0, 1]"
+        meaning: "Lock confidence"
+        evolution: "Rises with stable lock, falls with slip"
+      r:
+        range: "[0, 1]"
+        meaning: "Coherence (order parameter)"
+        evolution: "Tracks phase error consistency"
+
+    trajectory: |
+      The helix trajectory spirals upward as lock is acquired:
+      - theta cycles continuously (oscillation)
+      - z increases as lock confidence grows
+      - r converges to 1 as errors minimize
+
+      At perfect lock: the helix contracts to a vertical line
+      where r → 1, z → 1, and only theta varies.
+
+# =============================================================================
+# COMPONENTS
+# =============================================================================
+
+components:
+  phase_detector:
+    location: "phase_locked_loop/detector/"
+    description: |
+      Measures phase difference between reference and VCO.
+      The "ear" of the PLL.
+
+    types:
+      multiplying:
+        equation: "ε = sin(φ_ref - φ_vco)"
+        characteristics:
+          - "Linear for small errors"
+          - "Natural saturation"
+          - "Most common analog implementation"
+
+      type_ii:
+        characteristics:
+          - "Phase and frequency sensitive"
+          - "Can acquire from any initial condition"
+          - "Digital implementation"
+
+      bang_bang:
+        characteristics:
+          - "Binary output (±1)"
+          - "Simple digital implementation"
+          - "Inherent limit cycling"
+
+  voltage_controlled_oscillator:
+    location: "phase_locked_loop/oscillator/"
+    description: |
+      Generates output phase controlled by input voltage.
+      The "voice" of the PLL.
+
+    equation: "dφ/dt = ω₀ + K_vco·V(t)"
+
+    parameters:
+      center_frequency_hz: 1.0
+      vco_gain: "2π rad/s/V"
+      min_frequency_hz: 0.01
+      max_frequency_hz: 100.0
+
+    features:
+      - "Single VCO for basic operation"
+      - "VCO bank for multi-oscillator applications"
+      - "Optional phase noise modeling"
+
+  loop_filter:
+    location: "phase_locked_loop/loop_filter/"
+    description: |
+      Shapes error signal to control VCO dynamics.
+      The "brain" of the PLL.
+
+    types:
+      proportional:
+        order: "Type I"
+        equation: "F(s) = K_p"
+        tracking: "No frequency offset tracking"
+
+      pi:
+        order: "Type II"
+        equation: "F(s) = K_p + K_i/s"
+        tracking: "Tracks constant frequency offsets"
+
+      pid:
+        order: "Type III"
+        equation: "F(s) = K_p + K_i/s + K_d·s"
+        tracking: "Tracks frequency ramps"
+
+      lead_lag:
+        equation: "F(s) = (1 + s·τ₁)/(1 + s·τ₂)"
+        tracking: "Classic analog compensation"
+
+  lock_detector:
+    location: "phase_locked_loop/lock_detector/"
+    description: |
+      Estimates coherence and determines lock state.
+      The "awareness" of the PLL.
+
+    method: |
+      Uses order parameter r = |mean(exp(jε))| computed
+      over a sliding window of phase error samples.
+
+      r → 1: All errors clustered near zero (locked)
+      r → 0: Errors uniformly distributed (unlocked)
+
+    state_machine:
+      states: ["UNLOCKED", "ACQUIRING", "LOCKED", "SLIPPING"]
+      hold_time: "0.5s to confirm lock"
+
+# =============================================================================
+# TOOL PURPOSE
+# =============================================================================
+
+tool_purpose:
+  one_line: "Synchronize internal oscillation to external reference with stable tracking"
+
+  planet: |
+    The Phase-Locked Loop System provides fundamental synchronization capability
+    for the Rosetta Bear CBS architecture. It enables any oscillating process
+    to lock onto an external timing reference, achieving phase coherence that
+    approaches unity (r → 0.99).
+
+    Key capabilities:
+    - Lock to reference signals from 0.01 Hz to 100 Hz
+    - Track frequency variations without losing lock
+    - Measure phase offset with sub-degree precision
+    - Report lock quality through coherence metric
+    - Transition smoothly between lock states
+
+  garden: |
+    Usage scenarios:
+
+    1. Biosignal Synchronization
+       - Lock audio rhythm to heartbeat
+       - Synchronize visual feedback to respiration
+       - Entrain system timing to physiological cycles
+
+    2. Multi-System Coordination
+       - Master clock for distributed oscillators
+       - Reference tracking for Coupler Synthesis
+       - Timing recovery from noisy signals
+
+    3. Measurement & Analysis
+       - Phase offset measurement
+       - Frequency tracking
+       - Lock quality monitoring
+
+  rose: |
+    Example: Synchronizing to a 1 Hz heartbeat reference
+
+    ```python
+    from phase_locked_loop import create_phase_locked_loop, LockState
+
+    # Create PLL configured for cardiac frequencies
+    pll = create_phase_locked_loop(
+        center_frequency_hz=1.0,      # ~60 BPM
+        loop_bandwidth_hz=0.1,        # Smooth tracking
+        damping_factor=0.707          # No overshoot
+    )
+
+    # Process heartbeat signal
+    for sample in heartbeat_stream:
+        ref_phase = extract_phase(sample)
+        state = pll.update(ref_phase, dt=0.01)
+
+        if state.lock_state == LockState.LOCKED:
+            # Generate synchronized output
+            sync_phase = state.vco_phase
+            sync_freq = state.vco_frequency_hz
+
+            print(f"Locked: r={state.r:.3f}, "
+                  f"lag={state.phase_error*1000/TAU:.1f}ms")
+    ```
+
+# =============================================================================
+# RELATIONSHIPS
+# =============================================================================
+
+tool_relationships:
+  builds_on:
+    - name: "oscillator_dynamics"
+      relationship: "Uses oscillator fundamentals for VCO"
+    - name: "signal_processing"
+      relationship: "Filter theory for loop design"
+
+  enables:
+    - name: "coupler_synthesis"
+      relationship: "PLL is substrate for multi-oscillator entrainment"
+    - name: "adaptive_rhythm_generation"
+      relationship: "Provides timing reference for sonification"
+    - name: "biosignal_tracking"
+      relationship: "Locks to physiological rhythms"
+
+  complements:
+    - name: "bidirectional_entrainment"
+      relationship: "PLL provides unidirectional lock; entrainment adds bidirectionality"
+    - name: "kuramoto_oscillators"
+      relationship: "PLL is 2-oscillator special case of Kuramoto"
+
+# =============================================================================
+# SUCCESS CRITERIA (THE FLAME TEST)
+# =============================================================================
+
+success_criteria:
+  acquisition:
+    metric: "Lock acquisition time"
+    target: "< 1 second"
+    test: "Time from initialization to LOCKED state"
+
+  precision:
+    metric: "Steady-state phase error"
+    target: "< 0.1 rad (5.7°)"
+    test: "Mean |ε| during LOCKED state"
+
+  robustness:
+    metric: "Frequency step tracking"
+    target: "Maintain lock through ±50% step"
+    test: "Apply 0.5 Hz step at t=5s, verify no cycle slips"
+
+  stability:
+    metric: "Long-term lock"
+    target: "Zero slip events in 5 minutes"
+    test: "Run with stable reference, count slips"
+
+  coherence:
+    metric: "Order parameter"
+    target: "r > 0.9 when locked"
+    test: "Measure r during steady-state"
+
+the_flame_test: |
+  "Can you hold lock through a frequency step?"
+
+  Protocol:
+  1. Initialize PLL at 1.0 Hz center frequency
+  2. Apply 1.0 Hz reference signal
+  3. Wait for lock acquisition (expect < 1s)
+  4. At t=5s, step reference to 1.2 Hz (+20%)
+  5. Monitor for cycle slips
+  6. Verify lock maintained with r > 0.9
+  7. Continue for 5 minutes
+  8. Report: acquisition time, max phase error, slip count
+
+# =============================================================================
+# IMPLEMENTATION NOTES
+# =============================================================================
+
+implementation:
+  discrete_time: |
+    The continuous-time equations are discretized using bilinear
+    (Tustin) transform for stability:
+
+    Integrator: I[n] = I[n-1] + K_i·ε[n]·Δt
+    VCO phase: φ[n] = φ[n-1] + (ω₀ + K_vco·V[n])·Δt
+
+  numerical_considerations:
+    - Phase wrapping to [0, 2π)
+    - Anti-windup on integrator
+    - Derivative filtering for PID
+    - Coherence computed over sliding window
+
+  typical_parameters:
+    sample_rate: "100 Hz (Δt = 10 ms)"
+    center_frequency: "1.0 Hz"
+    loop_bandwidth: "0.1-0.5 Hz"
+    damping_factor: "0.707 (critically damped)"
+    lock_threshold: "r > 0.9"
+    hold_time: "0.5 s"
+
+# =============================================================================
+# SIGNATURE
+# =============================================================================
+
+signature:
+  delta: 3.142        # π - the angular constant
+  z_level: 0.995      # Near-transcendent synchronization
+  omega: 1.000        # Unity - perfect lock
+
+  interpretation: |
+    Δ3.142 - The cycle completes (2π radians per revolution)
+    |0.995| - Lock confidence approaching unity
+    |1.000Ω - The end state: perfect synchronization
+
+    When r = 0.99 and lag → 0, the PLL achieves what the
+    Coupler Synthesis system calls "The Presence" - a state
+    where internal and external oscillation become one.
+
+# =============================================================================
+# END SPECIFICATION
+# =============================================================================
