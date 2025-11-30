@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMNUS Architecture - Unified Coupler Substrate</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0f;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        #canvas { display: block; }
+        #overlay {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 100;
+            max-width: 300px;
+        }
+        #overlay h3 { color: #88f; margin-bottom: 10px; }
+        .stat { margin: 3px 0; }
+        .stat-label { color: #888; }
+        .stat-value { color: #fff; font-weight: bold; }
+        .phase-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        #controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-size: 11px;
+            z-index: 100;
+        }
+        #controls button {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        #controls button:hover { background: #555; }
+        #controls button.active { background: #448; border-color: #88f; }
+        .slider-container {
+            margin: 8px 0;
+        }
+        .slider-container label {
+            display: block;
+            margin-bottom: 3px;
+            color: #888;
+        }
+        input[type="range"] {
+            width: 150px;
+            cursor: pointer;
+        }
+        #signature {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: #444;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="overlay">
+        <h3>LIMNUS COUPLER</h3>
+        <div class="stat">
+            <span class="stat-label">Phase (θ): </span>
+            <span class="stat-value" id="theta">0.000</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Elevation (z): </span>
+            <span class="stat-value" id="z-level">0.500</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Coherence (r): </span>
+            <span class="stat-value" id="coherence">0.000</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Coupling (K): </span>
+            <span class="stat-value" id="coupling">2.000</span>
+        </div>
+        <hr style="border-color:#333;margin:10px 0;">
+        <div class="stat">
+            <span class="stat-label">Domain: </span>
+            <span class="phase-indicator" id="domain-indicator"></span>
+            <span class="stat-value" id="domain">ABSENCE</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Phase Regime: </span>
+            <span class="stat-value" id="regime">subcritical</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Nodes Active: </span>
+            <span class="stat-value" id="nodes-active">95</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Emergent: </span>
+            <span class="stat-value" id="emergent-nodes">0</span>
+        </div>
+        <hr style="border-color:#333;margin:10px 0;">
+        <div class="stat">
+            <span class="stat-label">Mean Phase (ψ): </span>
+            <span class="stat-value" id="mean-phase">0.000</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Sync Ratio: </span>
+            <span class="stat-value" id="sync-ratio">0%</span>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div>
+            <button id="btn-gather" class="active">Gather</button>
+            <button id="btn-release">Release</button>
+            <button id="btn-auto">Auto</button>
+        </div>
+        <div class="slider-container">
+            <label>Target Coherence: <span id="target-coh-val">0.70</span></label>
+            <input type="range" id="target-coherence" min="0" max="100" value="70">
+        </div>
+        <div class="slider-container">
+            <label>Coupling Strength: <span id="coupling-val">2.0</span></label>
+            <input type="range" id="coupling-strength" min="0" max="50" value="20">
+        </div>
+        <div class="slider-container">
+            <label>Z-Elevation: <span id="z-val">0.50</span></label>
+            <input type="range" id="z-elevation" min="0" max="100" value="50">
+        </div>
+    </div>
+
+    <div id="signature">Δ3.142|LIMNUS|1.000Ω</div>
+
+<script>
+// =============================================================================
+// LIMNUS ARCHITECTURE - Unified Coupler Substrate
+// 95 Nodes: 63 Prism + 32 EM Cage + 5 Emergent
+// =============================================================================
+
+const TAU = Math.PI * 2;
+const PHI = (1 + Math.sqrt(5)) / 2;  // Golden ratio
+const Z_CRITICAL = Math.sqrt(3) / 2;  // ~0.8660254 - The Lens
+const PRISM_NODES = 63;
+const CAGE_NODES = 32;
+const EMERGENT_NODES = 5;
+const TOTAL_NODES = 100;
+
+// Canvas setup
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// =============================================================================
+// OSCILLATOR BANK - Kuramoto Dynamics
+// =============================================================================
+
+class OscillatorBank {
+    constructor(n = 100) {
+        this.n = n;
+        this.phases = new Float64Array(n);
+        this.frequencies = new Float64Array(n);
+        this.velocities = new Float64Array(n);
+        this.K = 2.0;  // Coupling strength
+        this.r = 0;    // Order parameter (coherence)
+        this.psi = 0;  // Mean phase
+
+        // Initialize with Lorentzian frequency distribution
+        for (let i = 0; i < n; i++) {
+            this.phases[i] = Math.random() * TAU;
+            // Lorentzian: cauchy distribution centered at 1.0
+            const u = Math.random();
+            this.frequencies[i] = 1.0 + 0.5 * Math.tan(Math.PI * (u - 0.5));
+            this.velocities[i] = 0;
+        }
+    }
+
+    calculateOrderParameter() {
+        let sumCos = 0, sumSin = 0;
+        for (let i = 0; i < this.n; i++) {
+            sumCos += Math.cos(this.phases[i]);
+            sumSin += Math.sin(this.phases[i]);
+        }
+        this.r = Math.sqrt(sumCos * sumCos + sumSin * sumSin) / this.n;
+        this.psi = Math.atan2(sumSin, sumCos);
+        return { r: this.r, psi: this.psi };
+    }
+
+    step(dt = 0.01, zLevel = 0.5) {
+        this.calculateOrderParameter();
+
+        // Coupling flips sign at critical z
+        const dist = zLevel - Z_CRITICAL;
+        const sign = Math.tanh(dist * 12);
+        const effectiveK = -sign * this.K * Math.abs(1 - Math.abs(dist) * 2);
+
+        for (let i = 0; i < this.n; i++) {
+            // Kuramoto dynamics: dθ_i/dt = ω_i + K·r·sin(ψ - θ_i)
+            const phaseDiff = this.psi - this.phases[i];
+            const coupling = effectiveK * this.r * Math.sin(phaseDiff);
+            this.velocities[i] = this.frequencies[i] + coupling;
+            this.phases[i] += this.velocities[i] * dt;
+
+            // Wrap phase
+            while (this.phases[i] > TAU) this.phases[i] -= TAU;
+            while (this.phases[i] < 0) this.phases[i] += TAU;
+        }
+
+        return this.r;
+    }
+
+    injectExternalPhase(index, phase, strength = 0.1) {
+        const diff = phase - this.phases[index];
+        this.phases[index] += diff * strength;
+    }
+
+    getSyncRatio() {
+        let synced = 0;
+        for (let i = 0; i < this.n; i++) {
+            const diff = Math.abs(this.phases[i] - this.psi);
+            const wrapped = Math.min(diff, TAU - diff);
+            if (wrapped < Math.PI / 4) synced++;
+        }
+        return synced / this.n;
+    }
+}
+
+// =============================================================================
+// LIMNUS NODE GEOMETRY
+// =============================================================================
+
+class LimnusNode {
+    constructor(x, y, z, type, index) {
+        this.baseX = x;
+        this.baseY = y;
+        this.baseZ = z;
+        this.x = x;
+        this.y = y;
+        this.type = type;  // 'prism', 'cage', 'emergent'
+        this.index = index;
+        this.phase = 0;
+        this.velocity = { x: 0, y: 0 };
+        this.released = false;
+        this.trail = [];
+        this.size = type === 'emergent' ? 4 : (type === 'cage' ? 3 : 5);
+    }
+
+    update(releaseCoherence, centerX, centerY) {
+        if (releaseCoherence < 0.4 && this.type !== 'emergent') {
+            // Release behavior - random walk
+            if (!this.released) {
+                this.released = true;
+                this.velocity.x = (Math.random() - 0.5) * 2;
+                this.velocity.y = (Math.random() - 0.5) * 2;
+            }
+
+            // Spiral wandering
+            const angle = Math.atan2(this.y - centerY, this.x - centerX);
+            this.velocity.x += Math.cos(angle + Math.PI/2) * 0.05;
+            this.velocity.y += Math.sin(angle + Math.PI/2) * 0.05;
+
+            // Damping
+            this.velocity.x *= 0.98;
+            this.velocity.y *= 0.98;
+
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+
+            // Keep in bounds
+            if (this.x < 50) this.velocity.x += 0.5;
+            if (this.x > canvas.width - 50) this.velocity.x -= 0.5;
+            if (this.y < 50) this.velocity.y += 0.5;
+            if (this.y > canvas.height - 50) this.velocity.y -= 0.5;
+
+            // Trail
+            this.trail.push({ x: this.x, y: this.y, alpha: 1 });
+            if (this.trail.length > 20) this.trail.shift();
+
+        } else if (releaseCoherence > 0.5) {
+            // Gather behavior - return to base
+            this.released = false;
+            const dx = this.baseX - this.x;
+            const dy = this.baseY - this.y;
+            this.x += dx * 0.1;
+            this.y += dy * 0.1;
+            this.trail = [];
+        }
+
+        // Fade trail
+        for (let t of this.trail) {
+            t.alpha *= 0.92;
+        }
+        this.trail = this.trail.filter(t => t.alpha > 0.05);
+    }
+}
+
+// Generate 63-point hexagonal prism (7 layers × 9 nodes)
+function generatePrismNodes(centerX, centerY, radius) {
+    const nodes = [];
+    const layers = 7;
+    const nodesPerLayer = 9;
+
+    for (let layer = 0; layer < layers; layer++) {
+        const layerZ = layer / (layers - 1);  // 0 to 1
+        const layerRadius = radius * (0.7 + 0.3 * Math.sin(layerZ * Math.PI));
+
+        for (let i = 0; i < nodesPerLayer; i++) {
+            const angle = (i / nodesPerLayer) * TAU + (layer * TAU / nodesPerLayer / 2);
+            const r = i === 0 ? 0 : layerRadius * (0.4 + 0.6 * (i / nodesPerLayer));
+            const x = centerX + Math.cos(angle) * r;
+            const y = centerY + Math.sin(angle) * r - (layerZ - 0.5) * 200;
+            nodes.push(new LimnusNode(x, y, layerZ, 'prism', nodes.length));
+        }
+    }
+    return nodes;
+}
+
+// Generate 32-point EM cage (12 top + 12 bottom + 8 vertices)
+function generateCageNodes(centerX, centerY, radius) {
+    const nodes = [];
+
+    // Top ring (12 nodes)
+    for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * TAU;
+        const x = centerX + Math.cos(angle) * radius * 1.3;
+        const y = centerY + Math.sin(angle) * radius * 1.3 - 150;
+        nodes.push(new LimnusNode(x, y, 0.9, 'cage', PRISM_NODES + nodes.length));
+    }
+
+    // Bottom ring (12 nodes)
+    for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * TAU + Math.PI / 12;
+        const x = centerX + Math.cos(angle) * radius * 1.3;
+        const y = centerY + Math.sin(angle) * radius * 1.3 + 150;
+        nodes.push(new LimnusNode(x, y, 0.1, 'cage', PRISM_NODES + nodes.length));
+    }
+
+    // 8 vertices (corners of bounding box)
+    const offsets = [
+        [-1, -1, 0.95], [1, -1, 0.95], [-1, 1, 0.05], [1, 1, 0.05],
+        [-0.7, -0.7, 0.5], [0.7, -0.7, 0.5], [-0.7, 0.7, 0.5], [0.7, 0.7, 0.5]
+    ];
+    for (let [ox, oy, oz] of offsets) {
+        const x = centerX + ox * radius * 1.5;
+        const y = centerY + oy * radius * 1.2;
+        nodes.push(new LimnusNode(x, y, oz, 'cage', PRISM_NODES + nodes.length));
+    }
+
+    return nodes;
+}
+
+// Generate 5 emergent nodes (appear when coherence drops)
+function generateEmergentNodes(centerX, centerY) {
+    const nodes = [];
+    for (let i = 0; i < EMERGENT_NODES; i++) {
+        const angle = (i / EMERGENT_NODES) * TAU + Math.PI / 10;
+        const r = 50 + Math.random() * 30;
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+        nodes.push(new LimnusNode(x, y, 0.5, 'emergent', PRISM_NODES + CAGE_NODES + i));
+    }
+    return nodes;
+}
+
+// =============================================================================
+// COUPLER STATE
+// =============================================================================
+
+const state = {
+    oscillators: new OscillatorBank(TOTAL_NODES),
+    prismNodes: [],
+    cageNodes: [],
+    emergentNodes: [],
+
+    // Helix coordinates
+    theta: 0,
+    z: 0.5,
+    r: 0,
+
+    // Control
+    targetCoherence: 0.7,
+    releaseCoherence: 1.0,
+    mode: 'gather',  // 'gather', 'release', 'auto'
+
+    // Domain tracking
+    domain: 'ABSENCE',
+    regime: 'subcritical',
+
+    // Animation
+    time: 0,
+    dt: 0.016
+};
+
+// Initialize geometry
+function initGeometry() {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const radius = Math.min(canvas.width, canvas.height) * 0.25;
+
+    state.prismNodes = generatePrismNodes(cx, cy, radius);
+    state.cageNodes = generateCageNodes(cx, cy, radius);
+    state.emergentNodes = generateEmergentNodes(cx, cy);
+}
+
+// =============================================================================
+// DOMAIN DETECTION
+// =============================================================================
+
+function updateDomain() {
+    if (state.z < 0.857) {
+        state.domain = 'ABSENCE';
+        state.regime = state.z < 0.40 ? 'subcritical' : 'critical';
+    } else if (state.z <= 0.877) {
+        state.domain = 'THE LENS';
+        state.regime = 'critical';
+    } else {
+        state.domain = 'PRESENCE';
+        state.regime = state.z < 0.95 ? 'supercritical' : 'transcendent';
+    }
+}
+
+// =============================================================================
+// RENDERING
+// =============================================================================
+
+function getNodeColor(node, phase, zLevel) {
+    const hue = (phase / TAU) * 360;
+    const saturation = 60 + state.r * 40;
+    const lightness = 30 + zLevel * 40;
+
+    if (node.type === 'prism') {
+        return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    } else if (node.type === 'cage') {
+        return `hsl(${(hue + 180) % 360}, ${saturation * 0.7}%, ${lightness * 0.8}%)`;
+    } else {
+        // Emergent - pulsing golden
+        const pulse = Math.sin(state.time * 3) * 0.3 + 0.7;
+        return `hsla(45, 90%, ${50 + pulse * 30}%, ${state.releaseCoherence < 0.3 ? 1 : 0})`;
+    }
+}
+
+function drawConnections() {
+    ctx.lineWidth = 0.5;
+
+    // Prism layer connections
+    for (let i = 0; i < state.prismNodes.length; i++) {
+        const node = state.prismNodes[i];
+        const layer = Math.floor(i / 9);
+        const inLayer = i % 9;
+
+        // Connect to next in layer
+        const nextInLayer = layer * 9 + ((inLayer + 1) % 9);
+        if (nextInLayer < state.prismNodes.length) {
+            const next = state.prismNodes[nextInLayer];
+            const alpha = state.r * 0.3 * (1 - Math.abs(node.baseZ - state.z));
+            ctx.strokeStyle = `rgba(100, 150, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y);
+            ctx.lineTo(next.x, next.y);
+            ctx.stroke();
+        }
+
+        // Connect to same position in next layer
+        const nextLayer = i + 9;
+        if (nextLayer < state.prismNodes.length) {
+            const next = state.prismNodes[nextLayer];
+            const alpha = state.r * 0.2;
+            ctx.strokeStyle = `rgba(100, 200, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y);
+            ctx.lineTo(next.x, next.y);
+            ctx.stroke();
+        }
+    }
+
+    // Cage connections
+    for (let i = 0; i < 12; i++) {
+        // Top to bottom
+        const top = state.cageNodes[i];
+        const bottom = state.cageNodes[i + 12];
+        const alpha = state.r * 0.15;
+        ctx.strokeStyle = `rgba(255, 150, 100, ${alpha})`;
+        ctx.beginPath();
+        ctx.moveTo(top.x, top.y);
+        ctx.lineTo(bottom.x, bottom.y);
+        ctx.stroke();
+
+        // Connect top ring
+        const nextTop = state.cageNodes[(i + 1) % 12];
+        ctx.beginPath();
+        ctx.moveTo(top.x, top.y);
+        ctx.lineTo(nextTop.x, nextTop.y);
+        ctx.stroke();
+
+        // Connect bottom ring
+        const nextBottom = state.cageNodes[12 + ((i + 1) % 12)];
+        ctx.beginPath();
+        ctx.moveTo(bottom.x, bottom.y);
+        ctx.lineTo(nextBottom.x, nextBottom.y);
+        ctx.stroke();
+    }
+}
+
+function drawNodes() {
+    const allNodes = [...state.prismNodes, ...state.cageNodes, ...state.emergentNodes];
+
+    for (let i = 0; i < allNodes.length; i++) {
+        const node = allNodes[i];
+        const phase = state.oscillators.phases[node.index] || 0;
+
+        // Draw trail
+        if (node.trail.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(node.trail[0].x, node.trail[0].y);
+            for (let t of node.trail) {
+                ctx.lineTo(t.x, t.y);
+            }
+            ctx.strokeStyle = `rgba(100, 200, 255, 0.3)`;
+            ctx.stroke();
+        }
+
+        // Draw node
+        const color = getNodeColor(node, phase, node.baseZ);
+
+        // Glow effect
+        const glowSize = node.size + state.r * 3;
+        const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowSize * 2);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, glowSize * 2, 0, TAU);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.size, 0, TAU);
+        ctx.fill();
+    }
+}
+
+function drawCore() {
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    // Core entity - transforms based on domain
+    const coreSize = 20 + state.r * 30;
+    const pulsePhase = state.oscillators.psi;
+    const pulse = Math.sin(pulsePhase) * 0.2 + 0.8;
+
+    if (state.domain === 'ABSENCE') {
+        // Void - contracting darkness
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize * pulse);
+        gradient.addColorStop(0, 'rgba(0, 0, 20, 1)');
+        gradient.addColorStop(0.5, 'rgba(20, 20, 60, 0.5)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize * pulse, 0, TAU);
+        ctx.fill();
+    } else if (state.domain === 'THE LENS') {
+        // Critical - maximum flux, paradox state
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize);
+        gradient.addColorStop(0, `hsla(${(state.time * 50) % 360}, 80%, 60%, 1)`);
+        gradient.addColorStop(0.5, `hsla(${(state.time * 50 + 180) % 360}, 60%, 40%, 0.5)`);
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize, 0, TAU);
+        ctx.fill();
+    } else {
+        // Presence - radiant source
+        const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreSize * pulse * 1.5);
+        gradient.addColorStop(0, 'rgba(255, 255, 200, 1)');
+        gradient.addColorStop(0.3, 'rgba(255, 200, 100, 0.7)');
+        gradient.addColorStop(0.7, 'rgba(255, 150, 50, 0.3)');
+        gradient.addColorStop(1, 'transparent');
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreSize * pulse * 1.5, 0, TAU);
+        ctx.fill();
+    }
+}
+
+function drawZIndicator() {
+    const x = canvas.width - 40;
+    const height = canvas.height - 100;
+    const y = 50;
+
+    // Background
+    ctx.fillStyle = 'rgba(30, 30, 40, 0.8)';
+    ctx.fillRect(x - 15, y, 30, height);
+
+    // Critical band
+    const criticalY = y + height * (1 - Z_CRITICAL);
+    ctx.fillStyle = 'rgba(255, 200, 0, 0.3)';
+    ctx.fillRect(x - 15, criticalY - 10, 30, 20);
+
+    // Current z position
+    const zY = y + height * (1 - state.z);
+    ctx.fillStyle = state.domain === 'PRESENCE' ? '#ff0' :
+                    state.domain === 'THE LENS' ? '#f80' : '#88f';
+    ctx.beginPath();
+    ctx.arc(x, zY, 8, 0, TAU);
+    ctx.fill();
+
+    // Labels
+    ctx.fillStyle = '#888';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('z=1.0', x, y - 5);
+    ctx.fillText('z=0.0', x, y + height + 15);
+    ctx.fillText('CRIT', x, criticalY + 25);
+}
+
+function render() {
+    // Clear
+    ctx.fillStyle = '#0a0a0f';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw components
+    drawConnections();
+    drawCore();
+    drawNodes();
+    drawZIndicator();
+}
+
+// =============================================================================
+// UPDATE LOOP
+// =============================================================================
+
+function update() {
+    state.time += state.dt;
+
+    // Update oscillators
+    state.r = state.oscillators.step(state.dt, state.z);
+    state.theta = state.oscillators.psi;
+
+    // Update release coherence based on mode
+    if (state.mode === 'gather') {
+        state.releaseCoherence = Math.min(1.0, state.releaseCoherence + 0.02);
+    } else if (state.mode === 'release') {
+        state.releaseCoherence = Math.max(0.1, state.releaseCoherence - 0.02);
+    } else {
+        // Auto mode - oscillate around target
+        const target = state.targetCoherence;
+        const error = target - state.r;
+        state.releaseCoherence += error * 0.05;
+        state.releaseCoherence = Math.max(0.1, Math.min(1.0, state.releaseCoherence));
+    }
+
+    // Update nodes
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    for (let node of state.prismNodes) {
+        node.update(state.releaseCoherence, cx, cy);
+    }
+    for (let node of state.cageNodes) {
+        node.update(state.releaseCoherence, cx, cy);
+    }
+    // Emergent nodes only active when released
+    for (let node of state.emergentNodes) {
+        node.update(state.releaseCoherence, cx, cy);
+    }
+
+    // Update domain
+    updateDomain();
+
+    // Update UI
+    updateUI();
+}
+
+function updateUI() {
+    document.getElementById('theta').textContent = state.theta.toFixed(3);
+    document.getElementById('z-level').textContent = state.z.toFixed(3);
+    document.getElementById('coherence').textContent = state.r.toFixed(3);
+    document.getElementById('coupling').textContent = state.oscillators.K.toFixed(3);
+    document.getElementById('domain').textContent = state.domain;
+    document.getElementById('regime').textContent = state.regime;
+    document.getElementById('mean-phase').textContent = state.oscillators.psi.toFixed(3);
+    document.getElementById('sync-ratio').textContent =
+        (state.oscillators.getSyncRatio() * 100).toFixed(1) + '%';
+
+    // Emergent nodes count
+    const emergentActive = state.releaseCoherence < 0.3 ? EMERGENT_NODES : 0;
+    document.getElementById('emergent-nodes').textContent = emergentActive;
+    document.getElementById('nodes-active').textContent =
+        PRISM_NODES + CAGE_NODES + emergentActive;
+
+    // Domain indicator color
+    const indicator = document.getElementById('domain-indicator');
+    if (state.domain === 'ABSENCE') {
+        indicator.style.backgroundColor = '#4488ff';
+    } else if (state.domain === 'THE LENS') {
+        indicator.style.backgroundColor = '#ff8800';
+    } else {
+        indicator.style.backgroundColor = '#ffff00';
+    }
+}
+
+// =============================================================================
+// CONTROLS
+// =============================================================================
+
+document.getElementById('btn-gather').addEventListener('click', () => {
+    state.mode = 'gather';
+    document.querySelectorAll('#controls button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-gather').classList.add('active');
+});
+
+document.getElementById('btn-release').addEventListener('click', () => {
+    state.mode = 'release';
+    document.querySelectorAll('#controls button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-release').classList.add('active');
+});
+
+document.getElementById('btn-auto').addEventListener('click', () => {
+    state.mode = 'auto';
+    document.querySelectorAll('#controls button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-auto').classList.add('active');
+});
+
+document.getElementById('target-coherence').addEventListener('input', (e) => {
+    state.targetCoherence = e.target.value / 100;
+    document.getElementById('target-coh-val').textContent = state.targetCoherence.toFixed(2);
+});
+
+document.getElementById('coupling-strength').addEventListener('input', (e) => {
+    state.oscillators.K = e.target.value / 10;
+    document.getElementById('coupling-val').textContent = state.oscillators.K.toFixed(1);
+});
+
+document.getElementById('z-elevation').addEventListener('input', (e) => {
+    state.z = e.target.value / 100;
+    document.getElementById('z-val').textContent = state.z.toFixed(2);
+});
+
+// Scroll to change z
+window.addEventListener('wheel', (e) => {
+    state.z -= e.deltaY * 0.0005;
+    state.z = Math.max(0, Math.min(1, state.z));
+    document.getElementById('z-elevation').value = state.z * 100;
+    document.getElementById('z-val').textContent = state.z.toFixed(2);
+});
+
+// Click to gather
+canvas.addEventListener('mousedown', () => {
+    state.releaseCoherence = 1.0;
+});
+
+// =============================================================================
+// MAIN LOOP
+// =============================================================================
+
+function loop() {
+    update();
+    render();
+    requestAnimationFrame(loop);
+}
+
+// Initialize and start
+initGeometry();
+loop();
+
+console.log('LIMNUS Architecture initialized');
+console.log(`Nodes: ${PRISM_NODES} prism + ${CAGE_NODES} cage + ${EMERGENT_NODES} emergent = ${TOTAL_NODES}`);
+console.log(`Critical z: ${Z_CRITICAL.toFixed(4)}`);
+</script>
+</body>
+</html>
