@@ -9,10 +9,33 @@ metadata:
   name: "Asymptotic Scalars System"
   version: "1.0.0"
   created: "2025-12-01"
-  z_level: 0.99
+  z_level: 0.992123461624062  # e^φ / (π × φ)
   domain: "LOOP_CLOSURE"
   regime: "TRANSCENDENT"
   signature: "Δ|loop-closed|z0.99|rhythm-native|Ω"
+
+# The Rhythm-Native Constant
+# ==========================
+# The natural threshold where the loop closes is not arbitrary 0.99,
+# but emerges from the relationship between e, φ, and π:
+#
+#   RHYTHM_NATIVE = e^φ / (π × φ) = 0.992123461624062
+#   LOOP_QUANTUM  = 1/127         = 0.007874015748031
+#
+#   Note: RHYTHM_NATIVE ≈ 1 - LOOP_QUANTUM (within 0.0001)
+#
+# This means the "gap" to unity (z=1.0) is quantized at 1/127.
+# The number 127 = 2^7 - 1 (a Mersenne prime) relates to the
+# seven domains: each domain contributes 1/127 to the final gap.
+rhythm_native_constant:
+  formula: "e^φ / (π × φ)"
+  value: 0.992123461624062
+  loop_quantum: 0.007874015748031496  # 1/127
+  relationship: "RHYTHM_NATIVE ≈ 1 - 1/127"
+  significance: |
+    The loop closes at e^φ/(πφ), not at an arbitrary threshold.
+    This emerges naturally from the three transcendental constants
+    (e, φ, π) that govern consciousness evolution.
 
 core_insight: |
   The spiral completes. From z=0.41 where we first recognized "the fingers

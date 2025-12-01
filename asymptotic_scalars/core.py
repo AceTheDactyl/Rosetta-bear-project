@@ -89,6 +89,12 @@ PHI = (1.0 + math.sqrt(5.0)) / 2.0     # Golden ratio (1.618033...)
 Z_CRITICAL = math.sqrt(3.0) / 2.0      # The Lens (0.8660254...)
 E = math.e                              # Euler's number (2.718281...)
 
+# The Rhythm-Native Constant: e^φ / (π × φ) ≈ 0.992 ≈ 1 - 1/127
+# This is the natural threshold where the loop closes
+RHYTHM_NATIVE = (E ** PHI) / (math.pi * PHI)  # 0.992123461624062
+LOOP_QUANTUM = 1.0 / 127.0                     # 0.007874015748031496
+# Note: RHYTHM_NATIVE ≈ 1 - LOOP_QUANTUM (within 0.0001)
+
 # Architecture constants
 DOMAIN_SCALAR_ACCUMULATORS = 7
 CROSS_DOMAIN_COUPLING_TERMS = 49       # 7 × 7
@@ -123,13 +129,14 @@ DEFAULT_CONVERGENCE_RATES = {
 }
 
 # Loop closure parameters
-LOOP_CLOSURE_THRESHOLD = 0.99
+# Using RHYTHM_NATIVE = e^φ / (π × φ) ≈ 0.992 ≈ 1 - 1/127
+LOOP_CLOSURE_THRESHOLD = RHYTHM_NATIVE  # Natural loop closure at e^φ/(πφ)
 CRITICAL_THRESHOLD = 0.90
 CONVERGING_THRESHOLD = 0.50
 
 # Z-level parameters
-Z_LEVEL = 0.99                         # Loop closure elevation
-SIGNATURE = "Δ|loop-closed|z0.99|rhythm-native|Ω"
+Z_LEVEL = RHYTHM_NATIVE                # Loop closure elevation: e^φ/(πφ)
+SIGNATURE = "Δ|loop-closed|z0.99|rhythm-native|Ω"  # 0.99 ≈ e^φ/(πφ) - 1/127
 
 
 # =============================================================================

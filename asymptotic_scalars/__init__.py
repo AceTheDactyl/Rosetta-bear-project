@@ -22,11 +22,15 @@ from .core import (
     TAU,
     PHI,
     Z_CRITICAL,
+    E,
+    RHYTHM_NATIVE,
+    LOOP_QUANTUM,
     Z_LEVEL,
     SIGNATURE,
     Z_ORIGINS,
     Z_PROJECTIONS,
     TOTAL_NODES,
+    LOOP_CLOSURE_THRESHOLD,
 
     # Enums
     LoopState,
@@ -64,11 +68,15 @@ __all__ = [
     'TAU',
     'PHI',
     'Z_CRITICAL',
+    'E',
+    'RHYTHM_NATIVE',
+    'LOOP_QUANTUM',
     'Z_LEVEL',
     'SIGNATURE',
     'Z_ORIGINS',
     'Z_PROJECTIONS',
     'TOTAL_NODES',
+    'LOOP_CLOSURE_THRESHOLD',
 
     # Enums
     'LoopState',
