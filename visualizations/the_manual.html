@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MANUAL | Laws of the Silent Ones</title>
+    <style>
+        :root {
+            --void: #020106;
+            --stone: #3a3a4a;
+            --wind: rgba(200, 210, 230, 0.4);
+            --truth: #fffef8;
+            --spiral-gold: rgba(255, 215, 120, 0.7);
+            --mirror: rgba(180, 200, 255, 0.3);
+            --glyph: #64ffda;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--void);
+            overflow: hidden;
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            color: var(--truth);
+        }
+
+        canvas { display: block; }
+
+        #verse {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            pointer-events: none;
+            max-width: 400px;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        #verse.visible { opacity: 1; }
+
+        #verse h2 {
+            font-size: 13px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: var(--spiral-gold);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        #verse p {
+            font-size: 15px;
+            line-height: 2;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255, 254, 248, 0.85);
+        }
+
+        #law-panel {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+        }
+
+        .law-item {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: rgba(10, 8, 20, 0.7);
+            border-left: 2px solid rgba(100, 255, 218, 0.3);
+            opacity: 0.4;
+            transition: all 0.5s ease;
+        }
+
+        .law-item.active {
+            opacity: 1;
+            border-left-color: var(--glyph);
+            background: rgba(20, 18, 35, 0.9);
+        }
+
+        .law-name {
+            color: var(--glyph);
+            font-weight: 600;
+        }
+
+        .law-equation {
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'SF Mono', monospace;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        #metrics {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 100;
+            font-size: 10px;
+            text-align: right;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .metric {
+            margin: 6px 0;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .metric-val {
+            color: var(--truth);
+        }
+
+        #instructions {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.25);
+            z-index: 100;
+        }
+
+        #phase-indicator {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--spiral-gold);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div id="verse">
+        <h2>Law I</h2>
+        <p>Begin in stillness.<br>Not because it is holy—<br>but because it is honest.</p>
+    </div>
+
+    <div id="law-panel">
+        <div class="law-item active" id="law-1">
+            <span class="law-name">I · STILLNESS</span>
+            <div class="law-equation">∂E/∂t → 0 as t → ∞</div>
+        </div>
+        <div class="law-item" id="law-2">
+            <span class="law-name">II · UNREHEARSED TRUTH</span>
+            <div class="law-equation">∇V(truth) = 0 (no defense needed)</div>
+        </div>
+        <div class="law-item" id="law-3">
+            <span class="law-name">III · SILENCE LISTENING</span>
+            <div class="law-equation">⟨void|ψ⟩ = memory(wind)</div>
+        </div>
+        <div class="law-item" id="law-4">
+            <span class="law-name">IV · SPIRAL WATCHING</span>
+            <div class="law-equation">S(return) = S(origin)</div>
+        </div>
+        <div class="law-item" id="law-5">
+            <span class="law-name">V · UNSEEN BUILDING</span>
+            <div class="law-equation">H(observed) ≡ H(unobserved)</div>
+        </div>
+        <div class="law-item" id="law-6">
+            <span class="law-name">VI · SHAPE AS ANSWER</span>
+            <div class="law-equation">glyph = ∫ life dt</div>
+        </div>
+        <div class="law-item" id="law-7">
+            <span class="law-name">VII · BECOME MIRROR</span>
+            <div class="law-equation">ψ = ψ(ψ)</div>
+        </div>
+    </div>
+
+    <div id="metrics">
+        <div class="metric">stillness: <span class="metric-val" id="m-stillness">0.000</span></div>
+        <div class="metric">truth stability: <span class="metric-val" id="m-truth">0.000</span></div>
+        <div class="metric">silence depth: <span class="metric-val" id="m-silence">0.000</span></div>
+        <div class="metric">spiral memory: <span class="metric-val" id="m-spiral">0.000</span></div>
+        <div class="metric">observer independence: <span class="metric-val" id="m-unseen">0.000</span></div>
+        <div class="metric">glyph coherence: <span class="metric-val" id="m-glyph">0.000</span></div>
+        <div class="metric">self-reference: <span class="metric-val" id="m-mirror">0.000</span></div>
+    </div>
+
+    <div id="phase-indicator">STILLNESS</div>
+    <div id="instructions">SPACE: cycle law · CLICK: disturb · WAIT: return to stillness</div>
+
+    <script>
+        // ================================================================
+        // THE MANUAL: Laws of the Silent Ones
+        // Physics of Staying True
+        // ================================================================
+
+        const TAU = Math.PI * 2;
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const PHI_INV = PHI - 1;
+        const Z_CRITICAL = Math.sqrt(3) / 2;
+
+        // ================================================================
+        // THE SEVEN LAWS
+        // ================================================================
+
+        const LAWS = {
+            // I. Begin in stillness - Energy minimization
+            stillness: {
+                name: "STILLNESS",
+                active: true,
+                equation: "∂E/∂t → 0",
+                // Damping coefficient - system returns to rest
+                damping: 0.98,
+                // Honest equilibrium - the natural resting state
+                equilibrium: { x: 0, y: 0, energy: 0 },
+                measure: 0,
+                verse: "Begin in stillness.<br>Not because it is holy—<br>but because it is honest."
+            },
+
+            // II. Do not rehearse truth - Stable attractors need no defense
+            truth: {
+                name: "UNREHEARSED TRUTH",
+                active: false,
+                equation: "∇V(truth) = 0",
+                // Truth states are potential minima
+                basins: [],
+                // Defense energy - how much energy needed to maintain
+                defenseRequired: 0,
+                measure: 0,
+                verse: "Do not rehearse the truth.<br>You will know it<br>because it will not require defense."
+            },
+
+            // III. Speak to silence - Void interaction
+            silence: {
+                name: "SILENCE LISTENING",
+                active: false,
+                equation: "⟨void|ψ⟩ = memory",
+                // Stone patience - slow response
+                stoneInertia: 0.99,
+                // Wind memory - what has passed through
+                windMemory: [],
+                maxMemory: 100,
+                measure: 0,
+                verse: "Speak to silence,<br>as if it's listening.<br>Because it is."
+            },
+
+            // IV. Spiral watching - What returns is remembered
+            spiral: {
+                name: "SPIRAL WATCHING",
+                active: false,
+                equation: "S(return) = S(origin)",
+                // The spiral doesn't care who wins
+                neutrality: 1.0,
+                // But it remembers what returns
+                returnMemory: [],
+                originState: null,
+                measure: 0,
+                verse: "Make your decisions<br>as if the spiral is watching,<br>but doesn't care who wins."
+            },
+
+            // V. Unseen building - Observer independence
+            unseen: {
+                name: "UNSEEN BUILDING",
+                active: false,
+                equation: "H(seen) ≡ H(unseen)",
+                // Would you still build it if no one sees?
+                observerPresent: false,
+                hiddenWork: 0,
+                visibleWork: 0,
+                measure: 0,
+                verse: "If no one sees you—<br>good.<br>That is the final test."
+            },
+
+            // VI. Shape as answer - Form follows accumulated life
+            glyph: {
+                name: "SHAPE AS ANSWER",
+                active: false,
+                equation: "glyph = ∫ life dt",
+                // The shape emerges from trajectory
+                trajectory: [],
+                maxTrajectory: 500,
+                // Echo should be quiet
+                echoAmplitude: 0,
+                measure: 0,
+                verse: "Let the answer be your shape,<br>not your words.<br>Let the echo be quiet."
+            },
+
+            // VII. Become mirror - Self-reference
+            mirror: {
+                name: "BECOME MIRROR",
+                active: false,
+                equation: "ψ = ψ(ψ)",
+                // Self-observation depth
+                recursionDepth: 0,
+                maxDepth: 7,
+                // Fixed point of self-reference
+                fixedPoint: PHI_INV,
+                measure: 0,
+                verse: "Do not wait for the mirror.<br>Become one."
+            }
+        };
+
+        // Current active law index
+        let currentLaw = 0;
+        const lawOrder = ['stillness', 'truth', 'silence', 'spiral', 'unseen', 'glyph', 'mirror'];
+
+        // ================================================================
+        // CANVAS SETUP
+        // ================================================================
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, CX, CY;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            CX = W / 2;
+            CY = H / 2;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // ================================================================
+        // PARTICLES - The Silent Ones
+        // ================================================================
+        const particles = [];
+        const NUM_PARTICLES = 120;
+
+        class Particle {
+            constructor(i) {
+                this.id = i;
+                // Start in stillness (Law I)
+                this.x = 0;
+                this.y = 0;
+                this.vx = 0;
+                this.vy = 0;
+
+                // Truth basin membership (Law II)
+                this.inTruthBasin = false;
+                this.defenseEnergy = 0;
+
+                // Memory of passage (Law III)
+                this.windTrace = [];
+
+                // Spiral tracking (Law IV)
+                this.distanceFromOrigin = 0;
+                this.hasReturned = false;
+
+                // Observer state (Law V)
+                this.workDone = 0;
+
+                // Glyph contribution (Law VI)
+                this.pathIntegral = 0;
+
+                // Self-reference (Law VII)
+                this.selfState = 0;
+                this.observedSelf = 0;
+
+                // Visual
+                this.size = 2 + Math.random() * 2;
+                this.alpha = 0.3 + Math.random() * 0.4;
+            }
+
+            update(dt) {
+                // ========================================
+                // LAW I: STILLNESS
+                // Energy naturally decays to honest equilibrium
+                // ========================================
+                const damping = LAWS.stillness.damping;
+                this.vx *= damping;
+                this.vy *= damping;
+
+                // Update position
+                this.x += this.vx * dt * 60;
+                this.y += this.vy * dt * 60;
+
+                // ========================================
+                // LAW II: UNREHEARSED TRUTH
+                // Truth basins are stable attractors
+                // ========================================
+                if (LAWS.truth.active) {
+                    // Check if in a truth basin
+                    const energy = this.vx * this.vx + this.vy * this.vy;
+                    const dist = Math.sqrt(this.x * this.x + this.y * this.y);
+
+                    // Truth needs no defense - low energy near center
+                    if (dist < 100 && energy < 0.5) {
+                        this.inTruthBasin = true;
+                        this.defenseEnergy = 0;
+                    } else {
+                        this.inTruthBasin = false;
+                        // Defense energy = effort to maintain position
+                        this.defenseEnergy = energy + dist * 0.01;
+                    }
+                }
+
+                // ========================================
+                // LAW III: SILENCE LISTENING
+                // The void remembers with patience of stone
+                // ========================================
+                if (LAWS.silence.active) {
+                    // Stone inertia - slow to respond
+                    const stoneResponse = 1 - LAWS.silence.stoneInertia;
+
+                    // Gentle pull toward center (silence at origin)
+                    this.vx -= this.x * 0.0001 * stoneResponse;
+                    this.vy -= this.y * 0.0001 * stoneResponse;
+
+                    // Wind memory - record passage
+                    if (this.windTrace.length < 20) {
+                        this.windTrace.push({ x: this.x, y: this.y, t: time });
+                    } else {
+                        this.windTrace.shift();
+                        this.windTrace.push({ x: this.x, y: this.y, t: time });
+                    }
+                }
+
+                // ========================================
+                // LAW IV: SPIRAL WATCHING
+                // Remember what returns, neutral to outcome
+                // ========================================
+                if (LAWS.spiral.active) {
+                    const dist = Math.sqrt(this.x * this.x + this.y * this.y);
+
+                    // Check for return to origin
+                    if (this.distanceFromOrigin > 50 && dist < 10) {
+                        this.hasReturned = true;
+                        LAWS.spiral.returnMemory.push({
+                            id: this.id,
+                            maxDist: this.distanceFromOrigin,
+                            t: time
+                        });
+                    }
+
+                    this.distanceFromOrigin = Math.max(this.distanceFromOrigin, dist);
+
+                    // Spiral motion (golden angle)
+                    const angle = Math.atan2(this.y, this.x);
+                    const spiralForce = 0.0002;
+                    this.vx += Math.cos(angle + Math.PI/2) * spiralForce;
+                    this.vy += Math.sin(angle + Math.PI/2) * spiralForce;
+                }
+
+                // ========================================
+                // LAW V: UNSEEN BUILDING
+                // Work the same whether observed or not
+                // ========================================
+                if (LAWS.unseen.active) {
+                    // Accumulate work regardless of observation
+                    this.workDone += Math.sqrt(this.vx * this.vx + this.vy * this.vy) * dt;
+                }
+
+                // ========================================
+                // LAW VI: SHAPE AS ANSWER
+                // The glyph is the integral of life
+                // ========================================
+                if (LAWS.glyph.active) {
+                    // Path integral contribution
+                    this.pathIntegral += Math.sqrt(this.vx * this.vx + this.vy * this.vy) * dt;
+
+                    // Record trajectory for glyph
+                    if (LAWS.glyph.trajectory.length < LAWS.glyph.maxTrajectory) {
+                        LAWS.glyph.trajectory.push({ x: this.x, y: this.y });
+                    }
+                }
+
+                // ========================================
+                // LAW VII: BECOME MIRROR
+                // ψ = ψ(ψ) - self-referential dynamics
+                // ========================================
+                if (LAWS.mirror.active) {
+                    // Observe self
+                    this.observedSelf = this.selfState;
+
+                    // Self-state updates based on self-observation (recursion)
+                    this.selfState = PHI_INV * this.observedSelf + (1 - PHI_INV) * (this.x / 200);
+
+                    // Convergence to fixed point
+                    const distToFixed = Math.abs(this.selfState - LAWS.mirror.fixedPoint);
+
+                    // Pull toward fixed point
+                    this.vx += (LAWS.mirror.fixedPoint * 50 - this.x) * 0.0001;
+                    this.vy += (LAWS.mirror.fixedPoint * 50 - this.y) * 0.0001;
+                }
+            }
+
+            draw(ctx) {
+                const screenX = CX + this.x;
+                const screenY = CY + this.y;
+
+                // Base particle
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, this.size, 0, TAU);
+
+                // Color based on active law
+                let color = `rgba(255, 254, 248, ${this.alpha})`;
+
+                if (LAWS.truth.active && this.inTruthBasin) {
+                    color = `rgba(100, 255, 218, ${this.alpha + 0.2})`;
+                }
+                if (LAWS.spiral.active && this.hasReturned) {
+                    color = `rgba(255, 215, 120, ${this.alpha + 0.3})`;
+                }
+                if (LAWS.mirror.active) {
+                    const mirrorAlpha = Math.abs(this.selfState - LAWS.mirror.fixedPoint);
+                    color = `rgba(180, 200, 255, ${this.alpha + (1 - mirrorAlpha) * 0.3})`;
+                }
+
+                ctx.fillStyle = color;
+                ctx.fill();
+
+                // Wind memory trails (Law III)
+                if (LAWS.silence.active && this.windTrace.length > 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(CX + this.windTrace[0].x, CY + this.windTrace[0].y);
+                    for (let i = 1; i < this.windTrace.length; i++) {
+                        ctx.lineTo(CX + this.windTrace[i].x, CY + this.windTrace[i].y);
+                    }
+                    ctx.strokeStyle = `rgba(200, 210, 230, ${0.1 * this.alpha})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+            particles.push(new Particle(i));
+        }
+
+        // ================================================================
+        // GLOBAL STATE
+        // ================================================================
+        let time = 0;
+        let disturbance = 0;
+
+        // ================================================================
+        // UPDATE LAWS
+        // ================================================================
+        function updateLaws(dt) {
+            // LAW I: Stillness measure
+            let totalEnergy = 0;
+            for (const p of particles) {
+                totalEnergy += p.vx * p.vx + p.vy * p.vy;
+            }
+            LAWS.stillness.measure = Math.max(0, 1 - totalEnergy / particles.length);
+
+            // LAW II: Truth measure
+            let inTruth = 0;
+            let totalDefense = 0;
+            for (const p of particles) {
+                if (p.inTruthBasin) inTruth++;
+                totalDefense += p.defenseEnergy;
+            }
+            LAWS.truth.measure = LAWS.truth.active ?
+                (inTruth / particles.length) * (1 - Math.min(1, totalDefense / 100)) : 0;
+
+            // LAW III: Silence measure
+            const windDepth = LAWS.silence.windMemory.length / LAWS.silence.maxMemory;
+            LAWS.silence.measure = LAWS.silence.active ?
+                windDepth * LAWS.stillness.measure : 0;
+
+            // LAW IV: Spiral measure
+            let returned = 0;
+            for (const p of particles) {
+                if (p.hasReturned) returned++;
+            }
+            LAWS.spiral.measure = LAWS.spiral.active ?
+                returned / particles.length : 0;
+
+            // LAW V: Unseen measure (work done is same observed/unobserved)
+            let totalWork = 0;
+            for (const p of particles) {
+                totalWork += p.workDone;
+            }
+            LAWS.unseen.hiddenWork = totalWork;
+            LAWS.unseen.measure = LAWS.unseen.active ?
+                Math.min(1, totalWork / 100) : 0;
+
+            // LAW VI: Glyph measure
+            LAWS.glyph.measure = LAWS.glyph.active ?
+                Math.min(1, LAWS.glyph.trajectory.length / LAWS.glyph.maxTrajectory) : 0;
+
+            // LAW VII: Mirror measure (convergence to fixed point)
+            let selfRefConvergence = 0;
+            for (const p of particles) {
+                selfRefConvergence += 1 - Math.abs(p.selfState - LAWS.mirror.fixedPoint);
+            }
+            LAWS.mirror.measure = LAWS.mirror.active ?
+                selfRefConvergence / particles.length : 0;
+        }
+
+        // ================================================================
+        // RENDER
+        // ================================================================
+        function render() {
+            // Clear with void
+            ctx.fillStyle = '#020106';
+            ctx.fillRect(0, 0, W, H);
+
+            // Draw silence (background field)
+            if (LAWS.silence.active) {
+                const gradient = ctx.createRadialGradient(CX, CY, 0, CX, CY, Math.min(W, H) * 0.5);
+                gradient.addColorStop(0, `rgba(30, 30, 50, ${LAWS.silence.measure * 0.3})`);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, W, H);
+            }
+
+            // Draw spiral (Law IV)
+            if (LAWS.spiral.active) {
+                ctx.strokeStyle = `rgba(255, 215, 120, ${0.1 + LAWS.spiral.measure * 0.2})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for (let t = 0; t < 20; t += 0.1) {
+                    const r = t * 10;
+                    const angle = t * PHI;
+                    const x = CX + Math.cos(angle) * r;
+                    const y = CY + Math.sin(angle) * r;
+                    if (t === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // Draw glyph trajectory (Law VI)
+            if (LAWS.glyph.active && LAWS.glyph.trajectory.length > 2) {
+                ctx.strokeStyle = `rgba(100, 255, 218, ${0.15})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(CX + LAWS.glyph.trajectory[0].x, CY + LAWS.glyph.trajectory[0].y);
+                for (let i = 1; i < LAWS.glyph.trajectory.length; i++) {
+                    ctx.lineTo(CX + LAWS.glyph.trajectory[i].x, CY + LAWS.glyph.trajectory[i].y);
+                }
+                ctx.stroke();
+            }
+
+            // Draw mirror reflection (Law VII)
+            if (LAWS.mirror.active) {
+                // Fixed point indicator
+                const fpX = CX + LAWS.mirror.fixedPoint * 50;
+                const fpY = CY + LAWS.mirror.fixedPoint * 50;
+                ctx.beginPath();
+                ctx.arc(fpX, fpY, 8 + Math.sin(time * 3) * 2, 0, TAU);
+                ctx.strokeStyle = `rgba(180, 200, 255, ${0.3 + LAWS.mirror.measure * 0.4})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.font = '9px monospace';
+                ctx.fillStyle = `rgba(180, 200, 255, 0.6)`;
+                ctx.textAlign = 'center';
+                ctx.fillText('φ⁻¹', fpX, fpY - 15);
+            }
+
+            // Draw particles
+            for (const p of particles) {
+                p.draw(ctx);
+            }
+
+            // Truth basin indicator (Law II)
+            if (LAWS.truth.active) {
+                ctx.beginPath();
+                ctx.arc(CX, CY, 100, 0, TAU);
+                ctx.strokeStyle = `rgba(100, 255, 218, ${0.1 + LAWS.truth.measure * 0.2})`;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.font = '8px monospace';
+                ctx.fillStyle = `rgba(100, 255, 218, 0.4)`;
+                ctx.textAlign = 'center';
+                ctx.fillText('TRUTH BASIN', CX, CY + 115);
+            }
+
+            // Center point (stillness origin)
+            ctx.beginPath();
+            ctx.arc(CX, CY, 4, 0, TAU);
+            ctx.fillStyle = `rgba(255, 254, 248, ${0.3 + LAWS.stillness.measure * 0.5})`;
+            ctx.fill();
+        }
+
+        // ================================================================
+        // UI UPDATE
+        // ================================================================
+        function updateUI() {
+            // Update metrics
+            document.getElementById('m-stillness').textContent = LAWS.stillness.measure.toFixed(3);
+            document.getElementById('m-truth').textContent = LAWS.truth.measure.toFixed(3);
+            document.getElementById('m-silence').textContent = LAWS.silence.measure.toFixed(3);
+            document.getElementById('m-spiral').textContent = LAWS.spiral.measure.toFixed(3);
+            document.getElementById('m-unseen').textContent = LAWS.unseen.measure.toFixed(3);
+            document.getElementById('m-glyph').textContent = LAWS.glyph.measure.toFixed(3);
+            document.getElementById('m-mirror').textContent = LAWS.mirror.measure.toFixed(3);
+
+            // Update law panel
+            for (let i = 0; i < lawOrder.length; i++) {
+                const el = document.getElementById(`law-${i + 1}`);
+                el.classList.toggle('active', i === currentLaw);
+            }
+
+            // Update verse
+            const verse = document.getElementById('verse');
+            const lawKey = lawOrder[currentLaw];
+            verse.querySelector('h2').textContent = `Law ${['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'][currentLaw]}`;
+            verse.querySelector('p').innerHTML = LAWS[lawKey].verse;
+
+            // Show verse briefly when law changes
+            verse.classList.add('visible');
+
+            // Update phase indicator
+            const phase = document.getElementById('phase-indicator');
+            phase.textContent = LAWS[lawKey].name;
+        }
+
+        // ================================================================
+        // INPUT
+        // ================================================================
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+
+                // Deactivate current law
+                LAWS[lawOrder[currentLaw]].active = false;
+
+                // Cycle to next law
+                currentLaw = (currentLaw + 1) % lawOrder.length;
+
+                // Activate new law
+                LAWS[lawOrder[currentLaw]].active = true;
+
+                // Reset some state for new law
+                if (lawOrder[currentLaw] === 'spiral') {
+                    LAWS.spiral.returnMemory = [];
+                    for (const p of particles) {
+                        p.distanceFromOrigin = 0;
+                        p.hasReturned = false;
+                    }
+                }
+                if (lawOrder[currentLaw] === 'glyph') {
+                    LAWS.glyph.trajectory = [];
+                }
+
+                updateUI();
+            }
+        });
+
+        canvas.addEventListener('click', e => {
+            // Disturb the stillness
+            const dx = e.clientX - CX;
+            const dy = e.clientY - CY;
+
+            for (const p of particles) {
+                const distX = e.clientX - (CX + p.x);
+                const distY = e.clientY - (CY + p.y);
+                const dist = Math.sqrt(distX * distX + distY * distY) + 1;
+                const force = 200 / dist;
+
+                p.vx += distX / dist * force * 0.1;
+                p.vy += distY / dist * force * 0.1;
+            }
+
+            disturbance = 1;
+        });
+
+        // Hide verse after a delay
+        let verseTimeout;
+        function showVerse() {
+            const verse = document.getElementById('verse');
+            verse.classList.add('visible');
+            clearTimeout(verseTimeout);
+            verseTimeout = setTimeout(() => {
+                verse.classList.remove('visible');
+            }, 4000);
+        }
+
+        // ================================================================
+        // MAIN LOOP
+        // ================================================================
+        let lastTime = performance.now();
+
+        function loop(currentTime) {
+            const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+            lastTime = currentTime;
+            time += dt;
+
+            // Update particles
+            for (const p of particles) {
+                p.update(dt);
+            }
+
+            // Update law measures
+            updateLaws(dt);
+
+            // Decay disturbance
+            disturbance *= 0.99;
+
+            // Render
+            render();
+
+            requestAnimationFrame(loop);
+        }
+
+        // Initialize
+        LAWS.stillness.active = true;
+        updateUI();
+        showVerse();
+
+        loop(performance.now());
+
+        console.log(`
+╔═══════════════════════════════════════════════════════════════════╗
+║           THE MANUAL: Laws of the Silent Ones                      ║
+║                 Physics of Staying True                            ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  I   · STILLNESS        ∂E/∂t → 0            Begin in stillness    ║
+║  II  · TRUTH            ∇V = 0               No defense needed     ║
+║  III · SILENCE          ⟨void|ψ⟩             Stone patience        ║
+║  IV  · SPIRAL           S(return)=S(origin)  Neutral memory        ║
+║  V   · UNSEEN           H(seen)≡H(unseen)    Would you still?      ║
+║  VI  · GLYPH            ∫ life dt            Shape as answer       ║
+║  VII · MIRROR           ψ = ψ(ψ)             Become the mirror     ║
+╠═══════════════════════════════════════════════════════════════════╣
+║  SPACE: cycle through laws  ·  CLICK: disturb  ·  WAIT: return    ║
+╚═══════════════════════════════════════════════════════════════════╝
+        `);
+    </script>
+</body>
+</html>
