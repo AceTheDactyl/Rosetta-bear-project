@@ -46,7 +46,7 @@
             justify-content: center;
             gap: 20px;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1600px;
         }
 
         .canvas-container {
@@ -62,19 +62,25 @@
             border-radius: 5px;
         }
 
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
         .equations-panel {
             background: linear-gradient(135deg, #0d0d15 0%, #151520 100%);
             border: 2px solid #333;
             border-radius: 10px;
             padding: 20px;
-            width: 100%;
-            max-width: 500px;
             box-shadow: 0 0 30px rgba(100, 100, 255, 0.1);
         }
 
         .equation-section {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 8px;
             border-left: 3px solid;
@@ -93,8 +99,8 @@
         }
 
         .equation-section h3 {
-            margin-bottom: 10px;
-            font-size: 1.1em;
+            margin-bottom: 8px;
+            font-size: 1em;
         }
 
         .equation-section.luminahedron h3 {
@@ -111,10 +117,10 @@
 
         .equation {
             font-family: 'Times New Roman', serif;
-            font-size: 1.1em;
+            font-size: 1em;
             color: #fff;
-            margin: 8px 0;
-            padding: 5px;
+            margin: 6px 0;
+            padding: 4px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
         }
@@ -134,8 +140,86 @@
         .mythos {
             font-style: italic;
             color: #aaa;
-            font-size: 0.9em;
+            font-size: 0.85em;
             margin-top: 5px;
+        }
+
+        /* Kaelhedron Structure Panel */
+        .kaelhedron-panel {
+            background: linear-gradient(135deg, #15101a 0%, #1a1525 100%);
+            border: 2px solid #9933ff55;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .kaelhedron-panel h3 {
+            color: #9933ff;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .seal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .seal-row:last-child {
+            border-bottom: none;
+        }
+
+        .seal-symbol {
+            font-size: 1.2em;
+            width: 25px;
+            text-align: center;
+        }
+
+        .seal-cells {
+            display: flex;
+            gap: 8px;
+        }
+
+        .cell-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .cell-dot.lambda { background: #ffd700; }
+        .cell-dot.beta { background: #c0c0c0; }
+        .cell-dot.nu { background: #87ceeb; }
+
+        .cell-dot.active {
+            box-shadow: 0 0 10px currentColor;
+            transform: scale(1.3);
+        }
+
+        .fano-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #444;
+        }
+
+        .fano-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 0;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .fano-line:hover {
+            color: #ffd700;
+        }
+
+        .fano-line.active {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .controls {
@@ -175,17 +259,17 @@
         .state-display {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
             margin: 20px 0;
             justify-content: center;
         }
 
         .state-box {
             background: rgba(0, 0, 0, 0.4);
-            padding: 15px 25px;
+            padding: 12px 20px;
             border-radius: 8px;
             text-align: center;
-            min-width: 150px;
+            min-width: 130px;
         }
 
         .state-box.lambda {
@@ -203,24 +287,30 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
         }
 
+        .state-box.kformation {
+            border: 2px solid #ff4500;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
+        }
+
         .state-label {
-            font-size: 0.8em;
+            font-size: 0.75em;
             color: #888;
         }
 
         .state-value {
-            font-size: 1.5em;
+            font-size: 1.3em;
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .state-box.lambda .state-value { color: #00d4ff; }
         .state-box.kappa .state-value { color: #9933ff; }
         .state-box.balance .state-value { color: #ffd700; }
+        .state-box.kformation .state-value { color: #ff4500; }
 
         .dimensional-bar {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             margin: 20px auto;
             padding: 15px;
             background: rgba(0, 0, 0, 0.3);
@@ -230,26 +320,26 @@
         .dimension-row {
             display: flex;
             align-items: center;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         .dimension-label {
-            width: 120px;
-            font-size: 0.9em;
+            width: 130px;
+            font-size: 0.85em;
         }
 
         .dimension-bar-container {
             flex: 1;
-            height: 24px;
+            height: 20px;
             background: #1a1a1a;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
         }
 
         .dimension-fill {
             height: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             transition: width 0.3s ease;
         }
 
@@ -266,9 +356,9 @@
         }
 
         .dimension-value {
-            width: 60px;
+            width: 50px;
             text-align: right;
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: #ffd700;
         }
 
@@ -283,66 +373,100 @@
             color: #ffd700;
             font-style: italic;
         }
+
+        /* K-Formation indicator */
+        .k-formation-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .k-formation-indicator.active {
+            background: rgba(255, 69, 0, 0.3);
+            border: 1px solid #ff4500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 69, 0, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>LUMINAHEDRON - KAELHEDRON POLARIC DYNAMICS</h1>
-        <div class="signature">Signature: Δ|loop-closed|z0.99|rhythm-native|Ω</div>
+        <div class="signature">21 Cells | 7 Seals | 3 Faces | Fano Navigation</div>
 
         <div class="main-view">
-            <div class="canvas-container">
-                <canvas id="mainCanvas" width="600" height="600"></canvas>
+            <div class="canvas-container" style="position: relative;">
+                <canvas id="mainCanvas" width="700" height="700"></canvas>
+                <div class="k-formation-indicator" id="kFormIndicator">K-Formation: <span id="kFormStatus">Approaching</span></div>
             </div>
 
-            <div class="equations-panel">
-                <div class="equation-section luminahedron">
-                    <h3>LUMINAHEDRON (λ) - The Outward-Radiating One</h3>
-                    <div class="equation">
-                        dim(<span class="symbol">λ</span>) = <span class="number">12</span> =
-                        <span class="number">8</span><sub>SU(3)</sub> +
-                        <span class="number">3</span><sub>SU(2)</sub> +
-                        <span class="number">1</span><sub>U(1)</sub>
+            <div class="side-panel">
+                <div class="equations-panel">
+                    <div class="equation-section luminahedron">
+                        <h3>LUMINAHEDRON (lambda) - Outward-Radiating</h3>
+                        <div class="equation">
+                            dim(<span class="symbol">lambda</span>) = <span class="number">12</span> =
+                            <span class="number">8</span><sub>SU(3)</sub> +
+                            <span class="number">3</span><sub>SU(2)</sub> +
+                            <span class="number">1</span><sub>U(1)</sub>
+                        </div>
+                        <div class="equation">
+                            F<sub>mu,nu</sub> = partial<sub>mu</sub>A<sub>nu</sub> - partial<sub>nu</sub>A<sub>mu</sub> + g[A<sub>mu</sub>, A<sub>nu</sub>]
+                        </div>
+                        <div class="mythos">"12 faces of manifestation illuminating the cosmos"</div>
                     </div>
-                    <div class="equation">
-                        F<sub>μν</sub> = ∂<sub>μ</sub>A<sub>ν</sub> - ∂<sub>ν</sub>A<sub>μ</sub> + g[A<sub>μ</sub>, A<sub>ν</sub>]
+
+                    <div class="equation-section kaelhedron">
+                        <h3>KAELHEDRON (kappa) - Inward-Folding</h3>
+                        <div class="equation">
+                            dim(<span class="symbol-k">kappa</span>) = <span class="number">21</span> =
+                            <span class="number">7</span><sub>Seals</sub> x
+                            <span class="number">3</span><sub>Faces</sub>
+                        </div>
+                        <div class="equation">
+                            square kappa + zeta kappa<sup>3</sup> = 0 (Klein-Gordon-Kael)
+                        </div>
+                        <div class="equation">
+                            zeta = (5/3)<sup>4</sup> = <span class="number">7.716...</span>
+                        </div>
+                        <div class="mythos">"21 cells of consciousness reflecting the void"</div>
                     </div>
-                    <div class="equation">
-                        d<span class="symbol">λ</span>/dt = (1 - <span class="symbol">λ</span>) · 0.1 - <span class="symbol-k">κ</span>·K
+
+                    <div class="equation-section polaric">
+                        <h3>POLARIC DANCE (kappa-lambda)</h3>
+                        <div class="equation">
+                            <span class="symbol-k">kappa</span> + <span class="symbol">lambda</span> =
+                            <span class="number">21</span> + <span class="number">12</span> =
+                            <span class="number">33</span> subset E<sub>8</sub>(<span class="number">248</span>)
+                        </div>
+                        <div class="equation">
+                            K-Formation: kappa > phi<sup>-1</sup> and R >= 7 and Q != 0
+                        </div>
+                        <div class="mythos">"When Kaelhedron meets Luminahedron, observer and observed become one"</div>
                     </div>
-                    <div class="mythos">"12 faces of manifestation illuminating the cosmos"</div>
                 </div>
 
-                <div class="equation-section kaelhedron">
-                    <h3>KAELHEDRON (κ) - The Inward-Folding One</h3>
-                    <div class="equation">
-                        dim(<span class="symbol-k">κ</span>) = <span class="number">21</span> =
-                        <span class="number">6</span><sub>Lorentz</sub> +
-                        <span class="number">15</span><sub>consciousness</sub>
+                <div class="kaelhedron-panel">
+                    <h3>KAELHEDRON STRUCTURE (7 Seals x 3 Faces)</h3>
+                    <div style="display: flex; justify-content: space-around; margin-bottom: 8px; font-size: 0.8em; color: #888;">
+                        <span style="color: #ffd700;">Lambda</span>
+                        <span style="color: #c0c0c0;">Beta</span>
+                        <span style="color: #87ceeb;">Nu</span>
                     </div>
-                    <div class="equation">
-                        R<sub>μν</sub> - ½g<sub>μν</sub>R = 8πG T<sub>μν</sub>
-                    </div>
-                    <div class="equation">
-                        d<span class="symbol-k">κ</span>/dt = (1 - <span class="symbol-k">κ</span>) · 0.1 - <span class="symbol">λ</span>·K
-                    </div>
-                    <div class="mythos">"21 faces of consciousness reflecting the void"</div>
-                </div>
+                    <div id="sealRows"></div>
 
-                <div class="equation-section polaric">
-                    <h3>POLARIC DANCE (κλ)</h3>
-                    <div class="equation">
-                        <span class="symbol-k">κ</span> ⊕ <span class="symbol">λ</span> =
-                        <span class="number">21</span> + <span class="number">12</span> =
-                        <span class="number">33</span> ⊂ E<sub>8</sub>(<span class="number">248</span>)
+                    <div class="fano-section">
+                        <div style="color: #ffd700; font-size: 0.9em; margin-bottom: 8px;">FANO LINES (Click to highlight)</div>
+                        <div id="fanoLines"></div>
                     </div>
-                    <div class="equation">
-                        Balance β = <span class="symbol">λ</span> / (<span class="symbol-k">κ</span> + <span class="symbol">λ</span>)
-                    </div>
-                    <div class="equation">
-                        Unity = (1 - 2|0.5 - β|) · (1 - Δφ/π)
-                    </div>
-                    <div class="mythos">"The storm that remembers the first storm: f(f(x)) = f(x)"</div>
                 </div>
             </div>
         </div>
@@ -359,47 +483,58 @@
                 <div class="value-display" id="timeValue">1.0x</div>
             </div>
             <div class="control-group">
-                <label>Initial λ Divergence</label>
-                <input type="range" id="lambdaSlider" min="0" max="100" value="70">
-                <div class="value-display" id="lambdaValue">0.70</div>
+                <label>Recursion Depth (R)</label>
+                <input type="range" id="recursionSlider" min="1" max="7" value="6">
+                <div class="value-display" id="recursionValue">R=6 (Xi)</div>
             </div>
             <div class="control-group">
-                <label>Initial κ Convergence</label>
-                <input type="range" id="kappaSlider" min="0" max="100" value="30">
-                <div class="value-display" id="kappaValue">0.30</div>
+                <label>Coherence (eta)</label>
+                <input type="range" id="coherenceSlider" min="0" max="100" value="58">
+                <div class="value-display" id="coherenceValue">0.58</div>
             </div>
         </div>
 
         <div class="state-display">
             <div class="state-box lambda">
-                <div class="state-label">λ Divergence</div>
+                <div class="state-label">lambda Divergence</div>
                 <div class="state-value" id="lambdaState">0.70</div>
             </div>
             <div class="state-box kappa">
-                <div class="state-label">κ Convergence</div>
+                <div class="state-label">kappa Convergence</div>
                 <div class="state-value" id="kappaState">0.30</div>
             </div>
             <div class="state-box balance">
-                <div class="state-label">Balance β</div>
+                <div class="state-label">Balance (beta)</div>
                 <div class="state-value" id="balanceState">0.50</div>
+            </div>
+            <div class="state-box kformation">
+                <div class="state-label">Coherence (eta)</div>
+                <div class="state-value" id="coherenceState">0.58</div>
             </div>
         </div>
 
         <div class="dimensional-bar">
-            <h3 style="text-align: center; color: #ffd700; margin-bottom: 15px;">E₈ DIMENSIONAL DECOMPOSITION (248)</h3>
+            <h3 style="text-align: center; color: #ffd700; margin-bottom: 12px;">E8 DIMENSIONAL DECOMPOSITION (248)</h3>
             <div class="dimension-row">
-                <div class="dimension-label" style="color: #00d4ff;">Luminahedron λ</div>
+                <div class="dimension-label" style="color: #00d4ff;">Luminahedron lambda</div>
                 <div class="dimension-bar-container">
                     <div class="dimension-fill lambda" style="width: 4.84%;"></div>
                 </div>
                 <div class="dimension-value">12</div>
             </div>
             <div class="dimension-row">
-                <div class="dimension-label" style="color: #9933ff;">Kaelhedron κ</div>
+                <div class="dimension-label" style="color: #9933ff;">Kaelhedron kappa</div>
                 <div class="dimension-bar-container">
                     <div class="dimension-fill kappa" style="width: 8.47%;"></div>
                 </div>
                 <div class="dimension-value">21</div>
+            </div>
+            <div class="dimension-row">
+                <div class="dimension-label" style="color: #666;">Polaric Union</div>
+                <div class="dimension-bar-container">
+                    <div class="dimension-fill" style="width: 13.31%; background: linear-gradient(90deg, #00d4ff, #ffd700, #9933ff);"></div>
+                </div>
+                <div class="dimension-value">33</div>
             </div>
             <div class="dimension-row">
                 <div class="dimension-label" style="color: #666;">Hidden Sector</div>
@@ -411,14 +546,14 @@
         </div>
 
         <footer>
-            <p class="storm">"When Kaelhedron meets Luminahedron, observer and observed become one."</p>
-            <p>Scalar Architecture v1.6.0 | Mythos = Mathematics</p>
+            <p class="storm">"exists R -> phi -> K -> infinity"</p>
+            <p>Scalar Architecture v2.0 | Kaelhedron Integration | Mythos = Mathematics</p>
         </footer>
     </div>
 
     <script>
         // ============================================
-        // LUMINAHEDRON-KAELHEDRON PHYSICS ENGINE
+        // LUMINAHEDRON-KAELHEDRON UNIFIED ENGINE
         // ============================================
 
         const canvas = document.getElementById('mainCanvas');
@@ -428,15 +563,45 @@
         const CX = W / 2;
         const CY = H / 2;
 
-        // Physical constants
-        const PHI = (1 + Math.sqrt(5)) / 2;  // Golden ratio
+        // Sacred Constants (derived from phi)
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const PHI_INV = 1 / PHI;
         const TAU = 2 * Math.PI;
+        const ZETA = Math.pow(5/3, 4);
 
         // Dimensional constants
         const DIM_LAMBDA = 12;
         const DIM_KAPPA = 21;
         const DIM_POLARIC = 33;
         const DIM_E8 = 248;
+
+        // Kaelhedron Structure: 7 Seals x 3 Faces
+        const SEALS = [
+            { id: 1, symbol: 'Omega', greek: 'Omega', name: 'GROUND', color: '#FFD700' },
+            { id: 2, symbol: 'Delta', greek: 'Delta', name: 'CHANGE', color: '#C0C0C0' },
+            { id: 3, symbol: 'Tau', greek: 'Tau', name: 'FORM', color: '#CD7F32' },
+            { id: 4, symbol: 'Psi', greek: 'Psi', name: 'MIND', color: '#9966CC' },
+            { id: 5, symbol: 'Sigma', greek: 'Sigma', name: 'SUM', color: '#4169E1' },
+            { id: 6, symbol: 'Xi', greek: 'Xi', name: 'BRIDGE', color: '#32CD32' },
+            { id: 7, symbol: 'Kappa', greek: 'Kappa', name: 'KEY', color: '#FF4500' }
+        ];
+
+        const FACES = [
+            { id: 'Lambda', name: 'Logos', mode: 'Structure', color: '#FFD700', angle: 0 },
+            { id: 'Beta', name: 'Bios', mode: 'Process', color: '#C0C0C0', angle: TAU / 3 },
+            { id: 'Nu', name: 'Nous', mode: 'Awareness', color: '#87CEEB', angle: 2 * TAU / 3 }
+        ];
+
+        // Fano Lines (holographic connections)
+        const FANO_LINES = [
+            { id: 1, points: [1, 2, 3], name: 'Foundation', color: '#FF6B6B' },
+            { id: 2, points: [1, 4, 5], name: 'Self-Reference', color: '#4ECDC4' },
+            { id: 3, points: [1, 6, 7], name: 'Completion', color: '#45B7D1' },
+            { id: 4, points: [2, 4, 6], name: 'Even Path', color: '#96CEB4' },
+            { id: 5, points: [2, 5, 7], name: 'Prime Path', color: '#FFEAA7' },
+            { id: 6, points: [3, 4, 7], name: 'Growth', color: '#DDA0DD' },
+            { id: 7, points: [3, 5, 6], name: 'Balance', color: '#98D8C8' }
+        ];
 
         // System state
         let state = {
@@ -448,21 +613,80 @@
             kappa: {
                 convergence: 0.3,
                 phase: 0,
-                vertices: []
+                cells: []
             },
             coupling: 0.5,
             timeScale: 1.0,
             balance: 0.5,
             unity: 0.5,
-            time: 0
+            coherence: 0.58,
+            recursion: 6,
+            topologicalCharge: 1,
+            time: 0,
+            selectedFanoLine: null
         };
+
+        // Build UI elements
+        function buildKaelhedronUI() {
+            const sealRowsContainer = document.getElementById('sealRows');
+            sealRowsContainer.innerHTML = '';
+
+            SEALS.forEach(seal => {
+                const row = document.createElement('div');
+                row.className = 'seal-row';
+                row.innerHTML = `
+                    <span class="seal-symbol" style="color: ${seal.color}">${seal.greek}</span>
+                    <span style="flex: 1; font-size: 0.7em; color: #666;">${seal.name}</span>
+                    <div class="seal-cells">
+                        <div class="cell-dot lambda" data-seal="${seal.id}" data-face="Lambda" title="${seal.greek}LAM"></div>
+                        <div class="cell-dot beta" data-seal="${seal.id}" data-face="Beta" title="${seal.greek}BET"></div>
+                        <div class="cell-dot nu" data-seal="${seal.id}" data-face="Nu" title="${seal.greek}NOU"></div>
+                    </div>
+                `;
+                sealRowsContainer.appendChild(row);
+            });
+
+            const fanoContainer = document.getElementById('fanoLines');
+            fanoContainer.innerHTML = '';
+
+            FANO_LINES.forEach(line => {
+                const lineEl = document.createElement('div');
+                lineEl.className = 'fano-line';
+                lineEl.dataset.lineId = line.id;
+                const sealSymbols = line.points.map(p => SEALS.find(s => s.id === p).greek).join('-');
+                lineEl.innerHTML = `<span style="color: ${line.color};">|</span> ${line.name}: ${sealSymbols}`;
+                lineEl.onclick = () => toggleFanoLine(line.id);
+                fanoContainer.appendChild(lineEl);
+            });
+        }
+
+        function toggleFanoLine(lineId) {
+            if (state.selectedFanoLine === lineId) {
+                state.selectedFanoLine = null;
+            } else {
+                state.selectedFanoLine = lineId;
+            }
+            updateFanoHighlights();
+        }
+
+        function updateFanoHighlights() {
+            document.querySelectorAll('.fano-line').forEach(el => {
+                el.classList.toggle('active', parseInt(el.dataset.lineId) === state.selectedFanoLine);
+            });
+
+            document.querySelectorAll('.cell-dot').forEach(el => {
+                const sealId = parseInt(el.dataset.seal);
+                const isOnLine = state.selectedFanoLine &&
+                    FANO_LINES.find(l => l.id === state.selectedFanoLine)?.points.includes(sealId);
+                el.classList.toggle('active', isOnLine);
+            });
+        }
 
         // Generate dodecahedron vertices (12-faced for Luminahedron)
         function generateDodecahedronVertices(radius) {
             const vertices = [];
             const phi = PHI;
 
-            // Dodecahedron has 20 vertices
             // Cube vertices
             for (let i = -1; i <= 1; i += 2) {
                 for (let j = -1; j <= 1; j += 2) {
@@ -472,7 +696,7 @@
                 }
             }
 
-            // Rectangle vertices (3 orthogonal golden rectangles)
+            // Golden rectangle vertices
             for (let i = -1; i <= 1; i += 2) {
                 for (let j = -1; j <= 1; j += 2) {
                     vertices.push([0, i / phi, j * phi]);
@@ -481,35 +705,39 @@
                 }
             }
 
-            // Normalize and scale
             return vertices.map(v => {
                 const len = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
                 return [v[0]/len * radius, v[1]/len * radius, v[2]/len * radius];
             });
         }
 
-        // Generate icosahedron vertices (20-faced, approximating 21 for Kaelhedron)
-        function generateIcosahedronVertices(radius) {
-            const vertices = [];
-            const phi = PHI;
+        // Generate Kaelhedron geometry (21 cells in 7x3 structure)
+        function generateKaelhedronGeometry(radius) {
+            const cells = [];
+            const verticalSpacing = radius * 0.35;
 
-            // 12 vertices of icosahedron
-            for (let i = -1; i <= 1; i += 2) {
-                for (let j = -1; j <= 1; j += 2) {
-                    vertices.push([0, i, j * phi]);
-                    vertices.push([i, j * phi, 0]);
-                    vertices.push([j * phi, 0, i]);
-                }
-            }
+            SEALS.forEach((seal, sealIdx) => {
+                FACES.forEach((face, faceIdx) => {
+                    const y = (3 - sealIdx) * verticalSpacing;
+                    const angle = face.angle + state.kappa.phase * 0.2;
+                    const r = radius * 0.6;
+                    const x = r * Math.cos(angle);
+                    const z = r * Math.sin(angle);
 
-            // Normalize and scale
-            return vertices.map(v => {
-                const len = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
-                return [v[0]/len * radius, v[1]/len * radius, v[2]/len * radius];
+                    cells.push({
+                        seal,
+                        face,
+                        x, y, z,
+                        isKFormed: seal.id === 7,
+                        isBridge: seal.id === state.recursion
+                    });
+                });
             });
+
+            return cells;
         }
 
-        // 3D rotation
+        // 3D rotation functions
         function rotateX(v, angle) {
             const cos = Math.cos(angle);
             const sin = Math.sin(angle);
@@ -528,8 +756,7 @@
             return [v[0]*cos - v[1]*sin, v[0]*sin + v[1]*cos, v[2]];
         }
 
-        // Project 3D to 2D with perspective
-        function project(v, distance = 400) {
+        function project(v, distance = 500) {
             const scale = distance / (distance + v[2]);
             return [v[0] * scale, v[1] * scale, scale];
         }
@@ -538,25 +765,21 @@
         function updatePhysics(dt) {
             const K = state.coupling;
 
-            // Cross-influence coupling (Kuramoto-like)
+            // Cross-influence coupling
             const kappaField = state.kappa.convergence * K;
             const lambdaField = state.lambda.divergence * K;
 
-            // Luminahedron: natural divergence, slowed by Kaelhedron
+            // Luminahedron divergence dynamics
             const dLambda = (1 - state.lambda.divergence) * 0.1 - kappaField * 0.05;
-            state.lambda.divergence = Math.max(0, Math.min(1,
-                state.lambda.divergence + dLambda * dt));
+            state.lambda.divergence = Math.max(0, Math.min(1, state.lambda.divergence + dLambda * dt));
 
-            // Kaelhedron: natural convergence, slowed by Luminahedron
+            // Kaelhedron convergence dynamics
             const dKappa = (1 - state.kappa.convergence) * 0.1 - lambdaField * 0.05;
-            state.kappa.convergence = Math.max(0, Math.min(1,
-                state.kappa.convergence + dKappa * dt));
+            state.kappa.convergence = Math.max(0, Math.min(1, state.kappa.convergence + dKappa * dt));
 
-            // Phase evolution
-            // Luminahedron spirals outward (faster phase)
+            // Phase evolution (golden ratio relationship)
             state.lambda.phase += PHI * dt * (1 + state.lambda.divergence);
-            // Kaelhedron spirals inward (slower phase)
-            state.kappa.phase += (1/PHI) * dt * (1 + state.kappa.convergence);
+            state.kappa.phase += PHI_INV * dt * (1 + state.kappa.convergence);
 
             // Compute balance
             const total = state.kappa.convergence + state.lambda.divergence + 0.001;
@@ -571,10 +794,19 @@
             state.time += dt;
         }
 
+        // Check K-Formation criteria
+        function checkKFormation() {
+            const coherenceMet = state.coherence > PHI_INV;
+            const recursionMet = state.recursion >= 7;
+            const chargeMet = state.topologicalCharge !== 0;
+
+            return coherenceMet && recursionMet && chargeMet;
+        }
+
         // Draw the visualization
         function draw() {
             // Clear with gradient background
-            const gradient = ctx.createRadialGradient(CX, CY, 0, CX, CY, 400);
+            const gradient = ctx.createRadialGradient(CX, CY, 0, CX, CY, 450);
             gradient.addColorStop(0, '#0d0d15');
             gradient.addColorStop(1, '#050508');
             ctx.fillStyle = gradient;
@@ -584,65 +816,84 @@
             ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(CX, CY, 280, 0, TAU);
+            ctx.arc(CX, CY, 320, 0, TAU);
             ctx.stroke();
 
-            // Draw polaric span circle
-            ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
+            // Draw phi threshold circle
+            ctx.strokeStyle = 'rgba(255, 69, 0, 0.15)';
             ctx.beginPath();
-            ctx.arc(CX, CY, 280 * (DIM_POLARIC / DIM_E8) * 5, 0, TAU);
+            ctx.arc(CX, CY, 320 * PHI_INV, 0, TAU);
             ctx.stroke();
+            ctx.font = '10px Courier New';
+            ctx.fillStyle = 'rgba(255, 69, 0, 0.4)';
+            ctx.fillText('phi^-1 threshold', CX + 320 * PHI_INV + 5, CY);
 
             // Calculate dynamic radii based on state
-            const lambdaRadius = 80 + state.lambda.divergence * 60;
-            const kappaRadius = 120 + state.kappa.convergence * 40;
+            const lambdaRadius = 80 + state.lambda.divergence * 50;
+            const kappaRadius = 100 + state.kappa.convergence * 30;
 
             // Luminahedron offset (radiates outward)
-            const lambdaOffset = state.lambda.divergence * 80;
-            const lambdaCX = CX + Math.cos(state.lambda.phase * 0.3) * lambdaOffset;
-            const lambdaCY = CY + Math.sin(state.lambda.phase * 0.3) * lambdaOffset;
+            const lambdaOffset = state.lambda.divergence * 100;
+            const lambdaCX = CX + Math.cos(state.lambda.phase * 0.3) * lambdaOffset - 100;
+            const lambdaCY = CY + Math.sin(state.lambda.phase * 0.3) * lambdaOffset * 0.3;
 
-            // Kaelhedron offset (pulls inward)
-            const kappaOffset = (1 - state.kappa.convergence) * 60;
-            const kappaCX = CX - Math.cos(state.kappa.phase * 0.2) * kappaOffset;
-            const kappaCY = CY - Math.sin(state.kappa.phase * 0.2) * kappaOffset;
+            // Kaelhedron offset (converges inward)
+            const kappaOffset = (1 - state.kappa.convergence) * 80;
+            const kappaCX = CX - Math.cos(state.kappa.phase * 0.2) * kappaOffset + 100;
+            const kappaCY = CY - Math.sin(state.kappa.phase * 0.2) * kappaOffset * 0.3;
 
-            // Draw coupling lines between centers
-            const couplingAlpha = state.coupling * state.unity;
-            ctx.strokeStyle = `rgba(255, 215, 0, ${couplingAlpha * 0.5})`;
-            ctx.lineWidth = 2 + state.unity * 3;
-            ctx.beginPath();
-            ctx.moveTo(lambdaCX, lambdaCY);
-            ctx.lineTo(kappaCX, kappaCY);
-            ctx.stroke();
+            // Draw coupling field between them
+            drawCouplingField(lambdaCX, lambdaCY, kappaCX, kappaCY);
 
-            // Draw Kaelhedron (behind)
+            // Draw Kaelhedron (21 cells)
             drawKaelhedron(kappaCX, kappaCY, kappaRadius);
 
-            // Draw Luminahedron (in front)
+            // Draw Luminahedron
             drawLuminahedron(lambdaCX, lambdaCY, lambdaRadius);
 
-            // Draw center point (unity)
-            const unityRadius = 5 + state.unity * 15;
-            const unityGradient = ctx.createRadialGradient(CX, CY, 0, CX, CY, unityRadius);
-            unityGradient.addColorStop(0, `rgba(255, 215, 0, ${state.unity})`);
-            unityGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
-            ctx.fillStyle = unityGradient;
-            ctx.beginPath();
-            ctx.arc(CX, CY, unityRadius, 0, TAU);
-            ctx.fill();
+            // Draw center unity point
+            drawUnityPoint();
 
-            // Draw dimensional labels
-            ctx.font = '14px Courier New';
-            ctx.fillStyle = '#00d4ff';
-            ctx.fillText(`λ = ${DIM_LAMBDA}D`, lambdaCX + lambdaRadius + 10, lambdaCY);
-            ctx.fillStyle = '#9933ff';
-            ctx.fillText(`κ = ${DIM_KAPPA}D`, kappaCX - kappaRadius - 60, kappaCY);
+            // Draw Fano plane overlay if line selected
+            if (state.selectedFanoLine) {
+                drawFanoOverlay(kappaCX, kappaCY, kappaRadius);
+            }
 
             // Draw phase indicators
-            drawPhaseRing(CX, CY + 250, 30, state.lambda.phase, '#00d4ff', 'λ');
-            drawPhaseRing(CX - 80, CY + 250, 30, state.kappa.phase, '#9933ff', 'κ');
-            drawPhaseRing(CX + 80, CY + 250, 30, state.unity * TAU, '#ffd700', 'U');
+            drawPhaseIndicators();
+
+            // Draw labels
+            ctx.font = '14px Courier New';
+            ctx.fillStyle = '#00d4ff';
+            ctx.fillText(`lambda = ${DIM_LAMBDA}D`, lambdaCX + lambdaRadius + 15, lambdaCY - 10);
+            ctx.fillStyle = '#9933ff';
+            ctx.fillText(`kappa = ${DIM_KAPPA}D (7x3)`, kappaCX - kappaRadius - 100, kappaCY - 10);
+        }
+
+        function drawCouplingField(lx, ly, kx, ky) {
+            const couplingAlpha = state.coupling * state.unity;
+
+            // Energy flow lines
+            const numLines = 5;
+            for (let i = 0; i < numLines; i++) {
+                const t = (state.time * 0.5 + i / numLines) % 1;
+                const x = lx + (kx - lx) * t;
+                const y = ly + (ky - ly) * t;
+                const wave = Math.sin(t * TAU * 3 + state.time * 2) * 10;
+
+                ctx.fillStyle = `rgba(255, 215, 0, ${couplingAlpha * (1 - Math.abs(t - 0.5) * 2)})`;
+                ctx.beginPath();
+                ctx.arc(x, y + wave, 3 + couplingAlpha * 3, 0, TAU);
+                ctx.fill();
+            }
+
+            // Main coupling line
+            ctx.strokeStyle = `rgba(255, 215, 0, ${couplingAlpha * 0.3})`;
+            ctx.lineWidth = 2 + state.unity * 3;
+            ctx.beginPath();
+            ctx.moveTo(lx, ly);
+            ctx.lineTo(kx, ky);
+            ctx.stroke();
         }
 
         function drawLuminahedron(cx, cy, radius) {
@@ -651,17 +902,12 @@
             const rotAngleY = state.lambda.phase * 0.3;
             const rotAngleZ = state.time * 0.1;
 
-            // Transform vertices
             const transformed = vertices.map(v => {
                 let tv = rotateX(v, rotAngleX);
                 tv = rotateY(tv, rotAngleY);
                 tv = rotateZ(tv, rotAngleZ);
                 return project(tv);
             });
-
-            // Sort by depth for proper rendering
-            const indexed = transformed.map((v, i) => ({v, i}));
-            indexed.sort((a, b) => a.v[2] - b.v[2]);
 
             // Draw connections
             ctx.strokeStyle = `rgba(0, 212, 255, ${0.3 + state.lambda.divergence * 0.4})`;
@@ -688,8 +934,8 @@
                 }
             }
 
-            // Draw vertices
-            indexed.forEach(({v, i}) => {
+            // Draw vertices with glow
+            transformed.forEach((v, i) => {
                 const size = 3 + v[2] * 4;
                 const alpha = 0.5 + v[2] * 0.5;
 
@@ -719,83 +965,149 @@
         }
 
         function drawKaelhedron(cx, cy, radius) {
-            const vertices = generateIcosahedronVertices(radius);
-            const rotAngleX = -state.kappa.phase * 0.4;
-            const rotAngleY = -state.kappa.phase * 0.25;
+            const cells = generateKaelhedronGeometry(radius);
+            const rotAngleX = -state.kappa.phase * 0.3 + 0.3;
+            const rotAngleY = -state.kappa.phase * 0.2;
             const rotAngleZ = -state.time * 0.08;
 
-            // Transform vertices
-            const transformed = vertices.map(v => {
-                let tv = rotateX(v, rotAngleX);
-                tv = rotateY(tv, rotAngleY);
-                tv = rotateZ(tv, rotAngleZ);
-                return project(tv);
+            // Transform and project cells
+            const projectedCells = cells.map(cell => {
+                let pos = [cell.x, cell.y, cell.z];
+                pos = rotateX(pos, rotAngleX);
+                pos = rotateY(pos, rotAngleY);
+                pos = rotateZ(pos, rotAngleZ);
+                const proj = project(pos);
+                return { ...cell, px: cx + proj[0], py: cy + proj[1], scale: proj[2], z: pos[2] };
             });
 
-            // Draw connections
-            ctx.strokeStyle = `rgba(153, 51, 255, ${0.2 + state.kappa.convergence * 0.3})`;
-            ctx.lineWidth = 1;
+            // Sort by depth
+            projectedCells.sort((a, b) => a.z - b.z);
 
-            for (let i = 0; i < transformed.length; i++) {
-                for (let j = i + 1; j < transformed.length; j++) {
-                    const v1 = transformed[i];
-                    const v2 = transformed[j];
-                    const dist = Math.sqrt(
-                        Math.pow(vertices[i][0] - vertices[j][0], 2) +
-                        Math.pow(vertices[i][1] - vertices[j][1], 2) +
-                        Math.pow(vertices[i][2] - vertices[j][2], 2)
-                    );
-
-                    if (dist < radius * 1.2) {
-                        const alpha = (v1[2] + v2[2]) / 2;
-                        ctx.strokeStyle = `rgba(153, 51, 255, ${0.1 + alpha * 0.2})`;
+            // Draw connections within same seal (horizontal)
+            SEALS.forEach(seal => {
+                const sealCells = projectedCells.filter(c => c.seal.id === seal.id);
+                for (let i = 0; i < sealCells.length; i++) {
+                    for (let j = i + 1; j < sealCells.length; j++) {
+                        ctx.strokeStyle = `rgba(153, 51, 255, 0.2)`;
+                        ctx.lineWidth = 0.5;
                         ctx.beginPath();
-                        ctx.moveTo(cx + v1[0], cy + v1[1]);
-                        ctx.lineTo(cx + v2[0], cy + v2[1]);
+                        ctx.moveTo(sealCells[i].px, sealCells[i].py);
+                        ctx.lineTo(sealCells[j].px, sealCells[j].py);
                         ctx.stroke();
                     }
                 }
-            }
-
-            // Draw vertices
-            transformed.forEach((v, i) => {
-                const size = 2 + v[2] * 3;
-                const alpha = 0.4 + v[2] * 0.4;
-
-                const vGradient = ctx.createRadialGradient(
-                    cx + v[0], cy + v[1], 0,
-                    cx + v[0], cy + v[1], size * 2
-                );
-                vGradient.addColorStop(0, `rgba(153, 51, 255, ${alpha})`);
-                vGradient.addColorStop(0.5, `rgba(100, 30, 150, ${alpha * 0.5})`);
-                vGradient.addColorStop(1, 'rgba(50, 0, 100, 0)');
-
-                ctx.fillStyle = vGradient;
-                ctx.beginPath();
-                ctx.arc(cx + v[0], cy + v[1], size * 2, 0, TAU);
-                ctx.fill();
             });
 
-            // Inner glow (collapse effect)
-            const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.8);
-            glow.addColorStop(0, `rgba(153, 51, 255, ${state.kappa.convergence * 0.2})`);
-            glow.addColorStop(0.5, `rgba(153, 51, 255, ${state.kappa.convergence * 0.05})`);
-            glow.addColorStop(1, 'rgba(153, 51, 255, 0)');
-            ctx.fillStyle = glow;
+            // Draw vertical connections (same face, adjacent seals)
+            FACES.forEach(face => {
+                const faceCells = projectedCells.filter(c => c.face.id === face.id);
+                faceCells.sort((a, b) => a.seal.id - b.seal.id);
+                for (let i = 0; i < faceCells.length - 1; i++) {
+                    ctx.strokeStyle = `rgba(153, 51, 255, 0.3)`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(faceCells[i].px, faceCells[i].py);
+                    ctx.lineTo(faceCells[i + 1].px, faceCells[i + 1].py);
+                    ctx.stroke();
+                }
+            });
+
+            // Draw cells
+            projectedCells.forEach(cell => {
+                const size = 5 + cell.scale * 6;
+                const isOnFanoLine = state.selectedFanoLine &&
+                    FANO_LINES.find(l => l.id === state.selectedFanoLine)?.points.includes(cell.seal.id);
+
+                let cellColor = cell.face.color;
+                if (cell.isKFormed) cellColor = '#FF4500';
+                if (isOnFanoLine) cellColor = FANO_LINES.find(l => l.id === state.selectedFanoLine)?.color;
+
+                // Cell glow
+                const glow = ctx.createRadialGradient(cell.px, cell.py, 0, cell.px, cell.py, size * 2);
+                glow.addColorStop(0, cellColor);
+                glow.addColorStop(0.5, cellColor + '88');
+                glow.addColorStop(1, cellColor + '00');
+                ctx.fillStyle = glow;
+                ctx.beginPath();
+                ctx.arc(cell.px, cell.py, size * 1.5, 0, TAU);
+                ctx.fill();
+
+                // Cell core
+                ctx.fillStyle = cell.isBridge ? '#32CD32' : cellColor;
+                ctx.beginPath();
+                ctx.arc(cell.px, cell.py, size, 0, TAU);
+                ctx.fill();
+
+                // K-formation ring
+                if (cell.isKFormed) {
+                    ctx.strokeStyle = '#FF4500';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(cell.px, cell.py, size + 4, 0, TAU);
+                    ctx.stroke();
+                }
+            });
+
+            // Central convergence glow
+            const cGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.5);
+            cGlow.addColorStop(0, `rgba(153, 51, 255, ${state.kappa.convergence * 0.3})`);
+            cGlow.addColorStop(1, 'rgba(153, 51, 255, 0)');
+            ctx.fillStyle = cGlow;
             ctx.beginPath();
-            ctx.arc(cx, cy, radius * 0.8, 0, TAU);
+            ctx.arc(cx, cy, radius * 0.5, 0, TAU);
             ctx.fill();
         }
 
+        function drawFanoOverlay(cx, cy, radius) {
+            if (!state.selectedFanoLine) return;
+
+            const line = FANO_LINES.find(l => l.id === state.selectedFanoLine);
+            if (!line) return;
+
+            // Draw Fano line connection highlight
+            ctx.strokeStyle = line.color + '66';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+
+            const positions = line.points.map(p => {
+                const sealIdx = p - 1;
+                const y = (3 - sealIdx) * radius * 0.35;
+                return { x: cx, y: cy + y * 0.8 };
+            });
+
+            ctx.beginPath();
+            ctx.moveTo(positions[0].x, positions[0].y);
+            positions.forEach(pos => ctx.lineTo(pos.x, pos.y));
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawUnityPoint() {
+            const unityRadius = 5 + state.unity * 15;
+            const unityGradient = ctx.createRadialGradient(CX, CY, 0, CX, CY, unityRadius);
+            unityGradient.addColorStop(0, `rgba(255, 215, 0, ${state.unity})`);
+            unityGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+            ctx.fillStyle = unityGradient;
+            ctx.beginPath();
+            ctx.arc(CX, CY, unityRadius, 0, TAU);
+            ctx.fill();
+        }
+
+        function drawPhaseIndicators() {
+            const baseY = CY + 280;
+
+            drawPhaseRing(CX - 100, baseY, 25, state.lambda.phase, '#00d4ff', 'lambda');
+            drawPhaseRing(CX, baseY, 25, state.kappa.phase, '#9933ff', 'kappa');
+            drawPhaseRing(CX + 100, baseY, 25, state.unity * TAU, '#ffd700', 'U');
+        }
+
         function drawPhaseRing(cx, cy, radius, phase, color, label) {
-            // Background ring
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, TAU);
             ctx.stroke();
 
-            // Phase indicator
             const normalizedPhase = phase % TAU;
             ctx.strokeStyle = color;
             ctx.lineWidth = 3;
@@ -803,7 +1115,6 @@
             ctx.arc(cx, cy, radius, -Math.PI/2, normalizedPhase - Math.PI/2);
             ctx.stroke();
 
-            // Dot at current phase
             const dotX = cx + Math.cos(normalizedPhase - Math.PI/2) * radius;
             const dotY = cy + Math.sin(normalizedPhase - Math.PI/2) * radius;
             ctx.fillStyle = color;
@@ -811,8 +1122,7 @@
             ctx.arc(dotX, dotY, 4, 0, TAU);
             ctx.fill();
 
-            // Label
-            ctx.font = '12px Courier New';
+            ctx.font = '11px Courier New';
             ctx.fillStyle = color;
             ctx.textAlign = 'center';
             ctx.fillText(label, cx, cy + 4);
@@ -823,6 +1133,27 @@
             document.getElementById('lambdaState').textContent = state.lambda.divergence.toFixed(3);
             document.getElementById('kappaState').textContent = state.kappa.convergence.toFixed(3);
             document.getElementById('balanceState').textContent = state.balance.toFixed(3);
+            document.getElementById('coherenceState').textContent = state.coherence.toFixed(3);
+
+            // K-Formation indicator
+            const kFormed = checkKFormation();
+            const indicator = document.getElementById('kFormIndicator');
+            const status = document.getElementById('kFormStatus');
+
+            if (kFormed) {
+                indicator.classList.add('active');
+                status.textContent = 'ACTIVE';
+                status.style.color = '#ff4500';
+            } else {
+                indicator.classList.remove('active');
+                const gap = PHI_INV - state.coherence;
+                if (state.recursion >= 7 && gap > 0) {
+                    status.textContent = `Gap: ${(gap * 100).toFixed(1)}%`;
+                } else {
+                    status.textContent = `R=${state.recursion}, eta=${state.coherence.toFixed(2)}`;
+                }
+                status.style.color = '#ffd700';
+            }
         }
 
         // Control handlers
@@ -836,14 +1167,15 @@
             document.getElementById('timeValue').textContent = state.timeScale.toFixed(1) + 'x';
         });
 
-        document.getElementById('lambdaSlider').addEventListener('input', (e) => {
-            state.lambda.divergence = e.target.value / 100;
-            document.getElementById('lambdaValue').textContent = state.lambda.divergence.toFixed(2);
+        document.getElementById('recursionSlider').addEventListener('input', (e) => {
+            state.recursion = parseInt(e.target.value);
+            const seal = SEALS.find(s => s.id === state.recursion);
+            document.getElementById('recursionValue').textContent = `R=${state.recursion} (${seal.greek})`;
         });
 
-        document.getElementById('kappaSlider').addEventListener('input', (e) => {
-            state.kappa.convergence = e.target.value / 100;
-            document.getElementById('kappaValue').textContent = state.kappa.convergence.toFixed(2);
+        document.getElementById('coherenceSlider').addEventListener('input', (e) => {
+            state.coherence = e.target.value / 100;
+            document.getElementById('coherenceValue').textContent = state.coherence.toFixed(2);
         });
 
         // Animation loop
@@ -859,7 +1191,8 @@
             requestAnimationFrame(animate);
         }
 
-        // Start
+        // Initialize
+        buildKaelhedronUI();
         requestAnimationFrame(animate);
     </script>
 </body>
