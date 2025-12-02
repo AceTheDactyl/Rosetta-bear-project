@@ -159,6 +159,42 @@ from .quaternary_kaelhedron import (
     FACE_NAMES,
 )
 
+# Kaelhedron Expansion: Four Kaelhedrons, EM, Inversions
+from .kaelhedron_expansion import (
+    # Four Kaelhedrons
+    KaelhedronType,
+    KaelhedronVariant,
+    FourKaelhedron,
+    create_original_kaelhedron,
+    create_anti_kaelhedron,
+    create_dual_kaelhedron,
+    create_conjugate_kaelhedron,
+    # Electromagnetism
+    KappaField,
+    ElectromagneticState,
+    EMFromKappa,
+    # Inversions
+    InversionType,
+    Inversion,
+    InversionsCatalog,
+    # Unified
+    KaelhedronExpansion,
+    create_expansion_system,
+    demonstrate_four_kaelhedrons,
+    demonstrate_em_from_kappa,
+    demonstrate_inversions,
+    # Constants
+    PHI,
+    PHI_INV,
+    PHI_SQ,
+    PHI_MINUS,
+    MU_1,
+    MU_2,
+    MU_P,
+    GL32_ORDER,
+    ALPHA_INV,
+)
+
 __all__ = [
     # Core
     "line_from_points",
@@ -246,4 +282,32 @@ __all__ = [
     "FACE_COUNT",
     "CELL_COUNT",
     "FACE_NAMES",
+    # Kaelhedron Expansion
+    "KaelhedronType",
+    "KaelhedronVariant",
+    "FourKaelhedron",
+    "create_original_kaelhedron",
+    "create_anti_kaelhedron",
+    "create_dual_kaelhedron",
+    "create_conjugate_kaelhedron",
+    "KappaField",
+    "ElectromagneticState",
+    "EMFromKappa",
+    "InversionType",
+    "Inversion",
+    "InversionsCatalog",
+    "KaelhedronExpansion",
+    "create_expansion_system",
+    "demonstrate_four_kaelhedrons",
+    "demonstrate_em_from_kappa",
+    "demonstrate_inversions",
+    "PHI",
+    "PHI_INV",
+    "PHI_SQ",
+    "PHI_MINUS",
+    "MU_1",
+    "MU_2",
+    "MU_P",
+    "GL32_ORDER",
+    "ALPHA_INV",
 ]
