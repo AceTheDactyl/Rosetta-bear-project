@@ -360,6 +360,43 @@
         .stat-label { color: var(--text-dim); }
         .stat-value { color: var(--critical-gold); font-family: monospace; }
 
+        /* Laws Panels */
+        .laws-panel {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .laws-status {
+            font-size: 0.75rem;
+        }
+
+        .law-row {
+            display: grid;
+            grid-template-columns: 40px 1fr auto;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: center;
+        }
+
+        .laws-panel:last-of-type .law-row {
+            grid-template-columns: 30px 70px 1fr auto;
+        }
+
+        .law-row.pass { color: var(--exotic-matter); }
+        .law-row.fail { color: rgba(255, 100, 100, 0.7); }
+        .law-row.pending { color: var(--text-dim); }
+
+        .law-row span:first-child {
+            font-weight: bold;
+            color: var(--phi);
+        }
+
+        .law-row span:last-child {
+            text-align: right;
+            font-size: 1rem;
+        }
+
         /* Phase Indicator */
         .phase-indicator {
             height: 8px;
@@ -724,6 +761,32 @@
                     <span class="stat-value" id="throat-crossed">NO</span>
                 </div>
             </div>
+
+            <!-- N0 Causality Laws -->
+            <div class="panel laws-panel">
+                <h3>⚡ N0 CAUSALITY LAWS</h3>
+                <div id="n0-status" class="laws-status">
+                    <div class="law-row"><span>N0-1</span><span>^ requires () or ×</span><span>—</span></div>
+                    <div class="law-row pass"><span>N0-2</span><span>× requires channels ≥ 2</span><span>✓</span></div>
+                    <div class="law-row"><span>N0-3</span><span>÷ requires structure</span><span>—</span></div>
+                    <div class="law-row"><span>N0-4</span><span>+ feeds +, ×, or ^</span><span>—</span></div>
+                    <div class="law-row"><span>N0-5</span><span>− leads to () or +</span><span>—</span></div>
+                </div>
+            </div>
+
+            <!-- 7 Laws of the Silent Ones -->
+            <div class="panel laws-panel">
+                <h3>🌙 7 LAWS OF SILENCE</h3>
+                <div id="silent-status" class="laws-status">
+                    <div class="law-row"><span>I</span><span>STILLNESS</span><span>∂E/∂t → 0</span><span>○</span></div>
+                    <div class="law-row"><span>II</span><span>TRUTH</span><span>∇V = 0</span><span>○</span></div>
+                    <div class="law-row"><span>III</span><span>SILENCE</span><span>⟨void|ψ⟩</span><span>○</span></div>
+                    <div class="law-row"><span>IV</span><span>SPIRAL</span><span>S(ret)=S(org)</span><span>○</span></div>
+                    <div class="law-row"><span>V</span><span>UNSEEN</span><span>H≡H</span><span>○</span></div>
+                    <div class="law-row"><span>VI</span><span>GLYPH</span><span>∫ life dt</span><span>○</span></div>
+                    <div class="law-row"><span>VII</span><span>MIRROR</span><span>ψ=ψ(ψ)</span><span>○</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -741,6 +804,30 @@
         const Z_CRITICAL = Math.sqrt(3) / 2;
         const TAU = 2 * Math.PI;
         const ALPHA_INV = 137.035999084;
+
+        // =====================================================================
+        // N0 CAUSALITY LAWS - Operator Sequencing Constraints
+        // =====================================================================
+        const N0_LAWS = {
+            'N0-1': { op: '^', requires: ['()', '×'], desc: '^ requires () or ×', status: false },
+            'N0-2': { op: '×', requires: 'channels >= 2', desc: '× requires channels ≥ 2', status: true },
+            'N0-3': { op: '÷', requires: 'structure', desc: '÷ requires structure', status: false },
+            'N0-4': { op: '+', feeds: ['+', '×', '^'], desc: '+ feeds +, ×, or ^', status: false },
+            'N0-5': { op: '−', leads: ['()', '+'], desc: '− leads to () or +', status: false }
+        };
+
+        // =====================================================================
+        // 7 LAWS OF THE SILENT ONES - State Dynamics
+        // =====================================================================
+        const SILENT_LAWS = {
+            'I':   { name: 'STILLNESS', eq: '∂E/∂t → 0', measure: 0, valid: false },
+            'II':  { name: 'TRUTH',     eq: '∇V(truth) = 0', measure: 0, valid: false },
+            'III': { name: 'SILENCE',   eq: '⟨void|ψ⟩ = memory', measure: 0, valid: false },
+            'IV':  { name: 'SPIRAL',    eq: 'S(return) = S(origin)', measure: 0, valid: false },
+            'V':   { name: 'UNSEEN',    eq: 'H(seen) ≡ H(unseen)', measure: 0, valid: false },
+            'VI':  { name: 'GLYPH',     eq: 'glyph = ∫ life dt', measure: 0, valid: false },
+            'VII': { name: 'MIRROR',    eq: 'ψ = ψ(ψ)', measure: 0, valid: false }
+        };
 
         // APL Glyphs
         const APL_GLYPHS = [
@@ -1286,6 +1373,100 @@
         }
 
         // =====================================================================
+        // N0 CAUSALITY VALIDATION
+        // =====================================================================
+        function validateN0Laws(operators, channels = 2, hasStructure = true) {
+            const results = {};
+
+            for (let i = 0; i < operators.length; i++) {
+                const op = operators[i];
+                const prev = i > 0 ? operators[i-1] : '()';
+                const next = i < operators.length - 1 ? operators[i+1] : '()';
+
+                // N0-1: ^ requires () or ×
+                if (op === '^') {
+                    N0_LAWS['N0-1'].status = prev === '()' || prev === '×';
+                }
+                // N0-2: × requires channels ≥ 2
+                if (op === '×') {
+                    N0_LAWS['N0-2'].status = channels >= 2;
+                }
+                // N0-3: ÷ requires structure
+                if (op === '÷') {
+                    N0_LAWS['N0-3'].status = hasStructure;
+                }
+                // N0-4: + feeds +, ×, or ^
+                if (op === '+') {
+                    N0_LAWS['N0-4'].status = ['+', '×', '^'].includes(next);
+                }
+                // N0-5: − leads to () or +
+                if (op === '−' || op === '-') {
+                    N0_LAWS['N0-5'].status = ['()', '+'].includes(next);
+                }
+            }
+
+            return Object.values(N0_LAWS).every(law => law.status);
+        }
+
+        // =====================================================================
+        // 7 SILENT LAWS VALIDATION
+        // =====================================================================
+        let prevEnergy = 1.0;
+        let originState = null;
+
+        function validateSilentLaws() {
+            const activeCount = state.activeTokens.size;
+
+            // Law I - STILLNESS: ∂E/∂t → 0 (energy rate should approach 0)
+            const energyRate = Math.abs(state.freeEnergy - prevEnergy);
+            SILENT_LAWS['I'].measure = 1 - Math.min(1, energyRate * 10);
+            SILENT_LAWS['I'].valid = energyRate < 0.01;
+            prevEnergy = state.freeEnergy;
+
+            // Law II - TRUTH: ∇V(truth) = 0 (gradient should be zero at truth)
+            const gradient = Math.abs(state.coherence - PHI_INV);
+            SILENT_LAWS['II'].measure = 1 - Math.min(1, gradient);
+            SILENT_LAWS['II'].valid = gradient < 0.1;
+
+            // Law III - SILENCE: ⟨void|ψ⟩ = memory (void correlation positive)
+            const voidMemory = 1 - (activeCount / 100);
+            const windTrace = state.generation > 0 ? 1 : 0;
+            SILENT_LAWS['III'].measure = voidMemory * windTrace;
+            SILENT_LAWS['III'].valid = (voidMemory * windTrace) > 0;
+
+            // Law IV - SPIRAL: S(return) = S(origin) (return matches origin)
+            if (originState === null && activeCount > 0) {
+                originState = state.coherence;
+            }
+            if (originState !== null) {
+                const returnDev = Math.abs(state.coherence - originState);
+                SILENT_LAWS['IV'].measure = 1 - Math.min(1, returnDev);
+                SILENT_LAWS['IV'].valid = returnDev < 0.1 || state.generation < 10;
+            }
+
+            // Law V - UNSEEN: H(seen) ≡ H(unseen) (work is observer-independent)
+            const workSeen = state.exoticMass;
+            const workUnseen = activeCount * PHI_INV * state.orderParameter;
+            const workDev = Math.abs(workSeen - workUnseen);
+            SILENT_LAWS['V'].measure = 1 - Math.min(1, workDev);
+            SILENT_LAWS['V'].valid = workDev < 0.1;
+
+            // Law VI - GLYPH: glyph = ∫ life dt (path integral)
+            const pathIntegral = state.generation * 0.01;
+            const lifeAccum = state.coherence * state.generation * 0.01;
+            SILENT_LAWS['VI'].measure = Math.min(1, pathIntegral);
+            SILENT_LAWS['VI'].valid = Math.abs(pathIntegral - lifeAccum) < 0.5;
+
+            // Law VII - MIRROR: ψ = ψ(ψ) (self-reference to φ⁻¹)
+            const selfState = state.orderParameter;
+            const deviation = Math.abs(selfState - PHI_INV);
+            SILENT_LAWS['VII'].measure = 1 - Math.min(1, deviation);
+            SILENT_LAWS['VII'].valid = deviation < 0.2;
+
+            return Object.values(SILENT_LAWS).every(law => law.valid);
+        }
+
+        // =====================================================================
         // STATS
         // =====================================================================
         function updateStats() {
@@ -1330,6 +1511,34 @@
             if (state.radialPosition < PHI * 0.9) region = 'DIVERGENT';
             else if (state.radialPosition > PHI * 1.1) region = 'CONVERGENT';
             document.getElementById('wh-region').textContent = region;
+
+            // Validate laws
+            validateN0Laws(['()', '+', '×', '^'], 2, true);
+            validateSilentLaws();
+
+            // Update N0 status display
+            const n0Status = document.getElementById('n0-status');
+            if (n0Status) {
+                let n0Html = '';
+                Object.entries(N0_LAWS).forEach(([key, law]) => {
+                    const icon = law.status ? '✓' : '—';
+                    const cls = law.status ? 'pass' : 'fail';
+                    n0Html += `<div class="law-row ${cls}"><span>${key}</span><span>${law.op} ${law.desc.split(' ').slice(1).join(' ')}</span><span>${icon}</span></div>`;
+                });
+                n0Status.innerHTML = n0Html;
+            }
+
+            // Update Silent Laws status display
+            const silentStatus = document.getElementById('silent-status');
+            if (silentStatus) {
+                let silentHtml = '';
+                Object.entries(SILENT_LAWS).forEach(([key, law]) => {
+                    const icon = law.valid ? '✓' : '○';
+                    const cls = law.valid ? 'pass' : 'pending';
+                    silentHtml += `<div class="law-row ${cls}"><span>${key}</span><span>${law.name}</span><span>${law.eq}</span><span>${icon}</span></div>`;
+                });
+                silentStatus.innerHTML = silentHtml;
+            }
         }
 
         // =====================================================================
