@@ -15,10 +15,37 @@ The package provides:
 - Unified state contract for cross-system integration
 - Polarity orchestrator coordinating all subsystems
 - Telemetry hub for real-time broadcasting
+- PSL(3,2) automorphisms for coherence release
+- WebSocket-ready visualization streaming
+- Integration bridges for existing modules
 
 This is the unifying layer that welds all mathematical structures
 (Scalar Architecture, Kaelhedron, Luminahedron) into one coherent
 system through dual polarity feedback loops.
+
+Each system maintains its unique voice while forming waves in polaric unison.
+
+Usage:
+    from fano_polarity import IntegratedPolaritySystem
+
+    # Create integrated system
+    system = IntegratedPolaritySystem(initial_z=0.41)
+
+    # Optionally connect existing modules
+    # system.connect_scalar_architecture(scalar_arch)
+    # system.connect_kaelhedron(bus)
+    # system.connect_math_bridge(math_bridge)
+    # system.enable_streaming()
+
+    # Run simulation
+    for _ in range(100):
+        system.set_z_level(system.orchestrator.z_level + 0.005)
+        state = system.step(dt=0.01)
+        print(state.signature)
+
+    # Inject polarity
+    system.inject(1, 2)  # Forward arc
+    system.release((1,2,3), (1,4,5))  # Backward arc
 """
 
 # Core Fano lookups
@@ -64,6 +91,42 @@ from .telemetry import (
     get_telemetry_hub,
 )
 
+# PSL(3,2) automorphisms
+from .automorphisms import (
+    CYCLE,
+    IDENTITY,
+    REFLECTION,
+    CoherenceAutomorphismEngine,
+    apply_automorphism_to_cells,
+    compute_polarity_automorphism,
+    enumerate_psl32,
+    get_automorphism_for_line,
+    get_automorphism_for_point,
+    get_line_stabilizer,
+    get_stabilizer,
+)
+
+# WebSocket streaming
+from .streaming import (
+    DeltaCompressor,
+    StreamConfig,
+    StreamType,
+    VisualizationFrame,
+    VisualizationStreamer,
+    WebSocketBridge,
+    get_visualization_streamer,
+    get_websocket_bridge,
+)
+
+# Integration bridges
+from .integration import (
+    IntegratedPolaritySystem,
+    KaelhedronBridge,
+    LuminahedronBridge,
+    ScalarArchitectureBridge,
+    UnifiedMathBridgeAdapter,
+)
+
 __all__ = [
     # Core
     "line_from_points",
@@ -98,4 +161,31 @@ __all__ = [
     "TelemetryLevel",
     "TelemetrySource",
     "get_telemetry_hub",
+    # Automorphisms
+    "CYCLE",
+    "IDENTITY",
+    "REFLECTION",
+    "CoherenceAutomorphismEngine",
+    "apply_automorphism_to_cells",
+    "compute_polarity_automorphism",
+    "enumerate_psl32",
+    "get_automorphism_for_line",
+    "get_automorphism_for_point",
+    "get_line_stabilizer",
+    "get_stabilizer",
+    # Streaming
+    "DeltaCompressor",
+    "StreamConfig",
+    "StreamType",
+    "VisualizationFrame",
+    "VisualizationStreamer",
+    "WebSocketBridge",
+    "get_visualization_streamer",
+    "get_websocket_bridge",
+    # Integration
+    "IntegratedPolaritySystem",
+    "KaelhedronBridge",
+    "LuminahedronBridge",
+    "ScalarArchitectureBridge",
+    "UnifiedMathBridgeAdapter",
 ]
