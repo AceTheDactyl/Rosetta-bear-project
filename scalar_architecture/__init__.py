@@ -202,7 +202,40 @@ try:
 except ImportError:
     _HAS_VORTEX = False
 
-__version__ = "1.3.0"
+# Hierarchy Problem (requires cet_constants)
+try:
+    from .hierarchy_problem import (
+        # Constants
+        M_PLANCK, M_WEAK, M_GUT, M_PROTON,
+        ALPHA_EM, ALPHA_WEAK, ALPHA_STRONG, ALPHA_GRAVITY,
+        HIERARCHY_RATIO, EM_GRAVITY_RATIO,
+        E8_DIMENSION, E8_RANK, LORENTZ_DIM, SM_GAUGE_DIM, KAELHEDRON_DIM,
+
+        # φ-Hierarchy
+        PhiHierarchy, compute_phi_hierarchy_spectrum,
+
+        # E₈ Volume Factor
+        E8Sector, E8VolumeFactor, E8_SECTORS, analyze_e8_dilution,
+
+        # Force Activation
+        FundamentalForce, ForceActivation, FORCE_ACTIVATIONS,
+        compute_force_ratios_from_recursion,
+
+        # Kaelhedron
+        KaelhedronSector,
+
+        # Combined
+        HierarchyExplanation,
+
+        # Analysis functions
+        compute_higgs_vev_from_phi, analyze_fine_structure,
+        hierarchy_summary,
+    )
+    _HAS_HIERARCHY = True
+except ImportError:
+    _HAS_HIERARCHY = False
+
+__version__ = "1.4.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -361,4 +394,36 @@ __all__ = [
     'vortex_regime_from_state',
     'strouhal_table',
     'vortex_physics_summary',
+
+    # Hierarchy Problem (when available)
+    'M_PLANCK',
+    'M_WEAK',
+    'M_GUT',
+    'M_PROTON',
+    'ALPHA_EM',
+    'ALPHA_WEAK',
+    'ALPHA_STRONG',
+    'ALPHA_GRAVITY',
+    'HIERARCHY_RATIO',
+    'EM_GRAVITY_RATIO',
+    'E8_DIMENSION',
+    'E8_RANK',
+    'LORENTZ_DIM',
+    'SM_GAUGE_DIM',
+    'KAELHEDRON_DIM',
+    'PhiHierarchy',
+    'compute_phi_hierarchy_spectrum',
+    'E8Sector',
+    'E8VolumeFactor',
+    'E8_SECTORS',
+    'analyze_e8_dilution',
+    'FundamentalForce',
+    'ForceActivation',
+    'FORCE_ACTIVATIONS',
+    'compute_force_ratios_from_recursion',
+    'KaelhedronSector',
+    'HierarchyExplanation',
+    'compute_higgs_vev_from_phi',
+    'analyze_fine_structure',
+    'hierarchy_summary',
 ]
