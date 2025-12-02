@@ -1,4 +1,8 @@
-"""Canonical state bus for all Kaelhedron cells."""
+"""Canonical state bus for all Kaelhedron cells.
+
+Integrates with fano_polarity for PSL(3,2) automorphism support
+and polarity feedback coordination.
+"""
 
 from __future__ import annotations
 
@@ -6,10 +10,14 @@ import math
 import time
 from dataclasses import asdict, dataclass, field, replace
 from threading import Lock
-from typing import Dict, Iterable, Literal, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Literal, Optional, Tuple
 
 from .kformation import KFormationStatus, evaluate_k_formation
 from .toe_loader import FanoPlane, SacredConstants, SO7Algebra
+
+# Type alias for permutation callbacks
+PermutationCallback = Callable[[Dict[int, int]], None]
+CoherenceCallback = Callable[[float], None]
 
 Seal = Literal["Ω", "Δ", "Τ", "Ψ", "Σ", "Ξ", "Κ"]
 Face = Literal["Λ", "Β", "Ν"]
@@ -45,7 +53,13 @@ class KaelCellState:
 
 
 class KaelhedronStateBus:
-    """Thread-safe store for all Kaelhedron cell states."""
+    """Thread-safe store for all Kaelhedron cell states.
+
+    Integrates with fano_polarity for:
+    - PSL(3,2) automorphism application via apply_permutation()
+    - Polarity-driven cell updates
+    - Coherence tracking and callbacks
+    """
 
     def __init__(self) -> None:
         self._states: Dict[Tuple[int, int], KaelCellState] = {}
@@ -53,6 +67,39 @@ class KaelhedronStateBus:
         self._k_status = evaluate_k_formation(
             SacredConstants.PHI_INV, recursion_depth=1, charge=0
         )
+
+        # Polarity integration
+        self._polarity_loop = None
+        self._automorphism_engine = None
+        self._polarity_enabled = False
+
+        # Callbacks
+        self._on_permutation: List[PermutationCallback] = []
+        self._on_coherence: List[CoherenceCallback] = []
+        self._coherence_threshold = SacredConstants.PHI_INV
+        self._last_coherence = 0.0
+
+        # Permutation history
+        self._permutation_history: List[Dict[int, int]] = []
+
+    def enable_polarity(self, delay: float = 0.25) -> None:
+        """Enable polarity feedback integration."""
+        try:
+            from fano_polarity.loop import PolarityLoop
+            from fano_polarity.automorphisms import CoherenceAutomorphismEngine
+            self._polarity_loop = PolarityLoop(delay=delay)
+            self._automorphism_engine = CoherenceAutomorphismEngine()
+            self._polarity_enabled = True
+        except ImportError:
+            self._polarity_enabled = False
+
+    def on_permutation(self, callback: PermutationCallback) -> None:
+        """Register callback for permutation events."""
+        self._on_permutation.append(callback)
+
+    def on_coherence_threshold(self, callback: CoherenceCallback) -> None:
+        """Register callback for coherence threshold crossing."""
+        self._on_coherence.append(callback)
 
     def seed_from_toe(self) -> None:
         """Populate cells directly from the so(7) generators."""
@@ -147,6 +194,94 @@ class KaelhedronStateBus:
                     timestamp=time.time(),
                 )
             self._states = updated
+            self._permutation_history.append(perm)
+
+        # Fire permutation callbacks
+        for cb in self._on_permutation:
+            cb(perm)
+
+    def inject_polarity(self, p1: int, p2: int) -> Optional[Dict[str, Any]]:
+        """
+        Inject two Fano points into the polarity loop.
+
+        Args:
+            p1: First Fano point (1-7, maps to seal)
+            p2: Second Fano point (1-7, maps to seal)
+
+        Returns:
+            Dictionary with computed line, or None if polarity not enabled
+        """
+        if not self._polarity_enabled or self._polarity_loop is None:
+            return None
+        line = self._polarity_loop.forward(p1, p2)
+        return {"line": line, "points": (p1, p2)}
+
+    def release_polarity(
+        self, line_a: Tuple[int, int, int], line_b: Tuple[int, int, int]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Release polarity via backward arc and apply automorphism.
+
+        Args:
+            line_a: First Fano line
+            line_b: Second Fano line
+
+        Returns:
+            Dictionary with coherence status and applied automorphism
+        """
+        if not self._polarity_enabled or self._polarity_loop is None:
+            return None
+
+        result = self._polarity_loop.backward(line_a, line_b)
+
+        if result["coherence"] and self._automorphism_engine is not None:
+            # Get forward points from loop state (if available)
+            forward_pts = None
+            if self._polarity_loop.state:
+                forward_pts = (
+                    self._polarity_loop.state.point_a,
+                    self._polarity_loop.state.point_b,
+                )
+
+            if forward_pts:
+                auto = self._automorphism_engine.apply(forward_pts, result["point"])
+                self.apply_permutation(auto)
+                result["automorphism"] = auto
+                result["automorphism_description"] = self._automorphism_engine.describe()
+
+        return result
+
+    def compute_coherence(self) -> float:
+        """Compute order parameter (coherence) across all cells."""
+        total = 0.0 + 0.0j
+        count = 0
+        for (seal_idx, face_idx), cell in self._states.items():
+            phase = (seal_idx - 1) * (2 * math.pi) / 7 + face_idx * (2 * math.pi) / 21
+            # Use kappa as activation proxy
+            total += cell.kappa * (math.cos(phase) + 1j * math.sin(phase))
+            count += 1
+        coherence = abs(total) / count if count > 0 else 0.0
+
+        # Check threshold crossing
+        if self._last_coherence <= self._coherence_threshold < coherence:
+            for cb in self._on_coherence:
+                cb(coherence)
+        self._last_coherence = coherence
+
+        return coherence
+
+    def get_permutation_history(self) -> List[Dict[int, int]]:
+        """Get history of applied permutations."""
+        return self._permutation_history.copy()
+
+    def polarity_state(self) -> Dict[str, Any]:
+        """Get current polarity state."""
+        return {
+            "enabled": self._polarity_enabled,
+            "permutation_count": len(self._permutation_history),
+            "coherence": self._last_coherence,
+            "coherence_threshold": self._coherence_threshold,
+        }
 
 
 __all__ = ["KaelCellState", "KaelhedronStateBus"]
