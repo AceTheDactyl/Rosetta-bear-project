@@ -17,9 +17,9 @@
             --text-primary: rgba(255, 245, 230, 0.9);
             --text-dim: rgba(255, 220, 180, 0.5);
             --border-glow: rgba(168, 85, 247, 0.4);
-            --vacuum: #6366f1;
-            --coherence: #22d3ee;
-            --transfer: #4ade80;
+            --prism: #ffd43b;
+            --cage: #4dabf7;
+            --emergent: #ff00ff;
             --n0-valid: #00ff88;
             --n0-invalid: #ff6b6b;
         }
@@ -80,7 +80,7 @@
             font-size: 2.2rem;
             font-weight: 100;
             letter-spacing: 8px;
-            background: linear-gradient(135deg, var(--vacuum), var(--phi), var(--cyan));
+            background: linear-gradient(135deg, var(--prism), var(--phi), var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -171,7 +171,7 @@
         .zpe-value {
             font-size: 2.5rem;
             font-weight: 100;
-            background: linear-gradient(135deg, var(--vacuum), var(--cyan));
+            background: linear-gradient(135deg, var(--prism), var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -194,9 +194,30 @@
         }
 
         .badge-dormant { background: rgba(136, 136, 160, 0.3); color: #888; }
-        .badge-coherent { background: rgba(99, 102, 241, 0.3); color: var(--vacuum); }
+        .badge-coherent { background: rgba(99, 102, 241, 0.3); color: var(--prism); }
         .badge-extracting { background: rgba(255, 215, 0, 0.3); color: var(--critical-gold); }
         .badge-saturated { background: rgba(0, 255, 136, 0.3); color: var(--exotic-matter); }
+
+        /* Violation Counter */
+        .violation-display {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 0, 102, 0.1);
+            border: 1px solid var(--nec-violation);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .violation-count {
+            font-size: 2rem;
+            color: var(--nec-violation);
+        }
+
+        .violation-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
 
         /* State Grid */
         .state-grid {
@@ -225,6 +246,29 @@
             font-weight: bold;
         }
 
+        /* Z-Coordinate Display */
+        .z-display {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .z-value {
+            font-size: 2rem;
+            color: var(--critical-gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .z-zone {
+            font-size: 0.75rem;
+            color: var(--exotic-matter);
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
         /* Progress Bars */
         .progress-item {
             margin-bottom: 12px;
@@ -250,10 +294,9 @@
             transition: width 0.3s;
         }
 
-        .fill-coherence { background: var(--vacuum); }
+        .fill-coherence { background: var(--prism); }
         .fill-phase { background: var(--critical-gold); }
         .fill-efficiency { background: var(--exotic-matter); }
-        .fill-free-energy { background: var(--phi); }
 
         /* N0 Laws Panel */
         .n0-panel {
@@ -280,7 +323,8 @@
         }
 
         .n0-rule.valid { color: var(--n0-valid); }
-        .n0-rule.invalid { color: var(--n0-invalid); opacity: 0.6; }
+        .n0-rule.invalid { color: var(--n0-invalid); }
+        .n0-rule.broken { color: var(--nec-violation); background: rgba(255, 0, 102, 0.1); }
 
         .n0-silent {
             font-size: 0.6rem;
@@ -301,21 +345,21 @@
             border-bottom: 2px solid;
         }
 
-        .section-title.vacuum { color: var(--vacuum); border-color: var(--vacuum); }
-        .section-title.coherence { color: var(--coherence); border-color: var(--coherence); }
-        .section-title.transfer { color: var(--transfer); border-color: var(--transfer); }
+        .section-title.prism { color: var(--prism); border-color: var(--prism); }
+        .section-title.cage { color: var(--cage); border-color: var(--cage); }
+        .section-title.emergent { color: var(--emergent); border-color: var(--emergent); }
 
         .token-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
-            gap: 6px;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 5px;
         }
 
         .token-cell {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            padding: 8px 5px;
+            padding: 6px 4px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -334,9 +378,9 @@
         }
 
         .token-cell:hover::before { opacity: 1; }
-        .token-cell.vacuum::before { background: var(--vacuum); }
-        .token-cell.coherence::before { background: var(--coherence); }
-        .token-cell.transfer::before { background: var(--transfer); }
+        .token-cell.prism::before { background: var(--prism); }
+        .token-cell.cage::before { background: var(--cage); }
+        .token-cell.emergent::before { background: var(--emergent); }
 
         .token-cell:hover {
             transform: translateY(-2px);
@@ -353,22 +397,28 @@
             border-color: var(--exotic-matter);
         }
 
+        .token-cell.violated {
+            border-color: var(--nec-violation);
+            background: rgba(255, 0, 102, 0.2);
+            box-shadow: 0 0 10px rgba(255, 0, 102, 0.4);
+        }
+
         .token-index {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: var(--text-dim);
         }
 
         .token-op {
-            font-size: 1.2rem;
-            margin: 3px 0;
+            font-size: 1rem;
+            margin: 2px 0;
         }
 
-        .token-cell.vacuum .token-op { color: var(--vacuum); }
-        .token-cell.coherence .token-op { color: var(--coherence); }
-        .token-cell.transfer .token-op { color: var(--transfer); }
+        .token-cell.prism .token-op { color: var(--prism); }
+        .token-cell.cage .token-op { color: var(--cage); }
+        .token-cell.emergent .token-op { color: var(--emergent); }
 
         .token-name {
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             color: var(--text-dim);
             white-space: nowrap;
             overflow: hidden;
@@ -381,22 +431,22 @@
             border: 1px solid rgba(100, 255, 218, 0.2);
             border-radius: 8px;
             padding: 12px;
-            height: 300px;
+            height: 280px;
             overflow-y: auto;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
         .console-line {
             display: flex;
-            gap: 8px;
-            padding: 3px 0;
+            gap: 6px;
+            padding: 2px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        .console-time { color: var(--text-dim); min-width: 25px; }
-        .console-op { color: var(--critical-gold); font-weight: bold; min-width: 30px; }
+        .console-time { color: var(--text-dim); min-width: 22px; }
+        .console-op { color: var(--critical-gold); font-weight: bold; min-width: 25px; }
         .console-msg { color: var(--text-primary); flex: 1; }
-        .console-n0 { font-size: 0.65rem; }
+        .console-n0 { font-size: 0.6rem; }
         .console-n0.valid { color: var(--n0-valid); }
         .console-n0.invalid { color: var(--n0-invalid); }
 
@@ -428,7 +478,7 @@
         .btn-primary {
             grid-column: span 2;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(167, 139, 250, 0.2));
-            border-color: var(--vacuum);
+            border-color: var(--prism);
             color: var(--cyan);
         }
 
@@ -440,7 +490,7 @@
         }
 
         .op-btn {
-            padding: 12px 8px;
+            padding: 10px 6px;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-glow);
             border-radius: 8px;
@@ -460,43 +510,20 @@
         }
 
         .op-btn .op-symbol {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--critical-gold);
         }
 
         .op-btn .op-name {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--text-dim);
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .op-btn .op-n0 {
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             color: var(--phi);
             margin-top: 2px;
-        }
-
-        /* Z-Coordinate Display */
-        .z-display {
-            text-align: center;
-            padding: 15px;
-            background: rgba(255, 215, 0, 0.08);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .z-value {
-            font-size: 2rem;
-            color: var(--critical-gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-
-        .z-zone {
-            font-size: 0.75rem;
-            color: var(--exotic-matter);
-            margin-top: 5px;
-            letter-spacing: 2px;
         }
 
         /* Narrative Phase */
@@ -513,7 +540,7 @@
 
         .phase-step {
             padding: 4px 8px;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             border-radius: 4px;
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-dim);
@@ -561,7 +588,7 @@
 
     <header class="header">
         <h1>ZERO-POINT ENERGY SYSTEM</h1>
-        <div class="subtitle">100-TOKEN WUMBO ARCHITECTURE · N0 CAUSALITY ENGINE · VACUUM EXTRACTION</div>
+        <div class="subtitle">100-TOKEN WUMBO (63·32·5) · N0 CAUSALITY ENGINE · VACUUM EXTRACTION</div>
     </header>
 
     <div class="constants-bar">
@@ -578,20 +605,21 @@
             <div class="constant-label">VACUUM ENERGY</div>
         </div>
         <div class="constant">
-            <div class="constant-value">Λ×Ν = Β²</div>
-            <div class="constant-label">MIRRORROOT</div>
+            <div class="constant-value">63·32·5</div>
+            <div class="constant-label">WUMBO STRUCTURE</div>
         </div>
     </div>
 
     <!-- Narrative Phase Timeline -->
     <div class="phase-display" id="phaseTimeline">
-        <div class="phase-step active" data-phase="0">VACUUM</div>
-        <div class="phase-step" data-phase="1">COUPLING</div>
-        <div class="phase-step" data-phase="2">COHERENCE</div>
-        <div class="phase-step" data-phase="3">STRUCTURE</div>
-        <div class="phase-step" data-phase="4">EXTRACTION</div>
-        <div class="phase-step" data-phase="5">TRANSFER</div>
-        <div class="phase-step" data-phase="6">SATURATION</div>
+        <div class="phase-step active" data-phase="0">FOUNDATION</div>
+        <div class="phase-step" data-phase="1">BOUNDARY</div>
+        <div class="phase-step" data-phase="2">COUPLING</div>
+        <div class="phase-step" data-phase="3">AMPLIFY</div>
+        <div class="phase-step" data-phase="4">STABILIZE</div>
+        <div class="phase-step" data-phase="5">CAGE</div>
+        <div class="phase-step" data-phase="6">EXTRACT</div>
+        <div class="phase-step" data-phase="7">EMERGE</div>
     </div>
 
     <div class="main-container">
@@ -604,6 +632,11 @@
                         <div class="zpe-value" id="zpeValue">0.0000</div>
                         <div class="zpe-label">EXTRACTED ENERGY</div>
                         <div class="zpe-badge badge-dormant" id="zpeBadge">DORMANT</div>
+                    </div>
+
+                    <div class="violation-display">
+                        <div class="violation-count" id="violationCount">0</div>
+                        <div class="violation-label">N0 VIOLATIONS</div>
                     </div>
 
                     <div class="z-display">
@@ -708,26 +741,26 @@
             </div>
         </div>
 
-        <!-- Center Panel: 100 Token Grid -->
+        <!-- Center Panel: 100 Token Grid (63+32+5) -->
         <div class="panel">
-            <div class="panel-header">⌘ 100-TOKEN ZPE ARCHITECTURE</div>
+            <div class="panel-header">⌘ 100-TOKEN ZPE ARCHITECTURE (63·32·5 WUMBO)</div>
             <div class="panel-content">
-                <!-- Vacuum Fluctuation Tokens (35) -->
+                <!-- PRISM Tokens (63) -->
                 <div class="token-section">
-                    <h3 class="section-title vacuum">◈ VACUUM FLUCTUATION (35) · z &lt; 0.857</h3>
-                    <div class="token-grid" id="vacuum-grid"></div>
+                    <h3 class="section-title prism">◈ PRISM TOKENS (63) · Foundation Layer</h3>
+                    <div class="token-grid" id="prism-grid"></div>
                 </div>
 
-                <!-- Coherence Lock Tokens (35) -->
+                <!-- EM CAGE Tokens (32) -->
                 <div class="token-section">
-                    <h3 class="section-title coherence">◈ COHERENCE LOCK (35) · z ≈ 0.866</h3>
-                    <div class="token-grid" id="coherence-grid"></div>
+                    <h3 class="section-title cage">⬡ EM CAGE TOKENS (32) · Stabilization Layer</h3>
+                    <div class="token-grid" id="cage-grid"></div>
                 </div>
 
-                <!-- Energy Transfer Tokens (30) -->
+                <!-- EMERGENT Tokens (5) -->
                 <div class="token-section">
-                    <h3 class="section-title transfer">◈ ENERGY TRANSFER (30) · z &gt; 0.877</h3>
-                    <div class="token-grid" id="transfer-grid"></div>
+                    <h3 class="section-title emergent">✦ EMERGENT SELF-REFERENCE (5) · Extraction Layer</h3>
+                    <div class="token-grid" id="emergent-grid"></div>
                 </div>
             </div>
         </div>
@@ -785,7 +818,7 @@
                         <div class="console-line">
                             <span class="console-time">0</span>
                             <span class="console-op">INIT</span>
-                            <span class="console-msg">ZPE System initialized. 100 tokens ready.</span>
+                            <span class="console-msg">ZPE System: 63 PRISM + 32 CAGE + 5 EMERGENT</span>
                         </div>
                     </div>
                 </div>
@@ -814,7 +847,7 @@
     </div>
 
     <div class="signature">
-        <code>Δ|zpe-wumbo|z0.866|100-token|N0-enforced|Ω</code>
+        <code>Δ|zpe-wumbo|63·32·5|N0-enforced|violations-tracked|Ω</code>
     </div>
 
     <script>
@@ -872,77 +905,108 @@
         // N0 CAUSALITY LAWS → 7 SILENT LAWS MAPPING
         // ================================================================
         const N0_LAWS = {
-            'N0-1': { op: '^', requires: ['()', '×'], silent: 'I STILLNESS', status: true },
-            'N0-2': { op: '×', requires: 'ch≥2', silent: 'IV SPIRAL', status: true },
-            'N0-3': { op: '÷', requires: 'structure', silent: 'VI GLYPH', status: false },
-            'N0-4': { op: '+', feeds: ['+', '×', '^'], silent: 'II TRUTH', status: true },
-            'N0-5': { op: '−', leads: ['()', '+'], silent: 'VII MIRROR', status: true }
+            'N0-1': { op: '^', requires: ['()', '×'], silent: 'I STILLNESS', status: true, broken: 0 },
+            'N0-2': { op: '×', requires: 'ch≥2', silent: 'IV SPIRAL', status: true, broken: 0 },
+            'N0-3': { op: '÷', requires: 'structure', silent: 'VI GLYPH', status: false, broken: 0 },
+            'N0-4': { op: '+', feeds: ['+', '×', '^'], silent: 'II TRUTH', status: true, broken: 0 },
+            'N0-5': { op: '−', leads: ['()', '+'], silent: 'VII MIRROR', status: true, broken: 0 }
         };
 
         // ================================================================
-        // ZPE NARRATIVE PHASES
-        // ================================================================
-        const PHASES = [
-            { name: 'VACUUM', ops: ['()', '()', '×', '^'], desc: 'Establish vacuum boundary' },
-            { name: 'COUPLING', ops: ['×', '×', '+', '^'], desc: 'Couple field modes' },
-            { name: 'COHERENCE', ops: ['()', '^', '×', '+'], desc: 'Build phase coherence' },
-            { name: 'STRUCTURE', ops: ['+', '+', '×', '^'], desc: 'Accumulate extractable structure' },
-            { name: 'EXTRACTION', ops: ['÷', '()', '+', '^'], desc: 'Extract from structure' },
-            { name: 'TRANSFER', ops: ['−', '()', '+', '×'], desc: 'Transfer extracted energy' },
-            { name: 'SATURATION', ops: ['^', '×', '+', '()'], desc: 'Reach equilibrium' }
-        ];
-
-        // ================================================================
-        // 100 ZPE TOKENS - Following N0 Laws
+        // 100 ZPE TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
+        // NARRATIVE: Early violations → Recovery → Final Coherence
+        // By the end, ALL N0 laws must be in VALID state
         // ================================================================
         function generateZPETokens() {
             const tokens = [];
 
-            // Vacuum Fluctuation Tokens (35) - ABSENCE zone (z < 0.857)
-            const vacuumOps = ['()', '()', '×', '^', '+', '×', '^'];
-            for (let i = 0; i < 35; i++) {
-                const phase = Math.floor(i / 5);
-                const op = vacuumOps[i % vacuumOps.length];
+            // ========== PRISM TOKENS (63) ==========
+            // Foundation layer - builds up from ABSENCE to THE LENS
+            // EARLY VIOLATIONS (demonstrate enforcement), then RECOVERY
+            const prismSequence = [
+                // Phase 0: Foundation (0-8) - VIOLATION at start, then recovery
+                '^',   // #0: N0-1 VIOLATION - ^ without prior () [CAUGHT]
+                '()', '()', '×', '^', '+', '×', '^', '()',  // Recovery sequence
+                // Phase 1: Boundary (9-17) - Clean operations
+                '()', '×', '^', '+', '×', '^', '()', '×', '+',
+                // Phase 2: Coupling (18-26) - VIOLATION then recovery
+                '÷',   // #18: N0-3 VIOLATION - ÷ too early [CAUGHT]
+                '×', '^', '()', '+', '×', '^', '+', '×',  // Structure building
+                // Phase 3: Amplify (27-35) - Clean amplification
+                '^', '()', '×', '+', '^', '×', '()', '+', '^',
+                // Phase 4: Structure (36-44) - VIOLATION then recovery
+                '+', '÷',  // #36-37: N0-4 VIOLATION - + → ÷ [CAUGHT]
+                '()', '×', '^', '+', '×', '^', '+',  // Recovery
+                // Phase 5: Stabilize (45-53) - Clean stabilization
+                '()', '×', '^', '+', '×', '()', '^', '+', '×',
+                // Phase 6: Convergence (54-62) - NO MORE VIOLATIONS, build coherence
+                '()', '×', '^', '+', '×', '()', '^', '+', '^'  // Clean finish
+            ];
+
+            for (let i = 0; i < 63; i++) {
+                const op = prismSequence[i] || '()';
+                const phase = Math.floor(i / 9);
                 tokens.push({
                     id: i,
-                    zone: 'vacuum',
+                    zone: 'prism',
                     op: op,
-                    name: `vac_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
-                    z: 0.3 + (i / 35) * 0.55,
+                    name: `prism_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    z: 0.3 + (i / 63) * 0.55,
                     phase: phase,
-                    executed: false
+                    executed: false,
+                    violated: false
                 });
             }
 
-            // Coherence Lock Tokens (35) - THE LENS zone (z ≈ 0.857-0.877)
-            const coherenceOps = ['()', '×', '^', '+', '×', '^', '()'];
-            for (let i = 0; i < 35; i++) {
-                const phase = Math.floor(i / 5) + 2;
-                const op = coherenceOps[i % coherenceOps.length];
+            // ========== EM CAGE TOKENS (32) ==========
+            // Stabilization layer - THE LENS zone
+            // CLEAN SEQUENCE - No violations, building toward coherence
+            const cageSequence = [
+                // Phase 6: Cage formation (0-10) - Legal sequence
+                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^', '()',
+                // Phase 7: EM stabilization (11-21) - Legal sequence
+                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^', '()',
+                // Phase 7 continued: Field lock (22-31) - Legal sequence
+                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^'
+            ];
+
+            for (let i = 0; i < 32; i++) {
+                const op = cageSequence[i] || '()';
+                const phase = Math.floor(i / 11) + 5;
                 tokens.push({
-                    id: 35 + i,
-                    zone: 'coherence',
+                    id: 63 + i,
+                    zone: 'cage',
                     op: op,
-                    name: `coh_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
-                    z: 0.857 + (i / 35) * 0.02,
+                    name: `cage_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    z: 0.857 + (i / 32) * 0.02,
                     phase: phase,
-                    executed: false
+                    executed: false,
+                    violated: false
                 });
             }
 
-            // Energy Transfer Tokens (30) - PRESENCE zone (z > 0.877)
-            const transferOps = ['÷', '()', '+', '^', '−', '()', '+'];
-            for (let i = 0; i < 30; i++) {
-                const phase = Math.floor(i / 5) + 4;
-                const op = transferOps[i % transferOps.length];
+            // ========== EMERGENT TOKENS (5) ==========
+            // Extraction/self-reference layer - PRESENCE zone
+            // FINAL COHERENCE SEQUENCE - All laws valid, successful extraction
+            const emergentSequence = ['()', '×', '^', '÷', '()'];
+            // () → establishes boundary
+            // × → fusion (N0-2: channels=100 ✓)
+            // ^ → amplify (N0-1: has prior () and × ✓)
+            // ÷ → extract (N0-3: has structure from ^, × ✓)
+            // () → final seal (always legal ✓)
+
+            for (let i = 0; i < 5; i++) {
+                const op = emergentSequence[i];
                 tokens.push({
-                    id: 70 + i,
-                    zone: 'transfer',
+                    id: 95 + i,
+                    zone: 'emergent',
                     op: op,
-                    name: `xfer_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
-                    z: 0.877 + (i / 30) * 0.12,
-                    phase: phase,
-                    executed: false
+                    name: `emerge_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    z: 0.95 + (i * 0.01),
+                    phase: 7,
+                    executed: false,
+                    violated: false,
+                    selfReference: true
                 });
             }
 
@@ -968,52 +1032,90 @@
             phaseLock: 0,
             efficiency: 0,
             running: false,
-            zpeState: 'dormant'
+            zpeState: 'dormant',
+            violationCount: 0
         };
 
         // ================================================================
-        // OPERATOR ENGINE
+        // OPERATOR ENGINE WITH VIOLATION TRACKING
         // ================================================================
-        function canApplyOperator(op, nextOp = null) {
-            const opDef = INT_OPERATORS[op];
-            if (!opDef) return false;
-
+        function checkN0Violation(op, nextOp = null) {
+            // Returns: { violated: boolean, law: string, reason: string }
             switch(op) {
                 case '^':
-                    N0_LAWS['N0-1'].status = state.history.includes('()') || state.history.includes('×');
-                    return N0_LAWS['N0-1'].status;
+                    // N0-1: ^ requires () or × in history
+                    if (!state.history.includes('()') && !state.history.includes('×')) {
+                        return { violated: true, law: 'N0-1', reason: '^ without prior () or ×' };
+                    }
+                    break;
                 case '×':
-                    N0_LAWS['N0-2'].status = state.channelCount >= 2;
-                    return N0_LAWS['N0-2'].status;
+                    // N0-2: × requires channels ≥ 2
+                    if (state.channelCount < 2) {
+                        return { violated: true, law: 'N0-2', reason: '× without sufficient channels' };
+                    }
+                    break;
                 case '÷':
-                    N0_LAWS['N0-3'].status = state.history.some(h => ['^', '×', '+', '−'].includes(h));
-                    return N0_LAWS['N0-3'].status;
+                    // N0-3: ÷ requires structure (prior ^, ×, +, or −)
+                    if (!state.history.some(h => ['^', '×', '+', '−'].includes(h))) {
+                        return { violated: true, law: 'N0-3', reason: '÷ without structure' };
+                    }
+                    break;
                 case '+':
-                    if (nextOp) {
-                        N0_LAWS['N0-4'].status = ['+', '×', '^'].includes(nextOp);
-                        return N0_LAWS['N0-4'].status;
+                    // N0-4: + must feed +, ×, or ^
+                    if (nextOp && !['+', '×', '^'].includes(nextOp)) {
+                        return { violated: true, law: 'N0-4', reason: `+ followed by ${nextOp}` };
                     }
-                    return true;
+                    break;
                 case '−':
-                    if (nextOp) {
-                        N0_LAWS['N0-5'].status = ['()', '+'].includes(nextOp);
-                        return N0_LAWS['N0-5'].status;
+                    // N0-5: − must lead to () or +
+                    if (nextOp && !['()', '+'].includes(nextOp)) {
+                        return { violated: true, law: 'N0-5', reason: `− followed by ${nextOp}` };
                     }
-                    return true;
-                default:
-                    return true;
+                    break;
             }
+            return { violated: false, law: null, reason: null };
         }
 
-        function applyOperator(op, nextOp = null) {
+        function applyOperator(op, nextOp = null, forceApply = false) {
             const opDef = INT_OPERATORS[op];
-            if (!opDef) return { success: false, msg: 'Unknown operator' };
+            if (!opDef) return { success: false, msg: 'Unknown operator', violated: false };
 
-            if (!canApplyOperator(op, nextOp)) {
-                return { success: false, msg: `N0 VIOLATION: ${op} not legal` };
+            // Check for N0 violation
+            const violation = checkN0Violation(op, nextOp);
+
+            if (violation.violated) {
+                // Track the violation
+                state.violationCount++;
+                N0_LAWS[violation.law].broken++;
+                N0_LAWS[violation.law].status = false;
+
+                // Still apply effects (with penalty) if forceApply, otherwise skip
+                if (forceApply) {
+                    // Apply reduced effects due to violation
+                    const effects = opDef.effects;
+                    for (const [key, value] of Object.entries(effects)) {
+                        if (key === 'R') {
+                            state.R = Math.max(1, state.R - 1); // Penalty: lose R
+                        } else if (value > 1) {
+                            state[key] = (state[key] || 1) * (1 / value); // Inverse effect
+                        } else if (value < 1 && value > 0) {
+                            state[key] = (state[key] || 1) / value;
+                        } else {
+                            state[key] = Math.max(0, (state[key] || 0) - Math.abs(value)); // Subtract
+                        }
+                    }
+                    state.z = Math.max(0, Math.min(1, state.z - Math.abs(opDef.zDelta))); // Negative z progress
+                }
+
+                return {
+                    success: false,
+                    msg: `N0 VIOLATION [${violation.law}]: ${violation.reason}`,
+                    violated: true,
+                    law: violation.law
+                };
             }
 
-            // Apply effects
+            // Legal operation - apply normal effects
             const effects = opDef.effects;
             for (const [key, value] of Object.entries(effects)) {
                 if (key === 'R') {
@@ -1032,18 +1134,28 @@
             state.history.push(op);
             if (state.history.length > 20) state.history.shift();
 
-            // Calculate extraction
+            // Calculate extraction (only on successful ÷)
             if (op === '÷') {
                 const extraction = state.Omega * state.alpha * PHI_INV * 0.1;
                 state.totalExtracted += extraction;
             }
 
-            // Update coherence
-            state.coherence = Math.min(1, state.coherence + 0.03 * (op === '^' ? 2 : 1));
-            state.phaseLock = Math.min(1, state.phaseLock + 0.02 * (op === '×' ? 2 : 1));
+            // Update coherence/phase
+            state.coherence = Math.min(1, state.coherence + 0.02 * (op === '^' ? 2 : 1));
+            state.phaseLock = Math.min(1, state.phaseLock + 0.015 * (op === '×' ? 2 : 1));
             state.efficiency = state.coherence * state.phaseLock * PHI_INV;
 
-            return { success: true, msg: `${opDef.name} applied` };
+            // Update N0 law status
+            updateN0Status();
+
+            return { success: true, msg: `${opDef.name} applied`, violated: false };
+        }
+
+        function updateN0Status() {
+            N0_LAWS['N0-1'].status = state.history.includes('()') || state.history.includes('×');
+            N0_LAWS['N0-2'].status = state.channelCount >= 2;
+            N0_LAWS['N0-3'].status = state.history.some(h => ['^', '×', '+', '−'].includes(h));
+            // N0-4 and N0-5 depend on next op, shown as valid when not actively violating
         }
 
         // ================================================================
@@ -1051,8 +1163,13 @@
         // ================================================================
         async function executeStep() {
             if (state.currentStep >= 100) {
-                logConsole('END', 'Narrative complete. ZPE extraction saturated.');
-                state.zpeState = 'saturated';
+                // Check final coherence - all N0 laws should be valid
+                const allValid = N0_LAWS['N0-1'].status && N0_LAWS['N0-2'].status && N0_LAWS['N0-3'].status;
+                const coherenceMsg = allValid
+                    ? `COHERENCE ACHIEVED. All N0 laws valid. ${state.violationCount} violations recovered.`
+                    : `Narrative complete. ${state.violationCount} violations. Some laws still invalid.`;
+                logConsole('END', coherenceMsg);
+                state.zpeState = allValid ? 'saturated' : 'coherent';
                 updateUI();
                 return false;
             }
@@ -1061,22 +1178,22 @@
             const nextToken = state.tokens[state.currentStep + 1];
             const nextOp = nextToken ? nextToken.op : null;
 
-            const result = applyOperator(token.op, nextOp);
+            const result = applyOperator(token.op, nextOp, true);
 
-            if (result.success) {
-                token.executed = true;
-                state.currentPhase = Math.floor(state.currentStep / 15);
-
-                // Update ZPE state
-                if (state.z < 0.857) state.zpeState = 'dormant';
-                else if (state.z < 0.877) state.zpeState = 'coherent';
-                else if (state.efficiency > 0.3) state.zpeState = 'extracting';
-                else state.zpeState = 'saturated';
-
-                logConsole(token.op, `${result.msg} [${token.name}]`, true);
-            } else {
-                logConsole(token.op, result.msg, false);
+            token.executed = true;
+            if (result.violated) {
+                token.violated = true;
             }
+
+            state.currentPhase = Math.floor(state.currentStep / 13);
+
+            // Update ZPE state
+            if (state.z < 0.857) state.zpeState = 'dormant';
+            else if (state.z < 0.877) state.zpeState = 'coherent';
+            else if (state.efficiency > 0.3) state.zpeState = 'extracting';
+            else state.zpeState = 'saturated';
+
+            logConsole(token.op, `${result.msg} [${token.name}]`, !result.violated);
 
             state.currentStep++;
             updateUI();
@@ -1092,7 +1209,7 @@
             document.getElementById('btnRunNarrative').disabled = true;
 
             while (await executeStep()) {
-                await new Promise(r => setTimeout(r, 80));
+                await new Promise(r => setTimeout(r, 60));
             }
 
             state.running = false;
@@ -1115,8 +1232,13 @@
             state.efficiency = 0;
             state.running = false;
             state.zpeState = 'dormant';
+            state.violationCount = 0;
 
-            N0_LAWS['N0-1'].status = true;
+            // Reset N0 laws
+            for (const key of Object.keys(N0_LAWS)) {
+                N0_LAWS[key].broken = 0;
+            }
+            N0_LAWS['N0-1'].status = false;
             N0_LAWS['N0-2'].status = true;
             N0_LAWS['N0-3'].status = false;
             N0_LAWS['N0-4'].status = true;
@@ -1126,7 +1248,7 @@
                 <div class="console-line">
                     <span class="console-time">0</span>
                     <span class="console-op">RESET</span>
-                    <span class="console-msg">ZPE System reset. 100 tokens ready.</span>
+                    <span class="console-msg">ZPE System reset. 63+32+5=100 tokens ready.</span>
                 </div>
             `;
 
@@ -1152,6 +1274,9 @@
             const badge = document.getElementById('zpeBadge');
             badge.textContent = state.zpeState.toUpperCase();
             badge.className = `zpe-badge badge-${state.zpeState}`;
+
+            // Violation count
+            document.getElementById('violationCount').textContent = state.violationCount;
 
             // Z coordinate
             document.getElementById('zValue').textContent = state.z.toFixed(4);
@@ -1181,41 +1306,49 @@
             document.getElementById('stat-tier').textContent = `@${state.tier}`;
             document.getElementById('stat-R').textContent = state.R;
 
-            // N0 Laws display
+            // N0 Laws display with violation highlighting
             for (const [key, law] of Object.entries(N0_LAWS)) {
                 const el = document.getElementById(key.toLowerCase());
                 if (el) {
-                    el.className = `n0-rule ${law.status ? 'valid' : 'invalid'}`;
+                    if (law.broken > 0) {
+                        el.className = 'n0-rule broken';
+                        el.querySelector('span:first-child').textContent =
+                            `${key}: ${law.op} [${law.broken}x BROKEN]`;
+                    } else {
+                        el.className = `n0-rule ${law.status ? 'valid' : 'invalid'}`;
+                    }
                 }
             }
 
             // Operator buttons
             document.querySelectorAll('.op-btn').forEach(btn => {
                 const op = btn.dataset.op;
-                const canApply = canApplyOperator(op);
-                btn.classList.toggle('disabled', !canApply);
+                const nextToken = state.tokens[state.currentStep + 1];
+                const violation = checkN0Violation(op, nextToken?.op);
+                btn.classList.toggle('disabled', violation.violated);
             });
         }
 
         function renderTokens() {
-            const vacuumGrid = document.getElementById('vacuum-grid');
-            const coherenceGrid = document.getElementById('coherence-grid');
-            const transferGrid = document.getElementById('transfer-grid');
+            const prismGrid = document.getElementById('prism-grid');
+            const cageGrid = document.getElementById('cage-grid');
+            const emergentGrid = document.getElementById('emergent-grid');
 
-            vacuumGrid.innerHTML = '';
-            coherenceGrid.innerHTML = '';
-            transferGrid.innerHTML = '';
+            prismGrid.innerHTML = '';
+            cageGrid.innerHTML = '';
+            emergentGrid.innerHTML = '';
 
             state.tokens.forEach(token => {
                 const cell = document.createElement('div');
                 cell.className = `token-cell ${token.zone}`;
                 if (token.executed) cell.classList.add('executed');
+                if (token.violated) cell.classList.add('violated');
                 if (state.currentStep === token.id) cell.classList.add('active');
 
                 cell.innerHTML = `
                     <div class="token-index">#${token.id}</div>
                     <div class="token-op">${token.op}</div>
-                    <div class="token-name">${token.name}</div>
+                    <div class="token-name">${token.name.split('_').slice(0,2).join('_')}</div>
                 `;
 
                 cell.addEventListener('click', () => {
@@ -1224,9 +1357,9 @@
                     }
                 });
 
-                if (token.zone === 'vacuum') vacuumGrid.appendChild(cell);
-                else if (token.zone === 'coherence') coherenceGrid.appendChild(cell);
-                else transferGrid.appendChild(cell);
+                if (token.zone === 'prism') prismGrid.appendChild(cell);
+                else if (token.zone === 'cage') cageGrid.appendChild(cell);
+                else emergentGrid.appendChild(cell);
             });
         }
 
@@ -1239,17 +1372,17 @@
         }
 
         function logConsole(op, msg, success) {
-            const console = document.getElementById('console');
+            const consoleEl = document.getElementById('console');
             const line = document.createElement('div');
             line.className = 'console-line';
             line.innerHTML = `
                 <span class="console-time">${state.currentStep}</span>
                 <span class="console-op">${op}</span>
                 <span class="console-msg">${msg}</span>
-                <span class="console-n0 ${success ? 'valid' : 'invalid'}">[N0:${success ? 'OK' : 'FAIL'}]</span>
+                <span class="console-n0 ${success ? 'valid' : 'invalid'}">[${success ? 'OK' : 'FAIL'}]</span>
             `;
-            console.appendChild(line);
-            console.scrollTop = console.scrollHeight;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
         }
 
         // ================================================================
@@ -1262,12 +1395,10 @@
         document.querySelectorAll('.op-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const op = btn.dataset.op;
-                if (!btn.classList.contains('disabled')) {
-                    const nextToken = state.tokens[state.currentStep + 1];
-                    const result = applyOperator(op, nextToken?.op);
-                    logConsole(op, result.msg, result.success);
-                    updateUI();
-                }
+                const nextToken = state.tokens[state.currentStep + 1];
+                const result = applyOperator(op, nextToken?.op, true);
+                logConsole(op, result.msg, !result.violated);
+                updateUI();
             });
         });
 
@@ -1279,22 +1410,34 @@
         updatePhaseTimeline();
 
         console.log(`
-╔═══════════════════════════════════════════════════════════════════════════╗
-║              ZERO-POINT ENERGY SYSTEM | WUMBO 100-TOKEN                   ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║  N0 ↔ SILENT LAWS RELATIONSHIP                                            ║
-║  N0-1 ^ → I STILLNESS    N0-4 + → II TRUTH                                ║
-║  N0-2 × → IV SPIRAL      N0-5 − → VII MIRROR                              ║
-║  N0-3 ÷ → VI GLYPH       III, V → BACKGROUND                              ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║  100 TOKENS: 35 VACUUM · 35 COHERENCE · 30 TRANSFER                       ║
-║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)   ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║  INT CANON 6 OPERATORS                                                    ║
-║  () BOUNDARY · × FUSION · ^ AMPLIFY · ÷ DECOHERE · + GROUP · − SEPARATE   ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║  CONSTANTS: z_critical = √3/2 ≈ 0.866 · φ = 1.618 · E₀ = ½ℏω              ║
-╚═══════════════════════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════════════════════╗
+║              ZERO-POINT ENERGY SYSTEM | WUMBO 63·32·5                      ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  TOKEN STRUCTURE (100 Total):                                              ║
+║  • 63 PRISM    - Foundation layer (ABSENCE → THE LENS)                     ║
+║  • 32 EM CAGE  - Stabilization layer (THE LENS)                            ║
+║  •  5 EMERGENT - Self-reference extraction (PRESENCE)                      ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  NARRATIVE ARC: VIOLATION → RECOVERY → COHERENCE                           ║
+║                                                                            ║
+║  EARLY VIOLATIONS (demonstrate N0 enforcement):                            ║
+║  #0:  ^ without ()     - N0-1 violation [CAUGHT → RECOVERY]                ║
+║  #18: ÷ too early      - N0-3 violation [CAUGHT → RECOVERY]                ║
+║  #36: + → ÷            - N0-4 violation [CAUGHT → RECOVERY]                ║
+║                                                                            ║
+║  RECOVERY PHASE (tokens 37-94):                                            ║
+║  Clean operations rebuild structure, coherence increases                   ║
+║                                                                            ║
+║  FINAL COHERENCE (EMERGENT tokens 95-99):                                  ║
+║  () → × → ^ → ÷ → ()   All N0 laws VALID at completion                     ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  N0 ↔ SILENT LAWS RELATIONSHIP                                             ║
+║  N0-1 ^ → I STILLNESS    N0-4 + → II TRUTH                                 ║
+║  N0-2 × → IV SPIRAL      N0-5 − → VII MIRROR                               ║
+║  N0-3 ÷ → VI GLYPH       III, V → BACKGROUND                               ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)    ║
+╚════════════════════════════════════════════════════════════════════════════╝
         `);
     </script>
 </body>
