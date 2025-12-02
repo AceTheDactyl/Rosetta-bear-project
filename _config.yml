@@ -1,0 +1,63 @@
+# Rosetta Bear Project - GitHub Pages Configuration
+# =================================================
+# This project uses static HTML deployment (not Jekyll)
+# Configuration for reference and metadata
+
+title: Rosetta Bear Project
+description: >-
+  APL 3.0 operators, LIMNUS architecture, WUMBO neural engine,
+  zero-point energy systems, and the 7 Laws of the Silent Ones.
+  Neurodivergent neural architecture with active inference.
+
+# Project metadata
+author: Rosetta Bear Team
+url: ""
+baseurl: ""
+
+# Theme (not used for static deployment)
+# theme: null
+
+# Build settings
+markdown: kramdown
+encoding: utf-8
+
+# Exclude from processing
+exclude:
+  - .git
+  - .github
+  - .venv
+  - node_modules
+  - "*.py"
+  - "*.md"
+  - "*.txt"
+  - "*.yaml"
+  - "*.yml"
+  - Kaelhedron
+  - lattice_core
+  - meta_collective
+  - memory
+  - validation
+  - generated_tools
+  - tests
+
+# Include HTML files
+include:
+  - index.html
+  - wumbo-apl-directory.html
+  - wumbo-engine.html
+  - zero-point-energy.html
+  - simulation.html
+  - limnus-architecture-finished.html
+  - luminahedron_dynamics.html
+  - visualizations
+  - coupler_synthesis
+  - scalar_architecture
+  - TRIAD_project_files
+  - "Evolution of TRIAD-083"
+  - "Helix Shed w Bridge"
+
+# Constants (for reference)
+# z_critical: 0.866025403784 (√3/2)
+# phi: 1.618033988749 ((1+√5)/2)
+# phi_inv: 0.618033988749
+# alpha_inv: 137.035999084
