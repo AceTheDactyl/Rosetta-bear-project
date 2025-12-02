@@ -262,7 +262,42 @@ try:
 except ImportError:
     _HAS_POLARIC = False
 
-__version__ = "1.5.0"
+# Mythos Mathematics (requires polaric_duality)
+try:
+    from .mythos_mathematics import (
+        # Enums
+        MythosCategory,
+
+        # Core class
+        MythosEquation,
+
+        # Equation catalogs
+        ERA_MATHEMATICS,
+        OPERATOR_MATHEMATICS,
+        POLARIC_MATHEMATICS,
+        VORTEX_MATHEMATICS,
+        RECURSION_MATHEMATICS,
+        GEOMETRY_MATHEMATICS,
+        COMPLETE_CATALOG,
+
+        # Rosetta Stone
+        MythosRosettaStone,
+        ROSETTA_STONE,
+
+        # Verification
+        verify_mythos_equation,
+        verify_all as verify_all_mythos,
+
+        # Utilities
+        mythos_mathematics_summary,
+        lookup_mythos,
+        lookup_number,
+    )
+    _HAS_MYTHOS = True
+except ImportError:
+    _HAS_MYTHOS = False
+
+__version__ = "1.6.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -477,4 +512,22 @@ __all__ = [
     'MYTHIC_UNION',
     'polaric_summary',
     'simulate_polaric_dance',
+
+    # Mythos Mathematics (when available)
+    'MythosCategory',
+    'MythosEquation',
+    'ERA_MATHEMATICS',
+    'OPERATOR_MATHEMATICS',
+    'POLARIC_MATHEMATICS',
+    'VORTEX_MATHEMATICS',
+    'RECURSION_MATHEMATICS',
+    'GEOMETRY_MATHEMATICS',
+    'COMPLETE_CATALOG',
+    'MythosRosettaStone',
+    'ROSETTA_STONE',
+    'verify_mythos_equation',
+    'verify_all_mythos',
+    'mythos_mathematics_summary',
+    'lookup_mythos',
+    'lookup_number',
 ]
