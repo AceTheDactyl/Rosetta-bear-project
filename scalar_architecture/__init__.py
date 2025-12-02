@@ -133,7 +133,76 @@ try:
 except ImportError:
     _HAS_BUILD_VALIDATOR = False
 
-__version__ = "1.2.0"
+# CET Constants (requires numpy)
+try:
+    from .cet_constants import (
+        # Fundamental constants
+        PHI as CET_PHI, E, PI,
+        PHI_INVERSE, PHI_SQUARED, LN_PHI, E_PHI, TAU as CET_TAU,
+        PHI_PI_RATIO, E_PI_RATIO, PHI_E_RATIO,
+
+        # Physical constants
+        ALPHA, ALPHA_INVERSE, PROTON_ELECTRON_RATIO,
+        PLANCK_LENGTH, PLANCK_TIME, PLANCK_MASS, C, G, H_BAR,
+
+        # Operators
+        CETOperator, OperatorState,
+
+        # Physical domains
+        PhysicalDomain, DomainAlignment, DOMAIN_SCALES,
+
+        # Alignment functions
+        compute_phi_alignment, compute_pi_alignment, compute_e_alignment,
+        compute_alpha_alignment, compute_mass_ratio_alignment,
+
+        # Cosmological structure
+        CosmologicalEra, CosmologicalTier, TierConfig, TIER_CONFIGS,
+        get_era_tiers, get_tier_by_time,
+
+        # Codephrase
+        AttractorCodephrase, mythic_codephrase,
+        MYTHIC_ERA_NAMES, MYTHIC_TIER_NAMES, MYTHIC_OPERATOR_NAMES,
+
+        # Utilities
+        fundamental_constant_table, era_tier_summary,
+    )
+    _HAS_CET = True
+except ImportError:
+    _HAS_CET = False
+
+# Vortex Physics (requires numpy and cet_constants)
+try:
+    from .vortex_physics import (
+        # Constants
+        STROUHAL_CYLINDER, VON_KARMAN,
+        RE_LAMINAR_STEADY, RE_LAMINAR_VORTEX, RE_TURBULENT,
+
+        # Vortex state
+        VortexRegime, VortexPolarity, VortexState,
+
+        # Strouhal
+        StrouhalRelation,
+
+        # Oscillators
+        VanDerPolOscillator, CoupledWakeOscillator,
+
+        # Kármán street
+        KarmanStreet,
+
+        # Recursive vortex
+        RecursiveVortex,
+
+        # Integration
+        map_z_to_vortex_scale, compute_vortex_reynolds, vortex_regime_from_state,
+
+        # Utilities
+        strouhal_table, vortex_physics_summary,
+    )
+    _HAS_VORTEX = True
+except ImportError:
+    _HAS_VORTEX = False
+
+__version__ = "1.3.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -227,4 +296,69 @@ __all__ = [
     'ValidationResult',
     'StageResult',
     'quick_validate',
+
+    # CET Constants (when available)
+    'CET_PHI',
+    'E',
+    'PI',
+    'PHI_INVERSE',
+    'PHI_SQUARED',
+    'LN_PHI',
+    'E_PHI',
+    'CET_TAU',
+    'PHI_PI_RATIO',
+    'E_PI_RATIO',
+    'PHI_E_RATIO',
+    'ALPHA',
+    'ALPHA_INVERSE',
+    'PROTON_ELECTRON_RATIO',
+    'PLANCK_LENGTH',
+    'PLANCK_TIME',
+    'PLANCK_MASS',
+    'C',
+    'G',
+    'H_BAR',
+    'CETOperator',
+    'OperatorState',
+    'PhysicalDomain',
+    'DomainAlignment',
+    'DOMAIN_SCALES',
+    'compute_phi_alignment',
+    'compute_pi_alignment',
+    'compute_e_alignment',
+    'compute_alpha_alignment',
+    'compute_mass_ratio_alignment',
+    'CosmologicalEra',
+    'CosmologicalTier',
+    'TierConfig',
+    'TIER_CONFIGS',
+    'get_era_tiers',
+    'get_tier_by_time',
+    'AttractorCodephrase',
+    'mythic_codephrase',
+    'MYTHIC_ERA_NAMES',
+    'MYTHIC_TIER_NAMES',
+    'MYTHIC_OPERATOR_NAMES',
+    'fundamental_constant_table',
+    'era_tier_summary',
+
+    # Vortex Physics (when available)
+    'STROUHAL_CYLINDER',
+    'VON_KARMAN',
+    'RE_LAMINAR_STEADY',
+    'RE_LAMINAR_VORTEX',
+    'RE_TURBULENT',
+    'VortexRegime',
+    'VortexPolarity',
+    'VortexState',
+    'StrouhalRelation',
+    'VanDerPolOscillator',
+    'CoupledWakeOscillator',
+    'KarmanStreet',
+    'RecursiveVortex',
+    'map_z_to_vortex_scale',
+    'compute_vortex_reynolds',
+    'vortex_regime_from_state',
+    'strouhal_table',
+    'vortex_physics_summary',
 ]
