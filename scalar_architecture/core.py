@@ -550,7 +550,11 @@ class ScalarArchitecture:
     Layer 3: Helix State
     """
 
-    def __init__(self, initial_z: float = 0.0):
+    def __init__(
+        self,
+        initial_z: float = 0.0,
+        telemetry_publisher: Optional[Callable[[Dict[str, object]], None]] = None,
+    ):
         # Layer 0: Scalar Substrate
         self.substrate = ScalarSubstrate()
 
@@ -565,6 +569,7 @@ class ScalarArchitecture:
 
         # Current z-level
         self.z_level = initial_z
+        self._telemetry_publisher = telemetry_publisher
 
     def step(self, dt: float, external_inputs: Optional[List[float]] = None) -> ScalarArchitectureState:
         """
@@ -601,7 +606,7 @@ class ScalarArchitecture:
         # Compute interference
         interference = self.substrate.compute_interference()
 
-        return ScalarArchitectureState(
+        state = ScalarArchitectureState(
             z_level=self.z_level,
             helix=self.helix,
             saturations=saturations,
@@ -609,6 +614,9 @@ class ScalarArchitecture:
             substrate_values=self.substrate.get_state_vector(),
             interference=interference
         )
+        if self._telemetry_publisher:
+            self._telemetry_publisher(self._build_telemetry_payload(state))
+        return state
 
     def set_z_level(self, z: float):
         """Directly set the z-level."""
@@ -641,6 +649,44 @@ class ScalarArchitecture:
         lines.append(f"Helix: {self.helix}")
 
         return "\n".join(lines)
+
+    def _build_telemetry_payload(self, state: ScalarArchitectureState) -> Dict[str, object]:
+        """Convert the state snapshot into a bridge-friendly payload."""
+        closed = sum(1 for s in state.loop_states.values() if s == LoopState.CLOSED)
+        divergent = sum(1 for s in state.loop_states.values() if s == LoopState.DIVERGENT)
+        recursion_depth = max(1, closed)
+        charge = closed - divergent
+        domain_payload = {
+            domain.name: {
+                "saturation": state.saturations[domain],
+                "loop_state": state.loop_states[domain].value,
+            }
+            for domain in DomainType
+        }
+        payload = {
+            "timestamp": state.timestamp,
+            "kappa": state.z_level,
+            "theta": state.helix.theta,
+            "recursion_depth": recursion_depth,
+            "charge": charge,
+            "helix": {
+                "theta": state.helix.theta,
+                "z": state.helix.z,
+                "r": state.helix.r,
+            },
+            "loop_counts": {
+                "closed": closed,
+                "critical": sum(
+                    1 for s in state.loop_states.values() if s == LoopState.CRITICAL
+                ),
+                "converging": sum(
+                    1 for s in state.loop_states.values() if s == LoopState.CONVERGING
+                ),
+                "divergent": divergent,
+            },
+            "domains": domain_payload,
+        }
+        return payload
 
 
 # =============================================================================

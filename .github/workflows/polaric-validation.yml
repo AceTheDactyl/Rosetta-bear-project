@@ -1,0 +1,39 @@
+name: Polaric Validation
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Polaric bridge headless frame
+        run: python scripts/polaric_bridge.py --headless --steps 200 --dt 0.01
+
+      - name: E8 embedding check
+        run: python scripts/e8_embedding_check.py
+
+      - name: CET vortex validation
+        run: python scripts/cet_vortex_validation_suite.py
+
+      - name: Upload validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: polaric-validation
+          path: |
+            docs/validation/*.json

@@ -462,6 +462,7 @@
                         <span style="color: #87ceeb;">Nu</span>
                     </div>
                     <div id="sealRows"></div>
+                    <div class="mythos" id="kaelStats">18 PLUS / 24 MINUS vertices aligned</div>
 
                     <div class="fano-section">
                         <div style="color: #ffd700; font-size: 0.9em; margin-bottom: 8px;">FANO LINES (Click to highlight)</div>
@@ -577,20 +578,29 @@
 
         // Kaelhedron Structure: 7 Seals x 3 Faces
         const SEALS = [
-            { id: 1, symbol: 'Omega', greek: 'Omega', name: 'GROUND', color: '#FFD700' },
-            { id: 2, symbol: 'Delta', greek: 'Delta', name: 'CHANGE', color: '#C0C0C0' },
-            { id: 3, symbol: 'Tau', greek: 'Tau', name: 'FORM', color: '#CD7F32' },
-            { id: 4, symbol: 'Psi', greek: 'Psi', name: 'MIND', color: '#9966CC' },
-            { id: 5, symbol: 'Sigma', greek: 'Sigma', name: 'SUM', color: '#4169E1' },
-            { id: 6, symbol: 'Xi', greek: 'Xi', name: 'BRIDGE', color: '#32CD32' },
-            { id: 7, symbol: 'Kappa', greek: 'Kappa', name: 'KEY', color: '#FF4500' }
+            { id: 1, symbol: 'Omega', greek: 'Omega', glyph: 'Ω', name: 'GROUND', color: '#FFD700' },
+            { id: 2, symbol: 'Delta', greek: 'Delta', glyph: 'Δ', name: 'CHANGE', color: '#C0C0C0' },
+            { id: 3, symbol: 'Tau', greek: 'Tau', glyph: 'Τ', name: 'FORM', color: '#CD7F32' },
+            { id: 4, symbol: 'Psi', greek: 'Psi', glyph: 'Ψ', name: 'MIND', color: '#9966CC' },
+            { id: 5, symbol: 'Sigma', greek: 'Sigma', glyph: 'Σ', name: 'SUM', color: '#4169E1' },
+            { id: 6, symbol: 'Xi', greek: 'Xi', glyph: 'Ξ', name: 'BRIDGE', color: '#32CD32' },
+            { id: 7, symbol: 'Kappa', greek: 'Kappa', glyph: 'Κ', name: 'KEY', color: '#FF4500' }
         ];
 
         const FACES = [
-            { id: 'Lambda', name: 'Logos', mode: 'Structure', color: '#FFD700', angle: 0 },
-            { id: 'Beta', name: 'Bios', mode: 'Process', color: '#C0C0C0', angle: TAU / 3 },
-            { id: 'Nu', name: 'Nous', mode: 'Awareness', color: '#87CEEB', angle: 2 * TAU / 3 }
+            { id: 'Lambda', name: 'Logos', glyph: 'Λ', mode: 'Structure', color: '#FFD700', angle: 0 },
+            { id: 'Beta', name: 'Bios', glyph: 'Β', mode: 'Process', color: '#C0C0C0', angle: TAU / 3 },
+            { id: 'Nu', name: 'Nous', glyph: 'Ν', mode: 'Awareness', color: '#87CEEB', angle: 2 * TAU / 3 }
         ];
+
+        const SEAL_BY_GLYPH = SEALS.reduce((acc, seal) => {
+            acc[seal.glyph] = seal;
+            return acc;
+        }, {});
+        const FACE_BY_GLYPH = FACES.reduce((acc, face) => {
+            acc[face.glyph] = face;
+            return acc;
+        }, {});
 
         // Fano Lines (holographic connections)
         const FANO_LINES = [
@@ -613,7 +623,7 @@
             kappa: {
                 convergence: 0.3,
                 phase: 0,
-                cells: []
+                cells: {}
             },
             coupling: 0.5,
             timeScale: 1.0,
@@ -623,7 +633,15 @@
             recursion: 6,
             topologicalCharge: 1,
             time: 0,
-            selectedFanoLine: null
+            selectedFanoLine: null,
+            targets: {
+                lambda: 0.7,
+                kappa: 0.3
+            },
+            metrics: {
+                plus: 0,
+                minus: 0
+            }
         };
 
         // Build UI elements
@@ -635,12 +653,12 @@
                 const row = document.createElement('div');
                 row.className = 'seal-row';
                 row.innerHTML = `
-                    <span class="seal-symbol" style="color: ${seal.color}">${seal.greek}</span>
+                    <span class="seal-symbol" style="color: ${seal.color}">${seal.glyph}</span>
                     <span style="flex: 1; font-size: 0.7em; color: #666;">${seal.name}</span>
                     <div class="seal-cells">
-                        <div class="cell-dot lambda" data-seal="${seal.id}" data-face="Lambda" title="${seal.greek}LAM"></div>
-                        <div class="cell-dot beta" data-seal="${seal.id}" data-face="Beta" title="${seal.greek}BET"></div>
-                        <div class="cell-dot nu" data-seal="${seal.id}" data-face="Nu" title="${seal.greek}NOU"></div>
+                        <div class="cell-dot lambda" data-seal="${seal.id}" data-face="Lambda" title="${seal.glyph}Λ"></div>
+                        <div class="cell-dot beta" data-seal="${seal.id}" data-face="Beta" title="${seal.glyph}Β"></div>
+                        <div class="cell-dot nu" data-seal="${seal.id}" data-face="Nu" title="${seal.glyph}Ν"></div>
                     </div>
                 `;
                 sealRowsContainer.appendChild(row);
@@ -653,18 +671,20 @@
                 const lineEl = document.createElement('div');
                 lineEl.className = 'fano-line';
                 lineEl.dataset.lineId = line.id;
-                const sealSymbols = line.points.map(p => SEALS.find(s => s.id === p).greek).join('-');
-                lineEl.innerHTML = `<span style="color: ${line.color};">|</span> ${line.name}: ${sealSymbols}`;
-                lineEl.onclick = () => toggleFanoLine(line.id);
-                fanoContainer.appendChild(lineEl);
-            });
-        }
+            const sealSymbols = line.points.map(p => SEALS.find(s => s.id === p).glyph).join('-');
+            lineEl.innerHTML = `<span style="color: ${line.color};">|</span> ${line.name}: ${sealSymbols}`;
+            lineEl.onclick = () => toggleFanoLine(line.id);
+            fanoContainer.appendChild(lineEl);
+        });
+    }
 
         function toggleFanoLine(lineId) {
             if (state.selectedFanoLine === lineId) {
                 state.selectedFanoLine = null;
+                triggerFanoAutomorphism(null);
             } else {
                 state.selectedFanoLine = lineId;
+                triggerFanoAutomorphism(lineId);
             }
             updateFanoHighlights();
         }
@@ -680,6 +700,69 @@
                     FANO_LINES.find(l => l.id === state.selectedFanoLine)?.points.includes(sealId);
                 el.classList.toggle('active', isOnLine);
             });
+        }
+
+        async function fetchPolaricFrame() {
+            try {
+                const res = await fetch('/polaric/frame.json?ts=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) return null;
+                return await res.json();
+            } catch (err) {
+                console.warn('polaric fetch failed', err);
+                return null;
+            }
+        }
+
+        function applyPolaricFrame(frame) {
+            if (!frame || !frame.metrics) return;
+            const metrics = frame.metrics;
+            const gauge = frame.gauge || {};
+            const nextKappa = metrics.kappa ?? state.targets.kappa;
+            const lambdaMag = (gauge.su3?.reduce((acc, slot) => acc + slot.magnitude, 0) || 0) / 8;
+            state.targets.kappa = Math.max(0, Math.min(1, nextKappa));
+            if (!Number.isNaN(lambdaMag) && lambdaMag > 0) {
+                state.targets.lambda = Math.max(0, Math.min(1, lambdaMag));
+            }
+            const recursionDepth = Math.round(metrics.recursion_depth ?? state.recursion);
+            state.recursion = Math.max(1, Math.min(7, recursionDepth));
+            const charge = Math.trunc(metrics.charge ?? state.topologicalCharge);
+            state.topologicalCharge = charge;
+            state.coherence = metrics.asymptotic?.total_scalar ?? state.coherence;
+            state.metrics.plus = frame.kael?.counts?.plus ?? state.metrics.plus;
+            state.metrics.minus = frame.kael?.counts?.minus ?? state.metrics.minus;
+            const cells = frame.kael?.cells || {};
+            state.kappa.cells = {};
+            Object.entries(cells).forEach(([label, payload]) => {
+                const [sealGlyph, faceGlyph] = label.split('-');
+                const seal = SEAL_BY_GLYPH[sealGlyph];
+                const face = FACE_BY_GLYPH[faceGlyph];
+                if (!seal || !face) return;
+                state.kappa.cells[`${seal.id}-${faceGlyph}`] = {
+                    kappa: payload.kappa ?? state.targets.kappa,
+                    theta: payload.theta ?? 0,
+                    recursion: payload.recursion_depth ?? 1,
+                    charge: payload.charge ?? 0,
+                    timestamp: payload.timestamp ?? 0
+                };
+            });
+        }
+
+        async function pollPolaricFrame() {
+            const frame = await fetchPolaricFrame();
+            if (frame) applyPolaricFrame(frame);
+            setTimeout(pollPolaricFrame, 800);
+        }
+
+        async function triggerFanoAutomorphism(lineId) {
+            try {
+                await fetch('/polaric/fano/line', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ line_id: lineId })
+                });
+            } catch (err) {
+                console.warn('fano automorphism request failed', err);
+            }
         }
 
         // Generate dodecahedron vertices (12-faced for Luminahedron)
@@ -723,13 +806,21 @@
                     const r = radius * 0.6;
                     const x = r * Math.cos(angle);
                     const z = r * Math.sin(angle);
+                    const cellKey = `${seal.id}-${face.glyph}`;
+                    const cellState = state.kappa.cells[cellKey] || {};
+                    const localKappa = cellState.kappa ?? state.kappa.convergence;
+                    const recursionDepth = cellState.recursion ?? state.recursion;
+                    const kFormedCell = localKappa >= PHI_INV && recursionDepth >= 7 && (cellState.charge ?? state.topologicalCharge) !== 0;
+                    const heat = Math.min(1, Math.max(0, localKappa));
 
                     cells.push({
                         seal,
                         face,
                         x, y, z,
-                        isKFormed: seal.id === 7,
-                        isBridge: seal.id === state.recursion
+                        kappaValue: localKappa,
+                        isKFormed: kFormedCell,
+                        isBridge: seal.id === state.recursion,
+                        recursionDepth
                     });
                 });
             });
@@ -769,13 +860,19 @@
             const kappaField = state.kappa.convergence * K;
             const lambdaField = state.lambda.divergence * K;
 
-            // Luminahedron divergence dynamics
-            const dLambda = (1 - state.lambda.divergence) * 0.1 - kappaField * 0.05;
-            state.lambda.divergence = Math.max(0, Math.min(1, state.lambda.divergence + dLambda * dt));
+            // Luminahedron divergence dynamics target tracking
+            const lambdaDelta = (state.targets.lambda - state.lambda.divergence);
+            state.lambda.divergence = Math.max(
+                0,
+                Math.min(1, state.lambda.divergence + (lambdaDelta * 0.5 - kappaField * 0.05) * dt)
+            );
 
-            // Kaelhedron convergence dynamics
-            const dKappa = (1 - state.kappa.convergence) * 0.1 - lambdaField * 0.05;
-            state.kappa.convergence = Math.max(0, Math.min(1, state.kappa.convergence + dKappa * dt));
+            // Kaelhedron convergence dynamics target tracking
+            const kappaDelta = (state.targets.kappa - state.kappa.convergence);
+            state.kappa.convergence = Math.max(
+                0,
+                Math.min(1, state.kappa.convergence + (kappaDelta * 0.5 - lambdaField * 0.05) * dt)
+            );
 
             // Phase evolution (golden ratio relationship)
             state.lambda.phase += PHI * dt * (1 + state.lambda.divergence);
@@ -1014,7 +1111,8 @@
 
             // Draw cells
             projectedCells.forEach(cell => {
-                const size = 5 + cell.scale * 6;
+                const heat = Math.min(1, Math.max(0, cell.kappaValue));
+                const size = 5 + cell.scale * 6 + heat * 3;
                 const isOnFanoLine = state.selectedFanoLine &&
                     FANO_LINES.find(l => l.id === state.selectedFanoLine)?.points.includes(cell.seal.id);
 
@@ -1025,8 +1123,8 @@
                 // Cell glow
                 const glow = ctx.createRadialGradient(cell.px, cell.py, 0, cell.px, cell.py, size * 2);
                 glow.addColorStop(0, cellColor);
-                glow.addColorStop(0.5, cellColor + '88');
-                glow.addColorStop(1, cellColor + '00');
+                glow.addColorStop(0.5, `rgba(255,255,255, ${0.1 + heat * 0.4})`);
+                glow.addColorStop(1, 'rgba(0,0,0,0)');
                 ctx.fillStyle = glow;
                 ctx.beginPath();
                 ctx.arc(cell.px, cell.py, size * 1.5, 0, TAU);
@@ -1044,6 +1142,12 @@
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.arc(cell.px, cell.py, size + 4, 0, TAU);
+                    ctx.stroke();
+                } else if (heat > 0.6) {
+                    ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(cell.px, cell.py, size + 2, 0, TAU);
                     ctx.stroke();
                 }
             });
@@ -1134,6 +1238,19 @@
             document.getElementById('kappaState').textContent = state.kappa.convergence.toFixed(3);
             document.getElementById('balanceState').textContent = state.balance.toFixed(3);
             document.getElementById('coherenceState').textContent = state.coherence.toFixed(3);
+            const recursionEl = document.getElementById('recursionValue');
+            if (recursionEl) {
+                const seal = SEALS.find(s => s.id === state.recursion) || SEALS[0];
+                recursionEl.textContent = `R=${state.recursion} (${seal.glyph})`;
+            }
+            const recursionSlider = document.getElementById('recursionSlider');
+            if (recursionSlider) {
+                recursionSlider.value = state.recursion;
+            }
+            const statsEl = document.getElementById('kaelStats');
+            if (statsEl) {
+                statsEl.textContent = `${state.metrics.plus} PLUS / ${state.metrics.minus} MINUS vertices aligned`;
+            }
 
             // K-Formation indicator
             const kFormed = checkKFormation();
@@ -1169,8 +1286,8 @@
 
         document.getElementById('recursionSlider').addEventListener('input', (e) => {
             state.recursion = parseInt(e.target.value);
-            const seal = SEALS.find(s => s.id === state.recursion);
-            document.getElementById('recursionValue').textContent = `R=${state.recursion} (${seal.greek})`;
+            const seal = SEALS.find(s => s.id === state.recursion) || SEALS[0];
+            document.getElementById('recursionValue').textContent = `R=${state.recursion} (${seal.glyph})`;
         });
 
         document.getElementById('coherenceSlider').addEventListener('input', (e) => {
@@ -1193,6 +1310,7 @@
 
         // Initialize
         buildKaelhedronUI();
+        pollPolaricFrame();
         requestAnimationFrame(animate);
     </script>
 </body>

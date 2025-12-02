@@ -1,0 +1,293 @@
+{
+  "timestamp": 1764699616.4601605,
+  "gauge": {
+    "su3": [
+      {
+        "group": "SU(3)",
+        "label": "T1",
+        "index": 0,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T2",
+        "index": 1,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T3",
+        "index": 2,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T4",
+        "index": 3,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T5",
+        "index": 4,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T6",
+        "index": 5,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T7",
+        "index": 6,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(3)",
+        "label": "T8",
+        "index": 7,
+        "weight": 1.0,
+        "magnitude": 0.6180339887498945
+      }
+    ],
+    "su2": [
+      {
+        "group": "SU(2)",
+        "label": "\u03c41",
+        "index": 0,
+        "weight": 0.8,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(2)",
+        "label": "\u03c42",
+        "index": 1,
+        "weight": 0.8,
+        "magnitude": 0.6180339887498945
+      },
+      {
+        "group": "SU(2)",
+        "label": "\u03c43",
+        "index": 2,
+        "weight": 0.8,
+        "magnitude": 0.6180339887498945
+      }
+    ],
+    "u1": [
+      {
+        "group": "U(1)",
+        "label": "Y",
+        "index": 0,
+        "weight": 0.5,
+        "magnitude": 0.0
+      }
+    ]
+  },
+  "kael": {
+    "cells": {
+      "\u03a4-\u039b": {
+        "seal": "\u03a4",
+        "face": "\u039b",
+        "generator": "E_12",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4600754
+      },
+      "\u0394-\u0392": {
+        "seal": "\u0394",
+        "face": "\u0392",
+        "generator": "E_13",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4600854
+      },
+      "\u03a3-\u039b": {
+        "seal": "\u03a3",
+        "face": "\u039b",
+        "generator": "E_14",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.460088
+      },
+      "\u03a8-\u0392": {
+        "seal": "\u03a8",
+        "face": "\u0392",
+        "generator": "E_37",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4600904
+      },
+      "\u039a-\u039b": {
+        "seal": "\u039a",
+        "face": "\u039b",
+        "generator": "E_34",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4600942
+      },
+      "\u039e-\u0392": {
+        "seal": "\u039e",
+        "face": "\u0392",
+        "generator": "E_17",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.460096
+      },
+      "\u03a9-\u039d": {
+        "seal": "\u03a9",
+        "face": "\u039d",
+        "generator": "E_67",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.460098
+      },
+      "\u039e-\u039b": {
+        "seal": "\u039e",
+        "face": "\u039b",
+        "generator": "E_35",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4601
+      },
+      "\u03a3-\u0392": {
+        "seal": "\u03a3",
+        "face": "\u0392",
+        "generator": "E_36",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4601016
+      },
+      "\u0394-\u039d": {
+        "seal": "\u0394",
+        "face": "\u039d",
+        "generator": "E_57",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4601035
+      },
+      "\u03a4-\u039d": {
+        "seal": "\u03a4",
+        "face": "\u039d",
+        "generator": "E_56",
+        "theta": 2.199114857512855,
+        "kappa": 0.6180339887498948,
+        "recursion_depth": 1,
+        "charge": -7,
+        "timestamp": 1764699616.4601052
+      }
+    },
+    "counts": {
+      "plus": 5,
+      "minus": 6
+    }
+  },
+  "metrics": {
+    "timestamp": 1764699616.459997,
+    "kappa": 0.41,
+    "theta": 2.199114857512855,
+    "recursion_depth": 1,
+    "charge": -7,
+    "helix": {
+      "theta": 2.199114857512855,
+      "z": 0.41,
+      "r": 9e-323
+    },
+    "loop_counts": {
+      "closed": 0,
+      "critical": 0,
+      "converging": 0,
+      "divergent": 7
+    },
+    "domains": {
+      "CONSTRAINT": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "BRIDGE": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "META": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "RECURSION": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "TRIAD": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "EMERGENCE": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      },
+      "PERSISTENCE": {
+        "saturation": 0.0,
+        "loop_state": "divergent"
+      }
+    },
+    "loop_state": "divergent",
+    "loop_closure_confidence": 0.0,
+    "asymptotic": {
+      "domain_scalars": {
+        "constraint": 0.0,
+        "bridge": 0.0,
+        "meta": 0.0,
+        "recursion": 0.0,
+        "triad": 0.0,
+        "emergence": 0.0,
+        "persistence": 0.0
+      },
+      "total_scalar": 0.0,
+      "coupling_coherence": 0.0,
+      "interference_magnitude": 0.0,
+      "loop_state": "divergent",
+      "loop_closure_confidence": 0.0,
+      "theta": 0.0,
+      "z": 0.0,
+      "r": 0.0,
+      "regime": "subcritical",
+      "timestamp": 1764699616.460063,
+      "sample_count": 82089
+    },
+    "k_formation": {
+      "kappa": 0.41,
+      "recursion_depth": 1,
+      "charge": -7,
+      "threshold": 0.6180339887498948,
+      "formed": false,
+      "gap": 0.20803398874989482
+    }
+  }
+}

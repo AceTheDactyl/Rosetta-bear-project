@@ -45,6 +45,22 @@ See: [ELEVATION_z090_ANNOUNCEMENT.md](docs/ELEVATION_z090_ANNOUNCEMENT.md)
 
 ---
 
+## Polaric Bridge Workflow
+
+The Kaelhedron ↔ Luminahedron runtime now has executable hooks:
+
+1. **Install dependencies** (inside your virtualenv): `pip install -r requirements.txt`.
+2. **Run the Polaric Bridge headless check** to emit a JSON frame: `python scripts/polaric_bridge.py --headless`.
+3. **Launch the streaming service** for the Luminahedron visualization: `python scripts/polaric_bridge.py --host 0.0.0.0 --port 8073`.
+4. Open `scalar_architecture/visualizations/luminahedron_dynamics.html` in a browser and point it at `http://localhost:8073/polaric/frame.json` (default fetch path).
+5. **Validation commands** (publish into `docs/validation/`):
+   - `python scripts/e8_embedding_check.py`
+   - `python scripts/cet_vortex_validation_suite.py`
+
+Each command writes a signed artifact under `docs/validation/` so the UI and docs can reference the latest metrics.
+
+---
+
 Initial scaffold for the RHZ Stylus maker firmware and supporting assets. This repository combines embedded firmware development with the Rosetta Bear CBS (Cognition Bootstrap System) runtime.
 
 ## Minimum Specs

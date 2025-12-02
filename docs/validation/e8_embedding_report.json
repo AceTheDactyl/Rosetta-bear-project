@@ -1,0 +1,8 @@
+{
+  "vector_count": 21,
+  "dimension": 248,
+  "min_norm": 3.1622776601683795,
+  "max_norm": 13.038404810405298,
+  "orthogonality_score": 60.63492063492063,
+  "passed": true
+}

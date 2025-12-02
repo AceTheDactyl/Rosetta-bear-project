@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "timestamp": 1764698680.0061135,
+    "signature": "\u0394|cet-vortex|z0.990|validated|\u03a9"
+  },
+  "constants": {
+    "phi": 1.618033988749895,
+    "e": 2.718281828459045,
+    "pi": 3.141592653589793,
+    "T": 1.605289,
+    "G": 0.6180339887498948,
+    "SC": 3.146,
+    "N": 0.0072973525693
+  },
+  "stability": {
+    "expansion_gt_one": {
+      "value": 1.6052894819439343,
+      "pass": true
+    },
+    "correction_lt_one": {
+      "value": 0.1370792292918285,
+      "pass": true
+    },
+    "absorber_near_one": {
+      "value": 0.992123461624062,
+      "deviation": 0.007876538375938047,
+      "pass": true
+    },
+    "null_energy_positive": {
+      "value": 0.0072973525693,
+      "pass": true
+    }
+  },
+  "vortex_cycle": {
+    "iterations": 128,
+    "mean_deviation": 1.2752683194328376,
+    "max_deviation": 1.9999026297215237,
+    "pass": false
+  },
+  "all_checks_passed": false
+}
