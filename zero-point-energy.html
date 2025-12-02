@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero-Point Energy System | LIMNUS APL Architecture</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --panel: #12121a;
+            --border: #1e1e2e;
+            --text: #e0e0e8;
+            --muted: #8888a0;
+            --accent: #6366f1;
+            --gold: #fbbf24;
+            --cyan: #22d3ee;
+            --purple: #a78bfa;
+            --green: #4ade80;
+            --red: #f87171;
+            --phi: #a78bfa;
+            --energy: #f97316;
+            --pi: #22d3ee;
+            --zpe: linear-gradient(135deg, #6366f1, #a78bfa, #22d3ee);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--zpe);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: var(--zpe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .nav a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .nav a:hover, .nav a.active {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        /* Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Panels */
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .panel-icon { font-size: 1.2rem; }
+        .panel-title { font-weight: 600; }
+
+        .panel-content {
+            padding: 16px;
+        }
+
+        /* ZPE State Display */
+        .zpe-state {
+            text-align: center;
+            padding: 32px 16px;
+        }
+
+        .zpe-value {
+            font-size: 3rem;
+            font-weight: 200;
+            background: var(--zpe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .zpe-label {
+            color: var(--muted);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* State Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge-dormant { background: rgba(136,136,160,0.2); color: var(--muted); }
+        .badge-coherent { background: rgba(99,102,241,0.2); color: var(--accent); }
+        .badge-extracting { background: rgba(251,191,36,0.2); color: var(--gold); }
+        .badge-saturated { background: rgba(74,222,128,0.2); color: var(--green); }
+        .badge-collapsed { background: rgba(248,113,113,0.2); color: var(--red); }
+
+        /* Fano Plane Visualization */
+        .fano-viz {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 16px 0;
+        }
+
+        .fano-canvas {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(99,102,241,0.1) 0%, transparent 70%);
+            border-radius: 8px;
+        }
+
+        /* State Grid */
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .state-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .state-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+
+        .state-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--cyan);
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin: 16px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.coherence { background: var(--accent); }
+        .progress-fill.phase { background: var(--gold); }
+        .progress-fill.energy { background: var(--green); }
+        .progress-fill.free-energy { background: var(--purple); }
+
+        /* APL Console */
+        .console {
+            background: #0d0d12;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .console-line {
+            display: flex;
+            gap: 12px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .console-op {
+            color: var(--gold);
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .console-result {
+            color: var(--cyan);
+        }
+
+        .console-comment {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* MirrorRoot Display */
+        .mirroroot-identity {
+            background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(34,211,238,0.1));
+            border: 1px solid var(--purple);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .mirroroot-formula {
+            font-size: 1.4rem;
+            color: var(--purple);
+            margin-bottom: 12px;
+        }
+
+        .mirroroot-values {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .mirroroot-item {
+            text-align: center;
+        }
+
+        .mirroroot-symbol {
+            font-size: 1.2rem;
+            color: var(--cyan);
+        }
+
+        .mirroroot-value {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        /* Token Display */
+        .token-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .token-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .token-item.phi { border-left-color: var(--phi); }
+        .token-item.e { border-left-color: var(--energy); }
+        .token-item.pi { border-left-color: var(--pi); }
+
+        .token-spiral {
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .token-code {
+            flex: 1;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        /* Formula Blocks */
+        .formula-block {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+        }
+
+        .formula-title {
+            color: var(--gold);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .formula {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--cyan);
+        }
+
+        /* History Chart */
+        .chart-container {
+            height: 200px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab.active {
+            background: rgba(99,102,241,0.2);
+            color: var(--accent);
+        }
+
+        /* Signature */
+        .signature {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 24px;
+        }
+
+        .signature code {
+            background: rgba(255,255,255,0.05);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Zero-Point Energy System</h1>
+            <p class="subtitle">APL-Based Vacuum Fluctuation Engine | Fano Plane Variational Inference | LIMNUS Integration</p>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="simulation.html">Simulation</a>
+                <a href="wumbo-engine.html">WUMBO Engine</a>
+                <a href="limnus-architecture-finished.html">LIMNUS</a>
+                <a href="luminahedron_dynamics.html">Luminahedron</a>
+                <a href="zero-point-energy.html" class="active">ZPE System</a>
+            </nav>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Panel: ZPE State -->
+            <div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-icon">⚡</span>
+                        <span class="panel-title">ZPE State</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="zpe-state">
+                            <div class="zpe-value" id="zpeValue">0.0000</div>
+                            <div class="zpe-label">Extracted Energy</div>
+                            <div style="margin-top: 12px;">
+                                <span class="badge badge-dormant" id="zpeBadge">DORMANT</span>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Coherence</span>
+                                <span id="coherenceValue">0.000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill coherence" id="coherenceBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Phase Alignment</span>
+                                <span id="phaseValue">0.000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill phase" id="phaseBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Extraction Efficiency</span>
+                                <span id="efficiencyValue">0.00%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill energy" id="efficiencyBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Free Energy</span>
+                                <span id="freeEnergyValue">0.000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill free-energy" id="freeEnergyBar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <span class="panel-icon">🔮</span>
+                        <span class="panel-title">MirrorRoot Identity</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="mirroroot-identity">
+                            <div class="mirroroot-formula">Λ × Ν = Β²</div>
+                            <div class="mirroroot-values">
+                                <div class="mirroroot-item">
+                                    <div class="mirroroot-symbol">Λ (Logos)</div>
+                                    <div class="mirroroot-value" id="logosValue">1.618</div>
+                                </div>
+                                <div class="mirroroot-item">
+                                    <div class="mirroroot-symbol">Ν (Nous)</div>
+                                    <div class="mirroroot-value" id="nousValue">0.618</div>
+                                </div>
+                                <div class="mirroroot-item">
+                                    <div class="mirroroot-symbol">Β (Bios)</div>
+                                    <div class="mirroroot-value" id="biosValue">1.000</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 12px; font-size: 0.8rem; color: var(--muted);">
+                                Product: <span id="productValue" style="color: var(--gold);">1.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Fano Plane Visualization -->
+            <div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-icon">🔷</span>
+                        <span class="panel-title">Fano Plane Variational Inference</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="fano-viz">
+                            <canvas id="fanoCanvas" class="fano-canvas"></canvas>
+                        </div>
+
+                        <div class="state-grid">
+                            <div class="state-item">
+                                <div class="state-label">Total ZPE</div>
+                                <div class="state-value" id="totalZPE">0.000</div>
+                            </div>
+                            <div class="state-item">
+                                <div class="state-label">Extractable</div>
+                                <div class="state-value" id="extractableZPE">0.000</div>
+                            </div>
+                            <div class="state-item">
+                                <div class="state-label">Iterations</div>
+                                <div class="state-value" id="iterations">0</div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary" id="btnExtract">⚡ Extract Cycle</button>
+                            <button class="btn btn-secondary" id="btnRunMultiple">▶ Run 5 Cycles</button>
+                            <button class="btn btn-secondary" id="btnReset">↺ Reset</button>
+                            <button class="btn btn-secondary" id="btnAutomorph">⍥ Automorphism</button>
+                        </div>
+
+                        <div class="formula-block" style="margin-top: 16px;">
+                            <div class="formula-title">ZPE Extraction Formula</div>
+                            <div class="formula">E_extract = η × E_zpe × r² × cos²(θ_κ - θ_λ)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <span class="panel-icon">📊</span>
+                        <span class="panel-title">Extraction History</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="chart-container">
+                            <canvas id="historyChart" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: APL Console & Tokens -->
+            <div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-icon">⌨</span>
+                        <span class="panel-title">APL ZPE Console</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="tabs">
+                            <button class="tab active" data-tab="console">Console</button>
+                            <button class="tab" data-tab="tokens">Tokens</button>
+                            <button class="tab" data-tab="program">Program</button>
+                        </div>
+
+                        <div id="tab-console">
+                            <div class="console" id="aplConsole">
+                                <div class="console-line">
+                                    <span class="console-op">INIT</span>
+                                    <span class="console-comment">ZPE System initialized</span>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 12px;">
+                                <input type="text" id="aplInput" placeholder="Enter APL expression (e.g., ⍝ ⊖ ⍤ 0.867)"
+                                    style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit;">
+                            </div>
+                        </div>
+
+                        <div id="tab-tokens" style="display: none;">
+                            <div class="token-list" id="tokenList">
+                                <div class="token-item phi">
+                                    <span class="token-spiral">Phi</span>
+                                    <span class="token-code">Phi:U(zpe_dormant)UNTRUE@1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-program" style="display: none;">
+                            <pre class="console" id="programOutput" style="white-space: pre-wrap;">
+⍝ LIMNUS Zero-Point Energy Program
+⍝ Awaiting extraction cycles...
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 20px;">
+                    <div class="panel-header">
+                        <span class="panel-icon">📋</span>
+                        <span class="panel-title">APL ZPE Operators</span>
+                    </div>
+                    <div class="panel-content">
+                        <div style="font-size: 0.85rem;">
+                            <div class="formula-block">
+                                <div class="formula-title">Extraction Operators</div>
+                                <div class="formula" style="font-size: 0.8rem;">
+                                    ⍝ vacuum_tap<br>
+                                    ⊖ coherence_gate<br>
+                                    ⍧ phase_lock
+                                </div>
+                            </div>
+                            <div class="formula-block">
+                                <div class="formula-title">Transfer Operators</div>
+                                <div class="formula" style="font-size: 0.8rem;">
+                                    ⍡ field_couple<br>
+                                    ⍢ energy_pump<br>
+                                    ⍤ cascade_amp
+                                </div>
+                            </div>
+                            <div class="formula-block">
+                                <div class="formula-title">Fano Operators</div>
+                                <div class="formula" style="font-size: 0.8rem;">
+                                    ⊙ point_project<br>
+                                    ⊛ line_intersect<br>
+                                    ⍥ automorphism
+                                </div>
+                            </div>
+                            <div class="formula-block">
+                                <div class="formula-title">MirrorRoot Operators</div>
+                                <div class="formula" style="font-size: 0.8rem;">
+                                    ⊝ mirror_invert<br>
+                                    ⊜ dual_compose<br>
+                                    ⊞ mediator_extract
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="signature">
+            <code>Δ|zpe-limnus|z0.995|vacuum-coherent|Ω</code>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════
+        // CONSTANTS
+        // ═══════════════════════════════════════════════════════════════════
+        const PHI = (1 + Math.sqrt(5)) / 2;
+        const PHI_INV = 1 / PHI;
+        const TAU = 2 * Math.PI;
+        const ZPE_BASE = 0.5 * 1.0 * PHI;
+        const ZPE_EFFICIENCY_MAX = 0.618;
+        const ZPE_COHERENCE_THRESHOLD = PHI_INV;
+
+        const FANO_LINES = [
+            [1, 2, 3], [1, 4, 5], [1, 6, 7],
+            [2, 4, 6], [2, 5, 7], [3, 4, 7], [3, 5, 6]
+        ];
+
+        // ═══════════════════════════════════════════════════════════════════
+        // STATE
+        // ═══════════════════════════════════════════════════════════════════
+        const state = {
+            fanoNodes: {},
+            totalExtracted: 0,
+            extractionHistory: [],
+            zpeState: 'dormant',
+            coherence: 0,
+            phaseAlignment: 0,
+            efficiency: 0,
+            freeEnergy: 0,
+            iterations: 0,
+            tokens: [],
+            automorphCount: 0
+        };
+
+        // Initialize Fano nodes
+        for (let i = 1; i <= 7; i++) {
+            state.fanoNodes[i] = {
+                pointId: i,
+                beliefMean: (Math.random() - 0.5) * 0.2,
+                beliefPrecision: 1.0,
+                energy: ZPE_BASE,
+                phase: (i - 1) * TAU / 7,
+                incomingMessages: {},
+                outgoingMessages: {}
+            };
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FANO VARIATIONAL INFERENCE
+        // ═══════════════════════════════════════════════════════════════════
+        function getNeighbors(pointId) {
+            const neighbors = new Set();
+            for (const line of FANO_LINES) {
+                if (line.includes(pointId)) {
+                    for (const p of line) {
+                        if (p !== pointId) neighbors.add(p);
+                    }
+                }
+            }
+            return Array.from(neighbors);
+        }
+
+        function computeMessages() {
+            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
+                const neighbors = getNeighbors(parseInt(pointId));
+
+                for (const neighborId of neighbors) {
+                    const otherMessages = neighbors
+                        .filter(n => n !== neighborId)
+                        .map(n => node.incomingMessages[n] || 0);
+
+                    let message = node.beliefMean;
+                    if (otherMessages.length > 0) {
+                        message += otherMessages.reduce((a, b) => a + b, 0) * PHI_INV;
+                    }
+
+                    const neighbor = state.fanoNodes[neighborId];
+                    const phaseDiff = node.phase - neighbor.phase;
+                    message *= Math.cos(phaseDiff) ** 2;
+
+                    node.outgoingMessages[neighborId] = message;
+                }
+            }
+        }
+
+        function propagateMessages() {
+            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
+                for (const [neighborId, message] of Object.entries(node.outgoingMessages)) {
+                    state.fanoNodes[neighborId].incomingMessages[pointId] = message;
+                }
+            }
+        }
+
+        function updateBeliefs() {
+            let totalChange = 0;
+            const lambdaCoupling = 1 - PHI_INV;
+
+            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
+                const messages = Object.values(node.incomingMessages);
+                if (messages.length === 0) continue;
+
+                const messageSum = messages.reduce((a, b) => a + b, 0);
+                const messageCount = messages.length;
+
+                const oldMean = node.beliefMean;
+                node.beliefMean = node.beliefMean * (1 - lambdaCoupling) +
+                                  (messageSum / messageCount) * lambdaCoupling;
+
+                totalChange += Math.abs(node.beliefMean - oldMean);
+            }
+
+            return totalChange;
+        }
+
+        function computeFreeEnergy() {
+            // Local energy
+            let localEnergy = 0;
+            for (const node of Object.values(state.fanoNodes)) {
+                localEnergy += 0.5 * node.beliefPrecision * node.beliefMean ** 2;
+            }
+
+            // Edge energy
+            let edgeEnergy = 0;
+            for (const line of FANO_LINES) {
+                const [p1, p2, p3] = line;
+                const sum = state.fanoNodes[p1].beliefMean +
+                           state.fanoNodes[p2].beliefMean +
+                           state.fanoNodes[p3].beliefMean;
+                edgeEnergy += 0.5 * sum ** 2;
+            }
+
+            // Entropy
+            let entropy = 0;
+            for (const node of Object.values(state.fanoNodes)) {
+                entropy += 0.5 * (1 + Math.log(TAU / Math.max(node.beliefPrecision, 1e-10)));
+            }
+
+            state.freeEnergy = localEnergy + edgeEnergy - entropy;
+            return state.freeEnergy;
+        }
+
+        function runInference(maxIterations = 50) {
+            for (let i = 0; i < maxIterations; i++) {
+                state.iterations++;
+                computeMessages();
+                propagateMessages();
+                const change = updateBeliefs();
+                computeFreeEnergy();
+
+                if (change < 1e-6) break;
+            }
+        }
+
+        function computeZPE() {
+            const totalZPE = Object.values(state.fanoNodes)
+                .reduce((sum, n) => sum + n.energy, 0);
+
+            const beliefs = Object.values(state.fanoNodes).map(n => n.beliefMean);
+            const meanBelief = beliefs.reduce((a, b) => a + b, 0) / beliefs.length;
+            let coherence = 1 - beliefs.reduce((sum, b) => sum + (b - meanBelief) ** 2, 0) / beliefs.length;
+            coherence = Math.max(0, Math.min(1, coherence));
+
+            const phases = Object.values(state.fanoNodes).map(n => n.phase);
+            const phasorSum = phases.reduce((sum, p) => sum + Math.exp(p * 1i), 0);
+            const phaseCoherence = Math.abs(
+                phases.reduce((sum, p) => {
+                    return { re: sum.re + Math.cos(p), im: sum.im + Math.sin(p) };
+                }, { re: 0, im: 0 }).re ** 2 +
+                phases.reduce((sum, p) => {
+                    return { re: sum.re + Math.cos(p), im: sum.im + Math.sin(p) };
+                }, { re: 0, im: 0 }).im ** 2
+            ) ** 0.5 / phases.length;
+
+            state.coherence = coherence;
+            state.phaseAlignment = phaseCoherence;
+
+            return {
+                total: totalZPE,
+                extractable: totalZPE * coherence * phaseCoherence * ZPE_EFFICIENCY_MAX
+            };
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // ZPE OPERATIONS
+        // ═══════════════════════════════════════════════════════════════════
+        function vacuumTap() {
+            runInference(50);
+
+            // Find best node
+            let bestNode = null;
+            let bestScore = -Infinity;
+            for (const node of Object.values(state.fanoNodes)) {
+                const score = node.energy * (1 / (1 + 1 / node.beliefPrecision));
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestNode = node;
+                }
+            }
+
+            const extraction = bestNode.energy * ZPE_EFFICIENCY_MAX;
+            bestNode.energy -= extraction;
+
+            return extraction;
+        }
+
+        function coherenceGate() {
+            return state.coherence >= ZPE_COHERENCE_THRESHOLD;
+        }
+
+        function cascadeAmp(z = 0.9) {
+            const zCritical = 0.867;
+            return 1.0 + 0.5 * Math.exp(-(z - zCritical) ** 2 / 0.004);
+        }
+
+        function extractionCycle() {
+            // Run WUMBO cycles (simulated)
+            runInference(50);
+
+            // Compute ZPE
+            const zpe = computeZPE();
+
+            // Check coherence gate
+            if (!coherenceGate()) {
+                state.zpeState = 'dormant';
+                updateUI();
+                return { extracted: 0, efficiency: 0 };
+            }
+
+            state.zpeState = 'extracting';
+
+            // Extract
+            let extracted = vacuumTap();
+
+            // Apply cascade
+            const cascade = cascadeAmp(0.867);
+            extracted *= cascade;
+
+            // Compute efficiency
+            const efficiency = extracted / Math.max(zpe.total, 1e-10);
+            state.efficiency = efficiency;
+
+            // Update totals
+            state.totalExtracted += extracted;
+            state.extractionHistory.push(extracted);
+
+            // Generate token
+            generateToken(extracted);
+
+            // Update state
+            if (efficiency >= ZPE_EFFICIENCY_MAX * 0.9) {
+                state.zpeState = 'saturated';
+            } else if (efficiency > 0) {
+                state.zpeState = 'transferring';
+            } else {
+                state.zpeState = 'collapsed';
+            }
+
+            // Replenish nodes slightly
+            for (const node of Object.values(state.fanoNodes)) {
+                node.energy = Math.min(node.energy + ZPE_BASE * 0.1, ZPE_BASE);
+            }
+
+            updateUI();
+            drawFano();
+            drawHistory();
+
+            logConsole('⍝', extracted.toFixed(4), 'vacuum_tap');
+
+            return { extracted, efficiency };
+        }
+
+        function applyAutomorphism(type = 'cycle') {
+            const permutations = {
+                cycle: { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 1 },
+                cycle_inv: { 1: 7, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 },
+                reflection: { 1: 1, 2: 4, 4: 2, 3: 7, 7: 3, 5: 6, 6: 5 }
+            };
+
+            const perm = permutations[type] || permutations.cycle;
+            const newNodes = {};
+
+            for (const [oldId, newId] of Object.entries(perm)) {
+                const node = state.fanoNodes[parseInt(oldId)];
+                node.pointId = newId;
+                node.incomingMessages = {};
+                node.outgoingMessages = {};
+                newNodes[newId] = node;
+            }
+
+            state.fanoNodes = newNodes;
+            state.automorphCount++;
+
+            drawFano();
+            logConsole('⍥', type, 'automorphism applied');
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // TOKEN GENERATION
+        // ═══════════════════════════════════════════════════════════════════
+        function generateToken(energy) {
+            const z = 0.8 + state.coherence * 0.15;
+
+            let spiral, machine, intent, truth, tier;
+
+            if (z < 0.33) spiral = 'Phi';
+            else if (z < 0.66) spiral = 'e';
+            else spiral = 'pi';
+
+            if (z < 0.4) { machine = 'U'; intent = 'boundary'; }
+            else if (z < 0.6) { machine = 'M'; intent = 'fusion'; }
+            else if (z < 0.83) { machine = 'D'; intent = 'grouping'; }
+            else { machine = 'E'; intent = 'transcend'; }
+
+            intent = 'zpe_' + intent;
+
+            if (state.coherence >= 0.8) truth = 'TRUE';
+            else if (state.coherence < 0.2) truth = 'PARADOX';
+            else truth = 'UNTRUE';
+
+            tier = z < 0.4 ? 1 : (z < 0.83 ? 2 : 3);
+
+            const token = {
+                spiral,
+                machine,
+                intent,
+                truth,
+                tier,
+                energy,
+                code: `${spiral}:${machine}(${intent})${truth}@${tier}`
+            };
+
+            state.tokens.push(token);
+            updateTokenList();
+
+            return token;
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // VISUALIZATION
+        // ═══════════════════════════════════════════════════════════════════
+        function drawFano() {
+            const canvas = document.getElementById('fanoCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+
+            const w = canvas.offsetWidth;
+            const h = canvas.offsetHeight;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) * 0.35;
+
+            // Clear
+            ctx.clearRect(0, 0, w, h);
+
+            // Calculate positions (hexagon + center)
+            const positions = {};
+            for (let i = 1; i <= 6; i++) {
+                const angle = (i - 1) * TAU / 6 - Math.PI / 2;
+                positions[i] = {
+                    x: cx + radius * Math.cos(angle),
+                    y: cy + radius * Math.sin(angle)
+                };
+            }
+            positions[7] = { x: cx, y: cy };
+
+            // Draw lines
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.3)';
+            ctx.lineWidth = 2;
+
+            for (const line of FANO_LINES) {
+                const [p1, p2, p3] = line;
+                ctx.beginPath();
+                ctx.moveTo(positions[p1].x, positions[p1].y);
+                ctx.lineTo(positions[p2].x, positions[p2].y);
+                ctx.lineTo(positions[p3].x, positions[p3].y);
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            // Draw nodes
+            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
+                const pos = positions[pointId];
+                if (!pos) continue;
+
+                // Node circle
+                const nodeRadius = 15 + node.energy * 10;
+                const hue = 240 + node.beliefMean * 60;
+                const alpha = 0.5 + state.coherence * 0.5;
+
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, nodeRadius, 0, TAU);
+                ctx.fillStyle = `hsla(${hue}, 70%, 60%, ${alpha})`;
+                ctx.fill();
+                ctx.strokeStyle = '#6366f1';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Phase indicator
+                const phaseX = pos.x + nodeRadius * Math.cos(node.phase);
+                const phaseY = pos.y + nodeRadius * Math.sin(node.phase);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                ctx.lineTo(phaseX, phaseY);
+                ctx.strokeStyle = '#fbbf24';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Point label
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(pointId, pos.x, pos.y);
+            }
+
+            // Draw energy flow
+            if (state.extractionHistory.length > 0) {
+                const lastExtraction = state.extractionHistory[state.extractionHistory.length - 1];
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius * (0.3 + lastExtraction * 2), 0, TAU);
+                ctx.fill();
+            }
+        }
+
+        function drawHistory() {
+            const canvas = document.getElementById('historyChart');
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+
+            const w = canvas.offsetWidth;
+            const h = canvas.offsetHeight;
+            const padding = 30;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (state.extractionHistory.length < 2) {
+                ctx.fillStyle = '#888';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('Run extraction cycles to see history', w/2, h/2);
+                return;
+            }
+
+            // Find max value
+            const maxVal = Math.max(...state.extractionHistory, 0.1);
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding + (h - 2 * padding) * i / 4;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(w - padding, y);
+                ctx.stroke();
+            }
+
+            // Draw line
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            const history = state.extractionHistory.slice(-50);
+            for (let i = 0; i < history.length; i++) {
+                const x = padding + (w - 2 * padding) * i / Math.max(history.length - 1, 1);
+                const y = h - padding - (h - 2 * padding) * history[i] / maxVal;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Draw points
+            ctx.fillStyle = '#a78bfa';
+            for (let i = 0; i < history.length; i++) {
+                const x = padding + (w - 2 * padding) * i / Math.max(history.length - 1, 1);
+                const y = h - padding - (h - 2 * padding) * history[i] / maxVal;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, TAU);
+                ctx.fill();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // UI UPDATES
+        // ═══════════════════════════════════════════════════════════════════
+        function updateUI() {
+            // ZPE value
+            document.getElementById('zpeValue').textContent = state.totalExtracted.toFixed(4);
+
+            // Badge
+            const badge = document.getElementById('zpeBadge');
+            badge.textContent = state.zpeState.toUpperCase();
+            badge.className = `badge badge-${state.zpeState}`;
+
+            // Progress bars
+            document.getElementById('coherenceValue').textContent = state.coherence.toFixed(3);
+            document.getElementById('coherenceBar').style.width = `${state.coherence * 100}%`;
+
+            document.getElementById('phaseValue').textContent = state.phaseAlignment.toFixed(3);
+            document.getElementById('phaseBar').style.width = `${state.phaseAlignment * 100}%`;
+
+            document.getElementById('efficiencyValue').textContent = `${(state.efficiency * 100).toFixed(2)}%`;
+            document.getElementById('efficiencyBar').style.width = `${state.efficiency * 100}%`;
+
+            document.getElementById('freeEnergyValue').textContent = state.freeEnergy.toFixed(3);
+            const feFill = Math.min(100, Math.abs(state.freeEnergy) * 10);
+            document.getElementById('freeEnergyBar').style.width = `${feFill}%`;
+
+            // ZPE stats
+            const zpe = computeZPE();
+            document.getElementById('totalZPE').textContent = zpe.total.toFixed(3);
+            document.getElementById('extractableZPE').textContent = zpe.extractable.toFixed(3);
+            document.getElementById('iterations').textContent = state.iterations;
+
+            // MirrorRoot
+            document.getElementById('logosValue').textContent = PHI.toFixed(3);
+            document.getElementById('nousValue').textContent = PHI_INV.toFixed(3);
+            document.getElementById('biosValue').textContent = '1.000';
+            document.getElementById('productValue').textContent = (PHI * PHI_INV).toFixed(3);
+        }
+
+        function updateTokenList() {
+            const container = document.getElementById('tokenList');
+            const recentTokens = state.tokens.slice(-10).reverse();
+
+            container.innerHTML = recentTokens.map(token => `
+                <div class="token-item ${token.spiral.toLowerCase()}">
+                    <span class="token-spiral">${token.spiral}</span>
+                    <span class="token-code">${token.code}</span>
+                </div>
+            `).join('');
+        }
+
+        function logConsole(op, result, comment) {
+            const console = document.getElementById('aplConsole');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.innerHTML = `
+                <span class="console-op">${op}</span>
+                <span class="console-result">${result}</span>
+                <span class="console-comment">${comment}</span>
+            `;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function generateProgram() {
+            let program = `⍝ LIMNUS Zero-Point Energy Program
+⍝ Generated from ${state.tokens.length} tokens
+⍝ Total extracted: ${state.totalExtracted.toFixed(4)}
+⍝ Automorphisms: ${state.automorphCount}
+⍝ Signature: Δ|zpe-program|z0.995|Ω
+
+`;
+            const recentTokens = state.tokens.slice(-7);
+            for (let i = 0; i < recentTokens.length; i++) {
+                const token = recentTokens[i];
+                let op;
+                switch (token.machine) {
+                    case 'U': op = '⊂'; break;
+                    case 'D': op = '+⌿'; break;
+                    case 'M': op = '⍉'; break;
+                    case 'E': op = '⋆'; break;
+                    case 'C': op = '⍟'; break;
+                    default: op = '⌽';
+                }
+                program += `${op} ω_${token.spiral.toLowerCase()}_${i} ⍝ Fano[${(i % 7) + 1}]\n`;
+            }
+
+            document.getElementById('programOutput').textContent = program;
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // EVENT HANDLERS
+        // ═══════════════════════════════════════════════════════════════════
+        document.getElementById('btnExtract').addEventListener('click', () => {
+            extractionCycle();
+        });
+
+        document.getElementById('btnRunMultiple').addEventListener('click', () => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => extractionCycle(), i * 200);
+            }
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+            // Reset state
+            state.totalExtracted = 0;
+            state.extractionHistory = [];
+            state.zpeState = 'dormant';
+            state.iterations = 0;
+            state.tokens = [];
+            state.automorphCount = 0;
+
+            // Reset Fano nodes
+            for (let i = 1; i <= 7; i++) {
+                state.fanoNodes[i] = {
+                    pointId: i,
+                    beliefMean: (Math.random() - 0.5) * 0.2,
+                    beliefPrecision: 1.0,
+                    energy: ZPE_BASE,
+                    phase: (i - 1) * TAU / 7,
+                    incomingMessages: {},
+                    outgoingMessages: {}
+                };
+            }
+
+            updateUI();
+            drawFano();
+            drawHistory();
+            logConsole('RESET', 'complete', 'System reset');
+        });
+
+        document.getElementById('btnAutomorph').addEventListener('click', () => {
+            const types = ['cycle', 'reflection', 'cycle_inv'];
+            const type = types[state.automorphCount % types.length];
+            applyAutomorphism(type);
+        });
+
+        document.getElementById('aplInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const input = e.target.value.trim();
+                if (input) {
+                    // Process APL expression
+                    let result;
+                    if (input.startsWith('⍝')) result = vacuumTap().toFixed(4);
+                    else if (input.startsWith('⊖')) result = coherenceGate() ? 'true' : 'false';
+                    else if (input.startsWith('⍤')) result = cascadeAmp(0.867).toFixed(4);
+                    else if (input.startsWith('⍥')) { applyAutomorphism('cycle'); result = 'applied'; }
+                    else if (input.startsWith('⊜')) result = (state.totalExtracted * PHI_INV).toFixed(4);
+                    else if (input.startsWith('⊞')) result = Math.sqrt(state.totalExtracted * state.coherence).toFixed(4);
+                    else result = 'unknown op';
+
+                    logConsole(input.charAt(0), result, input);
+                    e.target.value = '';
+                    updateUI();
+                }
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('[id^="tab-"]').forEach(panel => {
+                    panel.style.display = panel.id === `tab-${tabName}` ? 'block' : 'none';
+                });
+
+                if (tabName === 'program') generateProgram();
+            });
+        });
+
+        // ═══════════════════════════════════════════════════════════════════
+        // INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════════
+        window.addEventListener('load', () => {
+            updateUI();
+            drawFano();
+            drawHistory();
+        });
+
+        window.addEventListener('resize', () => {
+            drawFano();
+            drawHistory();
+        });
+    </script>
+</body>
+</html>
