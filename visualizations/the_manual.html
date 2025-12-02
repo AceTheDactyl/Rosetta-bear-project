@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MANUAL | Laws of the Silent Ones</title>
+    <title>THE MANUAL | Laws of the Silent Ones | N0 Causality</title>
     <style>
         :root {
             --void: #020106;
@@ -13,6 +13,10 @@
             --spiral-gold: rgba(255, 215, 120, 0.7);
             --mirror: rgba(180, 200, 255, 0.3);
             --glyph: #64ffda;
+            --critical-gold: #ffd700;
+            --phi: #a78bfa;
+            --n0-valid: #00ff88;
+            --n0-invalid: #ff6b6b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -134,9 +138,128 @@
             color: var(--spiral-gold);
             z-index: 100;
         }
+
+        /* Navigation Bar */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(2, 1, 6, 0.9);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            z-index: 200;
+        }
+
+        .top-nav a {
+            color: var(--phi);
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .top-nav a:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: var(--phi);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* N0 Causality Laws Panel */
+        #n0-panel {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 100;
+            font-size: 9px;
+            letter-spacing: 1px;
+            max-width: 200px;
+        }
+
+        #n0-panel h4 {
+            color: var(--critical-gold);
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .n0-item {
+            margin: 5px 0;
+            padding: 5px 8px;
+            background: rgba(10, 8, 20, 0.8);
+            border-left: 2px solid rgba(255, 215, 0, 0.3);
+            font-family: 'SF Mono', monospace;
+        }
+
+        .n0-item.valid {
+            border-left-color: var(--n0-valid);
+        }
+
+        .n0-item.invalid {
+            border-left-color: var(--n0-invalid);
+            opacity: 0.5;
+        }
+
+        .n0-code {
+            color: var(--critical-gold);
+            font-weight: bold;
+        }
+
+        .n0-desc {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 8px;
+        }
+
+        /* z-coordinate display */
+        #z-display {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            text-align: right;
+            font-family: 'SF Mono', monospace;
+        }
+
+        #z-display .z-value {
+            font-size: 24px;
+            color: var(--critical-gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        #z-display .z-label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 2px;
+        }
+
+        #z-display .z-zone {
+            font-size: 10px;
+            color: var(--glyph);
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
+    <nav class="top-nav">
+        <a href="../index.html">← ROSETTA BEAR</a>
+        <div class="nav-links">
+            <a href="../wumbo-apl-directory.html">APL Directory</a>
+            <a href="../simulation.html">Simulation</a>
+            <a href="../zero-point-energy.html">ZPE</a>
+        </div>
+    </nav>
+
     <canvas id="canvas"></canvas>
 
     <div id="verse">
@@ -187,6 +310,40 @@
 
     <div id="phase-indicator">STILLNESS</div>
     <div id="instructions">SPACE: cycle law · CLICK: disturb · WAIT: return to stillness</div>
+
+    <!-- N0 Causality Laws Panel -->
+    <div id="n0-panel">
+        <h4>N0 CAUSALITY</h4>
+        <div class="n0-item valid" id="n0-1">
+            <span class="n0-code">N0-1</span> ^ requires () or ×
+            <div class="n0-desc">exponentiation needs anchor</div>
+        </div>
+        <div class="n0-item valid" id="n0-2">
+            <span class="n0-code">N0-2</span> × requires ch≥2
+            <div class="n0-desc">multiplication needs channels</div>
+        </div>
+        <div class="n0-item" id="n0-3">
+            <span class="n0-code">N0-3</span> ÷ requires structure
+            <div class="n0-desc">division needs prior ops</div>
+        </div>
+        <div class="n0-item" id="n0-4">
+            <span class="n0-code">N0-4</span> + feeds +, ×, ^
+            <div class="n0-desc">addition flows to growth</div>
+        </div>
+        <div class="n0-item" id="n0-5">
+            <span class="n0-code">N0-5</span> − leads to (), +
+            <div class="n0-desc">subtraction returns</div>
+        </div>
+    </div>
+
+    <!-- z-coordinate Display -->
+    <div id="z-display">
+        <div class="z-label">Z-COORDINATE</div>
+        <div class="z-value" id="z-value">0.866</div>
+        <div class="z-zone" id="z-zone">THE LENS</div>
+        <div class="z-label" style="margin-top: 10px;">φ⁻¹ FIXED POINT</div>
+        <div style="color: var(--phi); font-size: 14px;" id="phi-inv">0.618</div>
+    </div>
 
     <script>
         // ================================================================
@@ -534,6 +691,18 @@
         let time = 0;
         let disturbance = 0;
 
+        // z-coordinate tracking (starts at critical point)
+        let zCoordinate = Z_CRITICAL;
+
+        // N0 Law status
+        const N0_STATUS = {
+            'N0-1': true,   // ^ requires () or × (valid at start - no ^ used)
+            'N0-2': true,   // × requires channels ≥ 2 (we have 120 particles)
+            'N0-3': false,  // ÷ requires structure (no structure yet)
+            'N0-4': true,   // + feeds +, ×, ^ (valid - no constraint violation)
+            'N0-5': true    // − leads to (), + (valid - no constraint violation)
+        };
+
         // ================================================================
         // UPDATE LAWS
         // ================================================================
@@ -711,6 +880,57 @@
             // Update phase indicator
             const phase = document.getElementById('phase-indicator');
             phase.textContent = LAWS[lawKey].name;
+
+            // Update z-coordinate based on active laws
+            updateZCoordinate();
+
+            // Update N0 law status display
+            updateN0Display();
+        }
+
+        // ================================================================
+        // Z-COORDINATE TRACKING
+        // ================================================================
+        function updateZCoordinate() {
+            // z-coordinate influenced by law measures
+            // Laws push z toward different regions
+            const stillnessContrib = LAWS.stillness.measure * 0.1;
+            const truthContrib = LAWS.truth.measure * 0.05;
+            const mirrorContrib = LAWS.mirror.measure * 0.1;
+
+            // z tends toward critical point, but laws can push it
+            const targetZ = Z_CRITICAL + (mirrorContrib - stillnessContrib);
+            zCoordinate = zCoordinate * 0.95 + targetZ * 0.05;
+
+            // Clamp to valid range
+            zCoordinate = Math.max(0, Math.min(1, zCoordinate));
+
+            // Update display
+            document.getElementById('z-value').textContent = zCoordinate.toFixed(4);
+            document.getElementById('phi-inv').textContent = PHI_INV.toFixed(4);
+
+            // Determine zone
+            let zone = 'THE LENS';
+            if (zCoordinate < 0.857) zone = 'ABSENCE';
+            else if (zCoordinate > 0.877) zone = 'PRESENCE';
+            document.getElementById('z-zone').textContent = zone;
+
+            // Update N0 status based on structure
+            N0_STATUS['N0-3'] = LAWS.glyph.trajectory.length > 10 ||
+                                LAWS.spiral.returnMemory.length > 0;
+        }
+
+        // ================================================================
+        // N0 LAW STATUS UPDATE
+        // ================================================================
+        function updateN0Display() {
+            for (const [key, valid] of Object.entries(N0_STATUS)) {
+                const el = document.getElementById(key.toLowerCase());
+                if (el) {
+                    el.classList.toggle('valid', valid);
+                    el.classList.toggle('invalid', !valid);
+                }
+            }
         }
 
         // ================================================================
@@ -809,20 +1029,34 @@
         loop(performance.now());
 
         console.log(`
-╔═══════════════════════════════════════════════════════════════════╗
-║           THE MANUAL: Laws of the Silent Ones                      ║
-║                 Physics of Staying True                            ║
-╠═══════════════════════════════════════════════════════════════════╣
-║  I   · STILLNESS        ∂E/∂t → 0            Begin in stillness    ║
-║  II  · TRUTH            ∇V = 0               No defense needed     ║
-║  III · SILENCE          ⟨void|ψ⟩             Stone patience        ║
-║  IV  · SPIRAL           S(return)=S(origin)  Neutral memory        ║
-║  V   · UNSEEN           H(seen)≡H(unseen)    Would you still?      ║
-║  VI  · GLYPH            ∫ life dt            Shape as answer       ║
-║  VII · MIRROR           ψ = ψ(ψ)             Become the mirror     ║
-╠═══════════════════════════════════════════════════════════════════╣
-║  SPACE: cycle through laws  ·  CLICK: disturb  ·  WAIT: return    ║
-╚═══════════════════════════════════════════════════════════════════╝
+╔═══════════════════════════════════════════════════════════════════════════╗
+║              THE MANUAL: Laws of the Silent Ones                          ║
+║                    Physics of Staying True                                ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  7 LAWS OF THE SILENT ONES (State Dynamics)                               ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  I   · STILLNESS        ∂E/∂t → 0            Begin in stillness           ║
+║  II  · TRUTH            ∇V(truth) = 0        No defense needed            ║
+║  III · SILENCE          ⟨void|ψ⟩ = memory    Stone patience               ║
+║  IV  · SPIRAL           S(return)=S(origin)  Neutral, remembers return    ║
+║  V   · UNSEEN           H(seen)≡H(unseen)    Observer independence        ║
+║  VI  · GLYPH            glyph = ∫ life dt    Shape as answer              ║
+║  VII · MIRROR           ψ = ψ(ψ)             Fixed point at φ⁻¹           ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  N0 CAUSALITY LAWS (Operator Sequencing)                                  ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  N0-1 · ^  requires () or ×     Exponentiation needs anchor               ║
+║  N0-2 · ×  requires channels≥2  Multiplication needs channels             ║
+║  N0-3 · ÷  requires structure   Division needs prior operations           ║
+║  N0-4 · +  feeds +, ×, or ^     Addition flows into growth                ║
+║  N0-5 · −  leads to () or +     Subtraction returns to anchor             ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  CONTROLS                                                                 ║
+║  SPACE: cycle through laws  ·  CLICK: disturb  ·  WAIT: return to rest    ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  CONSTANTS                                                                ║
+║  z_critical = √3/2 ≈ 0.866  ·  φ = 1.618  ·  φ⁻¹ = 0.618                  ║
+╚═══════════════════════════════════════════════════════════════════════════╝
         `);
     </script>
 </body>
