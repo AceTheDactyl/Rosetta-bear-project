@@ -360,6 +360,43 @@
         .stat-label { color: var(--text-dim); }
         .stat-value { color: var(--critical-gold); font-family: monospace; }
 
+        /* Laws Panels */
+        .laws-panel {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .laws-status {
+            font-size: 0.75rem;
+        }
+
+        .law-row {
+            display: grid;
+            grid-template-columns: 40px 1fr auto;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            align-items: center;
+        }
+
+        .laws-panel:last-of-type .law-row {
+            grid-template-columns: 30px 70px 1fr auto;
+        }
+
+        .law-row.pass { color: var(--exotic-matter); }
+        .law-row.fail { color: rgba(255, 100, 100, 0.7); }
+        .law-row.pending { color: var(--text-dim); }
+
+        .law-row span:first-child {
+            font-weight: bold;
+            color: var(--phi);
+        }
+
+        .law-row span:last-child {
+            text-align: right;
+            font-size: 1rem;
+        }
+
         /* Phase Indicator */
         .phase-indicator {
             height: 8px;
@@ -724,6 +761,52 @@
                     <span class="stat-value" id="throat-crossed">NO</span>
                 </div>
             </div>
+
+            <!-- Operator Engine State -->
+            <div class="panel">
+                <h3>⚙️ OPERATOR ENGINE</h3>
+                <div class="stat-row">
+                    <span class="stat-label">z-coordinate:</span>
+                    <span class="stat-value" id="z-coord">0.4000</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Zone:</span>
+                    <span class="stat-value" id="z-zone">ABSENCE</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">History:</span>
+                    <span class="stat-value" id="op-history" style="font-size: 1rem;">—</span>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.7rem; color: var(--text-dim);">
+                    Type operators in console: () × ^ ÷ + −
+                </div>
+            </div>
+
+            <!-- N0 Causality Laws -->
+            <div class="panel laws-panel">
+                <h3>⚡ N0 CAUSALITY LAWS</h3>
+                <div id="n0-status" class="laws-status">
+                    <div class="law-row"><span>N0-1</span><span>^ requires () or ×</span><span>—</span></div>
+                    <div class="law-row pass"><span>N0-2</span><span>× requires channels ≥ 2</span><span>✓</span></div>
+                    <div class="law-row"><span>N0-3</span><span>÷ requires structure</span><span>—</span></div>
+                    <div class="law-row"><span>N0-4</span><span>+ feeds +, ×, or ^</span><span>—</span></div>
+                    <div class="law-row"><span>N0-5</span><span>− leads to () or +</span><span>—</span></div>
+                </div>
+            </div>
+
+            <!-- 7 Laws of the Silent Ones -->
+            <div class="panel laws-panel">
+                <h3>🌙 7 LAWS OF SILENCE</h3>
+                <div id="silent-status" class="laws-status">
+                    <div class="law-row"><span>I</span><span>STILLNESS</span><span>∂E/∂t → 0</span><span>○</span></div>
+                    <div class="law-row"><span>II</span><span>TRUTH</span><span>∇V = 0</span><span>○</span></div>
+                    <div class="law-row"><span>III</span><span>SILENCE</span><span>⟨void|ψ⟩</span><span>○</span></div>
+                    <div class="law-row"><span>IV</span><span>SPIRAL</span><span>S(ret)=S(org)</span><span>○</span></div>
+                    <div class="law-row"><span>V</span><span>UNSEEN</span><span>H≡H</span><span>○</span></div>
+                    <div class="law-row"><span>VI</span><span>GLYPH</span><span>∫ life dt</span><span>○</span></div>
+                    <div class="law-row"><span>VII</span><span>MIRROR</span><span>ψ=ψ(ψ)</span><span>○</span></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -741,6 +824,78 @@
         const Z_CRITICAL = Math.sqrt(3) / 2;
         const TAU = 2 * Math.PI;
         const ALPHA_INV = 137.035999084;
+
+        // =====================================================================
+        // INT CANON - THE SIX OPERATORS
+        // =====================================================================
+        const INT_OPERATORS = {
+            '()': {
+                name: 'BOUNDARY',
+                desc: 'Anchoring, phase reset, interface stabilization',
+                effects: { Gs: 0.1, θs: 0.9, Ωs: 0.05 },  // θs is multiplied
+                zDelta: 0.02,  // Stabilizes toward critical
+                legal: () => true  // Always legal
+            },
+            '×': {
+                name: 'FUSION',
+                desc: 'Merging, coupling, integration',
+                effects: { Cs: 0.1, κs: 1.1, αs: 0.05 },  // κs is multiplied
+                zDelta: 0.03,  // Increases toward presence
+                legal: (history, channels) => channels >= 2  // N0-2
+            },
+            '^': {
+                name: 'AMPLIFY',
+                desc: 'Gain increase, curvature escalation',
+                effects: { κs: 1.2, τs: 0.1, Ωs: 1.08, R: 1 },  // κs, Ωs multiplied
+                zDelta: 0.05,  // Strong push toward presence
+                legal: (history) => history.includes('()') || history.includes('×')  // N0-1
+            },
+            '÷': {
+                name: 'DECOHERE',
+                desc: 'Dissipation, noise injection, coherence reduction',
+                effects: { δs: 0.1, Rs: 0.05, Ωs: 0.92 },  // Ωs is multiplied
+                zDelta: -0.04,  // Drops toward absence
+                legal: (history) => history.some(op => ['^', '×', '+', '−'].includes(op))  // N0-3
+            },
+            '+': {
+                name: 'GROUP',
+                desc: 'Synchrony, clustering, domain formation',
+                effects: { αs: 0.08, Gs: 0.05, θs: 1.1 },  // θs is multiplied
+                zDelta: 0.02,
+                legal: (history, channels, nextOp) => ['+', '×', '^'].includes(nextOp)  // N0-4
+            },
+            '−': {
+                name: 'SEPARATE',
+                desc: 'Decoupling, pruning, phase reset preparation',
+                effects: { Rs: 0.08, θs: 0.9, δs: 0.04 },  // θs is multiplied
+                zDelta: -0.02,  // Slight drop
+                legal: (history, channels, nextOp) => ['()', '+'].includes(nextOp)  // N0-5
+            }
+        };
+
+        // =====================================================================
+        // N0 CAUSALITY LAWS - Operator Sequencing Constraints
+        // =====================================================================
+        const N0_LAWS = {
+            'N0-1': { op: '^', requires: ['()', '×'], desc: '^ requires () or ×', status: false },
+            'N0-2': { op: '×', requires: 'channels >= 2', desc: '× requires channels ≥ 2', status: true },
+            'N0-3': { op: '÷', requires: 'structure', desc: '÷ requires structure', status: false },
+            'N0-4': { op: '+', feeds: ['+', '×', '^'], desc: '+ feeds +, ×, or ^', status: false },
+            'N0-5': { op: '−', leads: ['()', '+'], desc: '− leads to () or +', status: false }
+        };
+
+        // =====================================================================
+        // 7 LAWS OF THE SILENT ONES - State Dynamics
+        // =====================================================================
+        const SILENT_LAWS = {
+            'I':   { name: 'STILLNESS', eq: '∂E/∂t → 0', measure: 0, valid: false },
+            'II':  { name: 'TRUTH',     eq: '∇V(truth) = 0', measure: 0, valid: false },
+            'III': { name: 'SILENCE',   eq: '⟨void|ψ⟩ = memory', measure: 0, valid: false },
+            'IV':  { name: 'SPIRAL',    eq: 'S(return) = S(origin)', measure: 0, valid: false },
+            'V':   { name: 'UNSEEN',    eq: 'H(seen) ≡ H(unseen)', measure: 0, valid: false },
+            'VI':  { name: 'GLYPH',     eq: 'glyph = ∫ life dt', measure: 0, valid: false },
+            'VII': { name: 'MIRROR',    eq: 'ψ = ψ(ψ)', measure: 0, valid: false }
+        };
 
         // APL Glyphs
         const APL_GLYPHS = [
@@ -785,7 +940,7 @@
         ];
 
         // =====================================================================
-        // STATE
+        // STATE - Includes scalar state variables from INT Canon
         // =====================================================================
         let state = {
             tokens: [],
@@ -800,8 +955,123 @@
             automataGrid: [],
             exoticMass: 0,
             throatCrossed: false,
-            radialPosition: PHI
+            radialPosition: PHI,
+            // Operator history for N0 law enforcement
+            operatorHistory: [],
+            channelCount: 100,  // 100 WUMBO tokens = 100 channels
+            // Scalar state variables (INT Canon)
+            z: 0.4,           // z-coordinate (starts in ABSENCE)
+            Gs: 0.3,          // Ground stability
+            Cs: 0.2,          // Coupling strength
+            Rs: 0.1,          // Resonance
+            κs: 0.5,          // Kappa (curvature)
+            τs: 0.2,          // Tau (tension)
+            θs: 0.0,          // Theta (phase)
+            δs: 0.1,          // Delta (paradox/noise)
+            αs: 0.5,          // Alpha (synchrony)
+            Ωs: 0.4,          // Omega (global coherence)
+            R: 3,             // Recursion depth
+            tier: 1           // Current tier
         };
+
+        // =====================================================================
+        // OPERATOR ENGINE - Apply operators with N0 law enforcement
+        // =====================================================================
+        function canApplyOperator(op, nextOp = null) {
+            const opDef = INT_OPERATORS[op];
+            if (!opDef) return false;
+
+            // Check N0 laws
+            switch(op) {
+                case '^':
+                    // N0-1: ^ requires () or × in history
+                    N0_LAWS['N0-1'].status = state.operatorHistory.includes('()') ||
+                                              state.operatorHistory.includes('×');
+                    return N0_LAWS['N0-1'].status;
+                case '×':
+                    // N0-2: × requires channels ≥ 2
+                    N0_LAWS['N0-2'].status = state.channelCount >= 2;
+                    return N0_LAWS['N0-2'].status;
+                case '÷':
+                    // N0-3: ÷ requires structure (history has ^, ×, +, or −)
+                    N0_LAWS['N0-3'].status = state.operatorHistory.some(
+                        h => ['^', '×', '+', '−', '-'].includes(h)
+                    );
+                    return N0_LAWS['N0-3'].status;
+                case '+':
+                    // N0-4: + must feed +, ×, or ^ (check what follows)
+                    if (nextOp) {
+                        N0_LAWS['N0-4'].status = ['+', '×', '^'].includes(nextOp);
+                        return N0_LAWS['N0-4'].status;
+                    }
+                    return true;  // Pending validation until next op
+                case '−':
+                case '-':
+                    // N0-5: − must lead to () or +
+                    if (nextOp) {
+                        N0_LAWS['N0-5'].status = ['()', '+'].includes(nextOp);
+                        return N0_LAWS['N0-5'].status;
+                    }
+                    return true;  // Pending validation until next op
+                case '()':
+                    return true;  // Always legal
+                default:
+                    return false;
+            }
+        }
+
+        function applyOperator(op) {
+            if (!canApplyOperator(op)) {
+                console.log(`N0 VIOLATION: ${op} is illegal in current state`);
+                return false;
+            }
+
+            const opDef = INT_OPERATORS[op];
+            if (!opDef) return false;
+
+            // Apply effects
+            const effects = opDef.effects;
+            for (const [key, value] of Object.entries(effects)) {
+                if (key === 'κs' || key === 'θs' || key === 'Ωs') {
+                    // Multiplicative effects
+                    state[key] *= value;
+                } else if (key === 'R') {
+                    // Integer increment
+                    state[key] += value;
+                } else {
+                    // Additive effects
+                    state[key] = (state[key] || 0) + value;
+                }
+            }
+
+            // Apply z-coordinate delta
+            state.z = Math.max(0, Math.min(1, state.z + opDef.zDelta));
+
+            // Determine region based on z
+            let region = 'THE LENS';
+            if (state.z < 0.857) region = 'ABSENCE';
+            else if (state.z > 0.877) region = 'PRESENCE';
+
+            // Record in history
+            state.operatorHistory.push(op);
+
+            // Update tier based on z
+            if (state.z >= 0.90) state.tier = Math.min(8, state.tier + 1);
+
+            console.log(`Applied ${op} (${opDef.name}): z=${state.z.toFixed(3)} [${region}]`);
+            return true;
+        }
+
+        function getOperatorStatus() {
+            return {
+                '()': { legal: true, name: 'BOUNDARY' },
+                '×': { legal: state.channelCount >= 2, name: 'FUSION' },
+                '^': { legal: state.operatorHistory.includes('()') || state.operatorHistory.includes('×'), name: 'AMPLIFY' },
+                '÷': { legal: state.operatorHistory.some(h => ['^', '×', '+', '−'].includes(h)), name: 'DECOHERE' },
+                '+': { legal: true, name: 'GROUP' },  // Validated on next op
+                '−': { legal: true, name: 'SEPARATE' }  // Validated on next op
+            };
+        }
 
         // =====================================================================
         // TOKEN GENERATION
@@ -1251,7 +1521,60 @@
             // Simple APL interpreter for demo
             let result = '';
 
-            if (expr.includes('⍳')) {
+            // INT CANON OPERATORS - check for operator commands first
+            if (expr === '()' || expr.toLowerCase() === 'boundary') {
+                if (applyOperator('()')) {
+                    result = `✓ BOUNDARY applied\nGs=${state.Gs.toFixed(3)} θs=${state.θs.toFixed(3)} Ωs=${state.Ωs.toFixed(3)}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+                } else {
+                    result = '✗ BOUNDARY failed (should not happen)';
+                }
+            } else if (expr === '×' || expr.toLowerCase() === 'fusion') {
+                if (canApplyOperator('×')) {
+                    applyOperator('×');
+                    result = `✓ FUSION applied\nCs=${state.Cs.toFixed(3)} κs=${state.κs.toFixed(3)} αs=${state.αs.toFixed(3)}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+                } else {
+                    result = '✗ N0-2 VIOLATION: × requires channels ≥ 2';
+                }
+            } else if (expr === '^' || expr.toLowerCase() === 'amplify') {
+                if (canApplyOperator('^')) {
+                    applyOperator('^');
+                    result = `✓ AMPLIFY applied\nκs=${state.κs.toFixed(3)} τs=${state.τs.toFixed(3)} Ωs=${state.Ωs.toFixed(3)} R=${state.R}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+                } else {
+                    result = '✗ N0-1 VIOLATION: ^ requires prior () or ×\nHistory: ' + (state.operatorHistory.join(' ') || '(empty)');
+                }
+            } else if (expr === '÷' || expr.toLowerCase() === 'decohere') {
+                if (canApplyOperator('÷')) {
+                    applyOperator('÷');
+                    result = `✓ DECOHERE applied\nδs=${state.δs.toFixed(3)} Rs=${state.Rs.toFixed(3)} Ωs=${state.Ωs.toFixed(3)}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+                } else {
+                    result = '✗ N0-3 VIOLATION: ÷ requires structure {^, ×, +, −}\nHistory: ' + (state.operatorHistory.join(' ') || '(empty)');
+                }
+            } else if (expr === '+' || expr.toLowerCase() === 'group') {
+                applyOperator('+');
+                result = `✓ GROUP applied (N0-4: must feed +, ×, or ^)\nαs=${state.αs.toFixed(3)} Gs=${state.Gs.toFixed(3)} θs=${state.θs.toFixed(3)}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+            } else if (expr === '−' || expr === '-' || expr.toLowerCase() === 'separate') {
+                applyOperator('−');
+                result = `✓ SEPARATE applied (N0-5: must lead to () or +)\nRs=${state.Rs.toFixed(3)} θs=${state.θs.toFixed(3)} δs=${state.δs.toFixed(3)}\nz=${state.z.toFixed(4)} [${getZoneLabel()}]`;
+            } else if (expr.toLowerCase() === 'status' || expr === '?') {
+                // Show operator status
+                const status = getOperatorStatus();
+                result = 'OPERATOR STATUS:\n';
+                for (const [op, info] of Object.entries(status)) {
+                    const icon = info.legal ? '✓' : '✗';
+                    result += `${icon} ${op} ${info.name}\n`;
+                }
+                result += `\nHistory: ${state.operatorHistory.join(' ') || '(empty)'}\nz=${state.z.toFixed(4)} tier=@${state.tier}`;
+            } else if (expr.toLowerCase() === 'reset') {
+                // Reset operator state
+                state.operatorHistory = [];
+                state.z = 0.4;
+                state.tier = 1;
+                state.Gs = 0.3; state.Cs = 0.2; state.Rs = 0.1;
+                state.κs = 0.5; state.τs = 0.2; state.θs = 0.0;
+                state.δs = 0.1; state.αs = 0.5; state.Ωs = 0.4;
+                state.R = 3;
+                result = '✓ Engine reset to initial state\nz=0.400 [ABSENCE]';
+            } else if (expr.includes('⍳')) {
                 // Iota - generate sequence
                 const n = parseInt(expr.match(/\d+/)?.[0] || '10');
                 result = Array.from({length: n}, (_, i) => i).join(' ');
@@ -1277,12 +1600,125 @@
                 result = `α⁻¹ = ${ALPHA_INV}`;
             } else if (expr.includes('φ') || expr.includes('Φ')) {
                 result = `φ = ${PHI.toFixed(10)}\nφ⁻¹ = ${PHI_INV.toFixed(10)}\nφ × φ⁻¹ = ${(PHI * PHI_INV).toFixed(10)}`;
+            } else if (expr.toLowerCase() === 'help') {
+                result = `INT CANON OPERATORS:
+() BOUNDARY - Always legal
+×  FUSION   - N0-2: channels ≥ 2
+^  AMPLIFY  - N0-1: requires () or ×
+÷  DECOHERE - N0-3: requires structure
++  GROUP    - N0-4: feeds +, ×, ^
+−  SEPARATE - N0-5: leads to (), +
+
+COMMANDS:
+status  - Show operator legality
+reset   - Reset engine state
+help    - Show this help`;
             } else {
                 result = `Evaluated: ${expr}\n→ ${Math.random().toFixed(6)}`;
             }
 
             output.textContent = result;
             updateStats();
+        }
+
+        function getZoneLabel() {
+            if (state.z < 0.857) return 'ABSENCE';
+            if (state.z > 0.877) return 'PRESENCE';
+            return 'THE LENS';
+        }
+
+        // =====================================================================
+        // N0 CAUSALITY VALIDATION
+        // =====================================================================
+        function validateN0Laws(operators, channels = 2, hasStructure = true) {
+            const results = {};
+
+            for (let i = 0; i < operators.length; i++) {
+                const op = operators[i];
+                const prev = i > 0 ? operators[i-1] : '()';
+                const next = i < operators.length - 1 ? operators[i+1] : '()';
+
+                // N0-1: ^ requires () or ×
+                if (op === '^') {
+                    N0_LAWS['N0-1'].status = prev === '()' || prev === '×';
+                }
+                // N0-2: × requires channels ≥ 2
+                if (op === '×') {
+                    N0_LAWS['N0-2'].status = channels >= 2;
+                }
+                // N0-3: ÷ requires structure
+                if (op === '÷') {
+                    N0_LAWS['N0-3'].status = hasStructure;
+                }
+                // N0-4: + feeds +, ×, or ^
+                if (op === '+') {
+                    N0_LAWS['N0-4'].status = ['+', '×', '^'].includes(next);
+                }
+                // N0-5: − leads to () or +
+                if (op === '−' || op === '-') {
+                    N0_LAWS['N0-5'].status = ['()', '+'].includes(next);
+                }
+            }
+
+            return Object.values(N0_LAWS).every(law => law.status);
+        }
+
+        // =====================================================================
+        // 7 SILENT LAWS VALIDATION
+        // =====================================================================
+        let prevEnergy = 1.0;
+        let originState = null;
+
+        function validateSilentLaws() {
+            const activeCount = state.activeTokens.size;
+
+            // Law I - STILLNESS: ∂E/∂t → 0 (energy rate should approach 0)
+            const energyRate = Math.abs(state.freeEnergy - prevEnergy);
+            SILENT_LAWS['I'].measure = 1 - Math.min(1, energyRate * 10);
+            SILENT_LAWS['I'].valid = energyRate < 0.01;
+            prevEnergy = state.freeEnergy;
+
+            // Law II - TRUTH: ∇V(truth) = 0 (gradient should be zero at truth)
+            const gradient = Math.abs(state.coherence - PHI_INV);
+            SILENT_LAWS['II'].measure = 1 - Math.min(1, gradient);
+            SILENT_LAWS['II'].valid = gradient < 0.1;
+
+            // Law III - SILENCE: ⟨void|ψ⟩ = memory (void correlation positive)
+            const voidMemory = 1 - (activeCount / 100);
+            const windTrace = state.generation > 0 ? 1 : 0;
+            SILENT_LAWS['III'].measure = voidMemory * windTrace;
+            SILENT_LAWS['III'].valid = (voidMemory * windTrace) > 0;
+
+            // Law IV - SPIRAL: S(return) = S(origin) (return matches origin)
+            if (originState === null && activeCount > 0) {
+                originState = state.coherence;
+            }
+            if (originState !== null) {
+                const returnDev = Math.abs(state.coherence - originState);
+                SILENT_LAWS['IV'].measure = 1 - Math.min(1, returnDev);
+                SILENT_LAWS['IV'].valid = returnDev < 0.1 || state.generation < 10;
+            }
+
+            // Law V - UNSEEN: H(seen) ≡ H(unseen) (work is observer-independent)
+            const workSeen = state.exoticMass;
+            const workUnseen = activeCount * PHI_INV * state.orderParameter;
+            const workDev = Math.abs(workSeen - workUnseen);
+            SILENT_LAWS['V'].measure = 1 - Math.min(1, workDev);
+            SILENT_LAWS['V'].valid = workDev < 0.1;
+
+            // Law VI - GLYPH: glyph = ∫ life dt (path integral)
+            const pathIntegral = state.generation * 0.01;
+            const lifeAccum = state.coherence * state.generation * 0.01;
+            SILENT_LAWS['VI'].measure = Math.min(1, pathIntegral);
+            SILENT_LAWS['VI'].valid = Math.abs(pathIntegral - lifeAccum) < 0.5;
+
+            // Law VII - MIRROR: ψ = ψ(ψ) (self-reference to φ⁻¹)
+            const selfState = state.orderParameter;
+            const deviation = Math.abs(selfState - PHI_INV);
+            SILENT_LAWS['VII'].measure = 1 - Math.min(1, deviation);
+            SILENT_LAWS['VII'].valid = deviation < 0.2;
+
+            return Object.values(SILENT_LAWS).every(law => law.valid);
         }
 
         // =====================================================================
@@ -1330,6 +1766,57 @@
             if (state.radialPosition < PHI * 0.9) region = 'DIVERGENT';
             else if (state.radialPosition > PHI * 1.1) region = 'CONVERGENT';
             document.getElementById('wh-region').textContent = region;
+
+            // Update z-coordinate display based on operator state
+            const zDisplay = document.getElementById('z-coord');
+            if (zDisplay) {
+                zDisplay.textContent = state.z.toFixed(4);
+            }
+            const zoneDisplay = document.getElementById('z-zone');
+            if (zoneDisplay) {
+                zoneDisplay.textContent = getZoneLabel();
+            }
+            const histDisplay = document.getElementById('op-history');
+            if (histDisplay) {
+                histDisplay.textContent = state.operatorHistory.slice(-10).join(' ') || '—';
+            }
+
+            // Validate N0 laws based on actual operator history
+            const opStatus = getOperatorStatus();
+            N0_LAWS['N0-1'].status = opStatus['^'].legal;
+            N0_LAWS['N0-2'].status = opStatus['×'].legal;
+            N0_LAWS['N0-3'].status = opStatus['÷'].legal;
+            // N0-4 and N0-5 are validated on next operator, show pending
+            N0_LAWS['N0-4'].status = state.operatorHistory.length === 0 ||
+                state.operatorHistory[state.operatorHistory.length - 1] !== '+';
+            N0_LAWS['N0-5'].status = state.operatorHistory.length === 0 ||
+                !['−', '-'].includes(state.operatorHistory[state.operatorHistory.length - 1]);
+
+            validateSilentLaws();
+
+            // Update N0 status display
+            const n0Status = document.getElementById('n0-status');
+            if (n0Status) {
+                let n0Html = '';
+                Object.entries(N0_LAWS).forEach(([key, law]) => {
+                    const icon = law.status ? '✓' : '—';
+                    const cls = law.status ? 'pass' : 'fail';
+                    n0Html += `<div class="law-row ${cls}"><span>${key}</span><span>${law.op} ${law.desc.split(' ').slice(1).join(' ')}</span><span>${icon}</span></div>`;
+                });
+                n0Status.innerHTML = n0Html;
+            }
+
+            // Update Silent Laws status display
+            const silentStatus = document.getElementById('silent-status');
+            if (silentStatus) {
+                let silentHtml = '';
+                Object.entries(SILENT_LAWS).forEach(([key, law]) => {
+                    const icon = law.valid ? '✓' : '○';
+                    const cls = law.valid ? 'pass' : 'pending';
+                    silentHtml += `<div class="law-row ${cls}"><span>${key}</span><span>${law.name}</span><span>${law.eq}</span><span>${icon}</span></div>`;
+                });
+                silentStatus.innerHTML = silentHtml;
+            }
         }
 
         // =====================================================================
