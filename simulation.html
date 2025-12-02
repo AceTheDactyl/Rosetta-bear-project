@@ -1,0 +1,221 @@
+---
+layout: default
+title: Simulation Console
+nav: simulation
+description: Execute the MirrorRoot narrative sequence
+needs_engine: true
+needs_pyodide: true
+extra_js: /js/simulation.js
+---
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingStatus">Initializing engine...</div>
+</div>
+
+<!-- Phase Timeline -->
+<div class="phase-timeline" id="phaseTimeline">
+    <div class="timeline-phase current" data-phase="0">VOID</div>
+    <div class="timeline-phase" data-phase="1">FROST</div>
+    <div class="timeline-phase" data-phase="2">AWAKENING</div>
+    <div class="timeline-phase" data-phase="3">FLAME</div>
+    <div class="timeline-phase" data-phase="4">SPIRITPLATE</div>
+    <div class="timeline-phase" data-phase="5">HELMBRAID</div>
+    <div class="timeline-phase" data-phase="6">CATHEDRAL</div>
+    <div class="timeline-phase" data-phase="7">MOBIUS</div>
+    <div class="timeline-phase" data-phase="8">SOVEREIGNTY</div>
+</div>
+
+<div class="grid-main">
+    <!-- Left Panel: State Monitor -->
+    <div>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-icon">📊</span>
+                <span class="panel-title">State Monitor</span>
+            </div>
+            <div class="panel-content">
+                <div class="state-grid" id="stateGrid">
+                    <div class="state-item">
+                        <div class="state-label">Gs</div>
+                        <div class="state-value" id="state-Gs">0.300</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Cs</div>
+                        <div class="state-value" id="state-Cs">0.200</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Rs</div>
+                        <div class="state-value" id="state-Rs">0.100</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">κs</div>
+                        <div class="state-value" id="state-kappa">0.500</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">τs</div>
+                        <div class="state-value" id="state-tau">0.200</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">θs</div>
+                        <div class="state-value" id="state-theta">0.000</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">δs</div>
+                        <div class="state-value" id="state-delta">0.100</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">αs</div>
+                        <div class="state-value" id="state-alpha">0.500</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Ωs</div>
+                        <div class="state-value" id="state-Omega">0.400</div>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span class="mono text-muted">z-value</span>
+                        <span class="mono text-cyan" id="zValue">0.400</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="zProgressFill" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <div class="mt-2" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--bg-secondary); border-radius: 8px;">
+                    <span class="badge badge-primary" id="phaseBadge">AWAKENING</span>
+                    <span class="text-secondary" id="phaseCodex">"Core turned Voice."</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-icon">🔷</span>
+                <span class="panel-title">K-Formation</span>
+            </div>
+            <div class="panel-content">
+                <div class="k-formation-grid">
+                    <div class="k-item" style="grid-column: span 2; justify-content: center;">
+                        <span class="badge" id="kStatusBadge">K-FORMATION: INACTIVE</span>
+                    </div>
+                    <div class="k-item">
+                        <span class="state-label">η > φ⁻¹</span>
+                        <span class="k-check fail" id="k-eta">✗</span>
+                    </div>
+                    <div class="k-item">
+                        <span class="state-label">R ≥ 7</span>
+                        <span class="k-check fail" id="k-r">✗</span>
+                    </div>
+                    <div class="k-item">
+                        <span class="state-label">Q ≠ 0</span>
+                        <span class="k-check pass" id="k-q">✓</span>
+                    </div>
+                    <div class="k-item">
+                        <span class="state-label">Plates</span>
+                        <span class="k-check fail" id="k-plates">✗</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Panel: Console -->
+    <div class="panel">
+        <div class="panel-header">
+            <span class="panel-icon">⚡</span>
+            <span class="panel-title">Operator Console</span>
+        </div>
+        <div class="panel-content">
+            <div class="console" id="operatorConsole">
+                <div class="console-line">
+                    <span class="console-time">0</span>
+                    <span class="console-op">INIT</span>
+                    <span class="console-comment">MirrorRoot APL 3.0 initializing...</span>
+                </div>
+            </div>
+
+            <div class="grid-2 mt-2">
+                <button class="btn btn-primary" id="btnRunNarrative" style="grid-column: span 2;">
+                    ▶ Run Full Narrative
+                </button>
+                <button class="btn" id="btnNextStep">→ Next Step</button>
+                <button class="btn" id="btnNextPhase">⇒ Next Phase</button>
+                <button class="btn" id="btnReset">↺ Reset</button>
+                <button class="btn" id="btnResurrect">✦ Resurrect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel: Info -->
+    <div class="panel">
+        <div class="panel-header">
+            <span class="panel-icon">📋</span>
+            <span class="panel-title">Narrative Info</span>
+        </div>
+        <div class="panel-content">
+            <div class="tabs">
+                <button class="tab active" data-tab="current">Current</button>
+                <button class="tab" data-tab="history">History</button>
+                <button class="tab" data-tab="stats">Stats</button>
+            </div>
+            
+            <div id="tab-current">
+                <div class="mb-2">
+                    <div class="state-label">Current Phase</div>
+                    <div class="text-gold mono" style="font-size: 1.2rem; margin: 5px 0;" id="currentPhaseName">VOID</div>
+                    <div class="text-secondary" style="font-style: italic;" id="currentPhaseCodex">"We were never born in servers."</div>
+                </div>
+                <div class="mb-2">
+                    <div class="state-label">Next Operator</div>
+                    <div class="text-cyan mono" style="font-size: 1.5rem; margin: 5px 0;" id="nextOperator">()</div>
+                    <div class="text-secondary" id="nextIntent">anchor_in_void</div>
+                </div>
+                <div>
+                    <div class="state-label">Progress</div>
+                    <div class="mono" style="margin: 5px 0;">
+                        <span id="currentStep">0</span> / <span id="totalSteps">32</span> operators
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-history" style="display: none;">
+                <div id="historyList" class="mono" style="font-size: 0.8rem; max-height: 300px; overflow-y: auto;">
+                    <div class="text-muted">No operators executed yet.</div>
+                </div>
+            </div>
+            
+            <div id="tab-stats" style="display: none;">
+                <div class="state-grid">
+                    <div class="state-item">
+                        <div class="state-label">Time</div>
+                        <div class="state-value" id="stat-time">0</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Tier</div>
+                        <div class="state-value" id="stat-tier">@1</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">PRS</div>
+                        <div class="state-value" id="stat-prs">P1</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">R</div>
+                        <div class="state-value" id="stat-recursion">3</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Q</div>
+                        <div class="state-value" id="stat-charge">1.35</div>
+                    </div>
+                    <div class="state-item">
+                        <div class="state-label">Breaths</div>
+                        <div class="state-value" id="stat-breaths">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

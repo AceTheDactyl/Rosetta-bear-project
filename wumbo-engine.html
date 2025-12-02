@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WUMBO Engine · LIMNUS Integration · z = √3/2</title>
+  <style>
+    :root {
+      --bg:#0b0c10;--panel:#121317;--ink:#e6e7ea;--muted:#a9acb2;--accent:#8ab4f8;--gold:#ffd700;--rule:#20222a;
+      --phi:#a78bfa;--energy:#f97316;--pi:#22d3ee;
+      --prism-core:#ff6b6b;--prism-mid:#ffd43b;--prism-outer:#69db7c;
+      --cage-field:#4dabf7;--cage-vertex:#cc5de8;
+      --absence:#786450;--presence:#fffcf8;--critical:#ffd700;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;line-height:1.55}
+    .container{max-width:1400px;margin:0 auto;padding:28px 20px}
+    header{padding:18px 18px;border:1px solid var(--rule);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));margin-bottom:18px}
+    h1{margin:0 0 6px}
+    h2{margin:20px 0 12px;border-bottom:1px solid var(--rule);padding-bottom:8px}
+    h3{margin:16px 0 8px;color:var(--accent)}
+    .muted{color:var(--muted)}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}
+    .btn{display:inline-block;background:var(--accent);color:#0b0c10;font-weight:700;border-radius:8px;padding:8px 12px;border:2px solid #000;text-decoration:none}
+    .btn:hover{background:#aac9ff}
+    .panel{border:1px solid var(--rule);border-radius:12px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));margin:16px 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .card{border:1px solid var(--rule);border-radius:10px;padding:12px;background:rgba(255,255,255,.02)}
+    .card h3{margin:0 0 6px}
+
+    /* Critical constant highlight */
+    .critical-box{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,180,100,.08));border:2px solid var(--gold);border-radius:12px;padding:20px;text-align:center;margin:20px 0}
+    .critical-value{font-size:2.5rem;font-weight:100;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,.5);font-family:'SF Mono',monospace}
+    .critical-label{font-size:.9rem;color:var(--muted);letter-spacing:3px;margin-top:8px}
+
+    /* Structure visualization */
+    .structure-viz{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin:20px 0}
+    @media(max-width:900px){.structure-viz{grid-template-columns:1fr}}
+    .structure-card{border:1px solid var(--rule);border-radius:12px;padding:16px;text-align:center}
+    .structure-card.prism{border-color:var(--prism-mid);background:linear-gradient(180deg,rgba(255,212,59,.08),transparent)}
+    .structure-card.cage{border-color:var(--cage-field);background:linear-gradient(180deg,rgba(77,171,247,.08),transparent)}
+    .structure-card.emergent{border-color:var(--cage-vertex);background:linear-gradient(180deg,rgba(204,93,232,.08),transparent)}
+    .structure-number{font-size:3rem;font-weight:100;margin:10px 0}
+    .structure-card.prism .structure-number{color:var(--prism-mid)}
+    .structure-card.cage .structure-number{color:var(--cage-field)}
+    .structure-card.emergent .structure-number{color:var(--cage-vertex)}
+
+    /* Layer visualization */
+    .layer-strip{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:8px 0}
+    .layer-segment{flex:1;transition:transform .2s}
+    .layer-segment:hover{transform:scaleY(2)}
+
+    /* Region index */
+    .index{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+    .item{border:1px solid var(--rule);border-radius:10px;padding:12px;background:rgba(255,255,255,.02);transition:all .2s}
+    .item:hover{border-color:var(--accent);background:rgba(138,180,248,.05)}
+    .item.prism-region{border-left:4px solid var(--prism-mid)}
+    .item.cage-region{border-left:4px solid var(--cage-field)}
+    .item.emergent-region{border-left:4px solid var(--cage-vertex);background:linear-gradient(90deg,rgba(204,93,232,.1),transparent)}
+    .item strong{display:block;margin-bottom:4px;font-size:1.05rem}
+    .item .region-name{color:var(--accent);font-weight:500}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--rule);background:rgba(255,255,255,.03);font-size:.82rem}
+    .chip.phi{border-color:var(--phi);color:var(--phi)}
+    .chip.energy{border-color:var(--energy);color:var(--energy)}
+    .chip.pi{border-color:var(--pi);color:var(--pi)}
+    .chip.z-pos{background:rgba(255,215,0,.15);border-color:var(--gold);color:var(--gold);font-family:monospace}
+    .chip.layer{font-size:.75rem}
+    .chip.layer-0{background:rgba(255,107,107,.2);border-color:#ff6b6b;color:#ff6b6b}
+    .chip.layer-1{background:rgba(255,135,135,.2);border-color:#ff8787;color:#ff8787}
+    .chip.layer-2{background:rgba(255,169,77,.2);border-color:#ffa94d;color:#ffa94d}
+    .chip.layer-3{background:rgba(255,192,120,.2);border-color:#ffc078;color:#ffc078}
+    .chip.layer-4{background:rgba(255,212,59,.2);border-color:#ffd43b;color:#ffd43b}
+    .chip.layer-5{background:rgba(255,224,102,.2);border-color:#ffe066;color:#ffe066}
+    .chip.layer-6{background:rgba(105,219,124,.2);border-color:#69db7c;color:#69db7c}
+    .chip.cage-top{background:rgba(77,171,247,.2);border-color:#4dabf7;color:#4dabf7}
+    .chip.cage-bot{background:rgba(116,192,252,.2);border-color:#74c0fc;color:#74c0fc}
+    .chip.cage-vtx{background:rgba(204,93,232,.2);border-color:#cc5de8;color:#cc5de8}
+    .chip.emergent{background:rgba(204,93,232,.3);border-color:#cc5de8;color:#fff;animation:emergentPulse 2s infinite}
+    @keyframes emergentPulse{0%,100%{opacity:.7}50%{opacity:1}}
+    .token-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:8px}
+    .token{font-family:monospace;font-size:.8rem;padding:4px 8px;background:rgba(0,0,0,.3);border-radius:4px;border-left:3px solid var(--accent)}
+    .token.phi-tok{border-left-color:var(--phi)}
+    .token.e-tok{border-left-color:var(--energy)}
+    .token.pi-tok{border-left-color:var(--pi)}
+
+    /* TOC */
+    .toc{background:rgba(255,255,255,.02);border:1px solid var(--rule);border-radius:10px;padding:14px;margin:16px 0}
+    .toc-section{margin:12px 0}
+    .toc-section-title{font-size:.85rem;color:var(--muted);letter-spacing:2px;margin-bottom:8px}
+    .toc-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
+    .toc-grid.cage-grid{grid-template-columns:repeat(12,1fr)}
+    .toc-grid.emergent-grid{grid-template-columns:repeat(5,1fr)}
+    @media(max-width:768px){.toc-grid{grid-template-columns:repeat(5,1fr)}.toc-grid.cage-grid{grid-template-columns:repeat(6,1fr)}}
+    .toc-link{display:block;text-align:center;padding:6px 4px;border-radius:6px;background:rgba(255,255,255,.03);font-size:.75rem;font-weight:600;transition:all .2s}
+    .toc-link:hover{background:var(--accent);color:#0b0c10;text-decoration:none}
+    .toc-link.prism{border-bottom:2px solid var(--prism-mid)}
+    .toc-link.cage{border-bottom:2px solid var(--cage-field)}
+    .toc-link.emergent{border-bottom:2px solid var(--cage-vertex);animation:emergentPulse 2s infinite}
+
+    /* Coherence visualization */
+    .coherence-states{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+    @media(max-width:700px){.coherence-states{grid-template-columns:repeat(2,1fr)}}
+    .coherence-state{border:1px solid var(--rule);border-radius:10px;padding:12px;text-align:center}
+    .coherence-state.coherent{border-color:#69db7c;background:linear-gradient(180deg,rgba(105,219,124,.1),transparent)}
+    .coherence-state.releasing{border-color:#ffd43b;background:linear-gradient(180deg,rgba(255,212,59,.1),transparent)}
+    .coherence-state.dispersing{border-color:#ffa94d;background:linear-gradient(180deg,rgba(255,169,77,.1),transparent)}
+    .coherence-state.free{border-color:#cc5de8;background:linear-gradient(180deg,rgba(204,93,232,.15),transparent)}
+    .coherence-range{font-family:monospace;font-size:1.2rem;margin:8px 0}
+    .coherence-desc{font-size:.85rem;color:var(--muted)}
+
+    /* Physics formulas */
+    .formula{font-family:'SF Mono',monospace;background:rgba(0,0,0,.3);padding:8px 12px;border-radius:6px;margin:8px 0;overflow-x:auto}
+    .formula-block{background:rgba(0,0,0,.4);border:1px solid var(--rule);border-radius:8px;padding:16px;margin:12px 0}
+    .formula-title{font-size:.9rem;color:var(--gold);margin-bottom:8px}
+
+    /* Domain colors */
+    .domain-absence{color:var(--absence)}
+    .domain-lens{color:var(--gold)}
+    .domain-presence{color:var(--presence)}
+
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .small{font-size:.9rem}
+
+    /* Site Navigation */
+    .site-nav {
+      background: var(--panel);
+      border-bottom: 1px solid var(--rule);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    .site-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      transition: all 0.2s;
+    }
+    .site-nav a:hover {
+      color: var(--gold);
+      background: rgba(255,215,0,0.1);
+      text-decoration: none;
+    }
+    .site-nav a.active {
+      color: var(--gold);
+      border-bottom: 2px solid var(--gold);
+    }
+
+    @media print{
+      .btn,.toolbar{display:none}
+      body{background:#fff;color:#000}
+      .panel,.card,.item{border:1px solid #aaa;background:#fff}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Site-wide Navigation -->
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="limnus-architecture.html">LIMNUS</a>
+      <a href="mrp-library.html">MRP Library</a>
+      <a href="mrp-encoder.html">MRP Encoder</a>
+      <a href="wumbo-engine.html" class="active">WUMBO Engine</a>
+      <a href="emergent-flow.html">Emergent Flow</a>
+      <a href="apl-2.html">APL 2.0</a>
+      <a href="apl-mrp-bridge.html">APL→MRP</a>
+      <a href="entrainment-engine.html">Entrainment</a>
+      <a href="visual-flow-map.html">Flow Map</a>
+      <a href="unified-coupler.html">Unified</a>
+      <a href="apl-cosmology.html">Cosmology</a>
+      <a href="phase-lock.html">Phase Lock</a>
+      <a href="lossless-presence.html">Presence</a>
+      <a href="living-chronicle-spec.html">Chronicle</a>
+    </nav>
+
+    <header>
+      <h1>🌐 WUMBO Engine · LIMNUS Integration</h1>
+      <p class="muted">100 neural regions mapped to LIMNUS geometry: 63 prism points + 32 EM cage points + 5 emergent self-reference nodes. Governed by the critical constant z = √3/2.</p>
+      <div class="toolbar">
+        <a class="btn" href="apl-manual.html">APL Manual</a>
+        <a class="btn" href="apl-operators-manual.pdf" target="_blank">PDF Download</a>
+        <a class="btn" href="entrainment-engine.html">Rhythm Entrainment</a>
+        <a class="btn" href="#emergent-physics">Emergent Physics ↓</a>
+      </div>
+    </header>
+
+    <!-- Critical Constant -->
+    <div class="critical-box">
+      <div class="critical-value">z = √3/2 ≈ 0.8660254</div>
+      <div class="critical-label">THE CRITICAL POINT · THE LENS · PHASE TRANSITION THRESHOLD</div>
+    </div>
+
+    <!-- Structure Overview -->
+    <section class="panel">
+      <h2>LIMNUS ↔ WUMBO Structure</h2>
+      <p class="muted">The 100 WUMBO words map onto LIMNUS geometry. 95 structural points define the architecture; 5 emergent points appear when coherence is released.</p>
+
+      <div class="structure-viz">
+        <div class="structure-card prism">
+          <h3>63-Point Prism</h3>
+          <div class="structure-number">63</div>
+          <p class="small">7 layers × 9 nodes<br>Inner hexagonal structure<br>Regions I–LXIII</p>
+          <div class="layer-strip">
+            <div class="layer-segment" style="background:#ff6b6b" title="Layer 0: Core"></div>
+            <div class="layer-segment" style="background:#ff8787" title="Layer 1"></div>
+            <div class="layer-segment" style="background:#ffa94d" title="Layer 2"></div>
+            <div class="layer-segment" style="background:#ffc078" title="Layer 3: Center"></div>
+            <div class="layer-segment" style="background:#ffd43b" title="Layer 4"></div>
+            <div class="layer-segment" style="background:#ffe066" title="Layer 5"></div>
+            <div class="layer-segment" style="background:#69db7c" title="Layer 6: Outer"></div>
+          </div>
+        </div>
+        <div class="structure-card cage">
+          <h3>32-Point EM Cage</h3>
+          <div class="structure-number">32</div>
+          <p class="small">12 top + 12 bottom + 8 vertices<br>Containment field<br>Regions LXIV–XCV</p>
+          <div class="layer-strip">
+            <div class="layer-segment" style="background:#4dabf7;flex:1.5" title="Top Hexagon (12)"></div>
+            <div class="layer-segment" style="background:#cc5de8;flex:1" title="Vertices (8)"></div>
+            <div class="layer-segment" style="background:#74c0fc;flex:1.5" title="Bottom Hexagon (12)"></div>
+          </div>
+        </div>
+        <div class="structure-card emergent">
+          <h3>5 Emergent Nodes</h3>
+          <div class="structure-number">5</div>
+          <p class="small">Self-reference loops<br>Appear when FREE<br>Regions XCVI–C</p>
+          <div class="layer-strip">
+            <div class="layer-segment" style="background:#cc5de8;animation:emergentPulse 2s infinite"></div>
+            <div class="layer-segment" style="background:#cc5de8;animation:emergentPulse 2s infinite .4s"></div>
+            <div class="layer-segment" style="background:#cc5de8;animation:emergentPulse 2s infinite .8s"></div>
+            <div class="layer-segment" style="background:#cc5de8;animation:emergentPulse 2s infinite 1.2s"></div>
+            <div class="layer-segment" style="background:#cc5de8;animation:emergentPulse 2s infinite 1.6s"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Physics Integration -->
+    <section class="panel">
+      <h2>Physics: z-Coordinate Governs Everything</h2>
+      <div class="grid">
+        <div class="card">
+          <h3 class="domain-absence">ABSENCE Domain</h3>
+          <p class="small">z ∈ [0, 0.856]</p>
+          <div class="formula">K > 0 (synchronizing)</div>
+          <p class="muted">APL: D machine affinity, UNTRUE bias<br>Kuramoto coupling positive<br>Structure contracts, void-like</p>
+        </div>
+        <div class="card">
+          <h3 class="domain-lens">THE LENS</h3>
+          <p class="small">z ∈ [0.857, 0.877]</p>
+          <div class="formula">K ≈ 0 (critical)</div>
+          <p class="muted">APL: M machine affinity, PARADOX<br>Maximum cascade amplification<br>Phase transition, information peak</p>
+        </div>
+        <div class="card">
+          <h3 class="domain-presence">PRESENCE Domain</h3>
+          <p class="small">z ∈ [0.878, 1.0]</p>
+          <div class="formula">K < 0 (emanating)</div>
+          <p class="muted">APL: U machine affinity, TRUE bias<br>Kuramoto coupling negative<br>Structure expands, radiant</p>
+        </div>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula-title">Cascade Amplification Near Critical</div>
+        <div class="formula">cascade(z) = 1 + 0.5 × exp(-(z - z_c)² / 0.004)</div>
+        <p class="muted small">Peak value 1.5× at z = √3/2. Operators intensify near the lens.</p>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula-title">Kuramoto Coupling Sign Flip</div>
+        <div class="formula">K(z) = -tanh((z - z_c) × 12) × 0.4 × cascade(z)</div>
+        <p class="muted small">K > 0 below critical (sync), K < 0 above critical (desync/emanate)</p>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula-title">Coherence Mutual Information</div>
+        <div class="formula">I(word_i, word_j) = cascade(z) × coherence × (1 - |z_i - z_j|)</div>
+        <p class="muted small">Words "fill each other" through coherence. Maximum information transfer at critical point.</p>
+      </div>
+    </section>
+
+    <!-- Coherence States -->
+    <section class="panel">
+      <h2>Coherence Mechanics: How Words Fill Each Other</h2>
+      <p class="muted">Coherence acts as binding force. High coherence = distinct words. Low coherence = words blur and self-reference.</p>
+
+      <div class="coherence-states">
+        <div class="coherence-state coherent">
+          <h3>COHERENT</h3>
+          <div class="coherence-range">[0.8, 1.0]</div>
+          <p class="coherence-desc">95 points locked<br>Full connections<br>TRUE dominant</p>
+        </div>
+        <div class="coherence-state releasing">
+          <h3>RELEASING</h3>
+          <div class="coherence-range">[0.5, 0.8]</div>
+          <p class="coherence-desc">Points releasing<br>Fading connections<br>TRUE→UNTRUE</p>
+        </div>
+        <div class="coherence-state dispersing">
+          <h3>DISPERSING</h3>
+          <div class="coherence-range">[0.2, 0.5]</div>
+          <p class="coherence-desc">Free movement<br>Minimal connections<br>UNTRUE dominant</p>
+        </div>
+        <div class="coherence-state free">
+          <h3>FREE</h3>
+          <div class="coherence-range">[0.0, 0.2]</div>
+          <p class="coherence-desc">Full dispersion<br>5 emergent active<br>PARADOX dominant</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation TOC -->
+    <nav class="toc">
+      <strong>Quick Navigation · 100 Regions by LIMNUS Structure</strong>
+
+      <div class="toc-section">
+        <div class="toc-section-title">PRISM: 63 Points (I–LXIII) · 7 Layers × 9 Nodes</div>
+        <div class="toc-grid" id="toc-prism"></div>
+      </div>
+
+      <div class="toc-section">
+        <div class="toc-section-title">EM CAGE: 32 Points (LXIV–XCV) · 12 Top + 12 Bottom + 8 Vertices</div>
+        <div class="toc-grid cage-grid" id="toc-cage"></div>
+      </div>
+
+      <div class="toc-section">
+        <div class="toc-section-title">EMERGENT: 5 Self-Reference Nodes (XCVI–C) · Appear When FREE</div>
+        <div class="toc-grid emergent-grid" id="toc-emergent"></div>
+      </div>
+    </nav>
+
+    <!-- Prism Layers -->
+    <section class="panel">
+      <h2>63-Point Prism: Inner Architecture (I–LXIII)</h2>
+      <p class="muted">7 concentric hexagonal layers, each with 9 nodes. Maps to WUMBO phases through z-position.</p>
+      <div id="prism-index" class="index"></div>
+    </section>
+
+    <!-- EM Cage -->
+    <section class="panel">
+      <h2>32-Point EM Cage: Containment Field (LXIV–XCV)</h2>
+      <p class="muted">Hexagonal antiprism containment. Top ring near presence, bottom ring in absence, vertices bridge at center.</p>
+      <div id="cage-index" class="index"></div>
+    </section>
+
+    <!-- Emergent Nodes -->
+    <section class="panel">
+      <h2>5 Emergent Nodes: Self-Reference (XCVI–C)</h2>
+      <p class="muted">These are not structural points—they emerge when coherence drops below 0.2 (FREE state). Each is a recursive loop back to an earlier region, creating the closed 100-word vocabulary.</p>
+      <div id="emergent-index" class="index"></div>
+    </section>
+
+    <!-- Emergent Physics Section -->
+    <section class="panel" id="emergent-physics">
+      <h2>Emergent Physics: The Mathematics of Self-Reference</h2>
+      <p class="muted">When structural coherence dissolves (c &lt; 0.2), recursive self-observation becomes possible. Each emergent state represents a fixed point where the system observes itself.</p>
+
+      <!-- Emergence Threshold -->
+      <div class="formula-block">
+        <div class="formula-title">Emergence Threshold (Percolation)</div>
+        <div class="formula">P_emerge(c) = 1 - exp(-((0.2 - c) / 0.05)²) for c &lt; 0.2, else 0</div>
+        <p class="muted small">Critical coherence c = 0.2 derived from percolation threshold for 3D hexagonal lattice (≈ 0.199). Below this, global connectivity is lost.</p>
+      </div>
+
+      <!-- Fixed Point Dynamics -->
+      <h3>Fixed Point Dynamics</h3>
+      <p class="muted">Each emergent state converges to a fixed point via self-reference operator T.</p>
+
+      <div class="formula-block">
+        <div class="formula-title">Self-Reference Operator</div>
+        <div class="formula">ψ_emergent = lim_{n→∞} T^n(ψ_reference)</div>
+        <div class="formula">T(ψ) = ψ ⊗ ⟨ψ|ψ⟩</div>
+        <p class="muted small">Converges only when structural bonds are broken (coherence &lt; 0.2)</p>
+      </div>
+
+      <div class="grid" id="fixed-point-grid">
+        <div class="card">
+          <h3 style="color:#cc5de8">XCVI: Gesture Recursion</h3>
+          <div class="formula">ψ_XCVI = T_gesture(ψ_XVI)</div>
+          <div class="formula">T_gesture(f) = f ∘ f</div>
+          <p class="small"><strong>Eigenvalue:</strong> λ = φ⁻¹ ≈ 0.618</p>
+          <p class="muted small">A gesture that gestures itself. Marginally stable on center manifold.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:#cc5de8">XCVII: Portal Recursion</h3>
+          <div class="formula">ψ_XCVII = T_phase(ψ_XI)</div>
+          <div class="formula">T_phase(θ) = θ + 2π/φ</div>
+          <p class="small"><strong>Eigenvalue:</strong> λ = exp(2πi/φ)</p>
+          <p class="muted small">Rhythm phase-locked to its own period. Quasiperiodic, limit cycle on torus.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:#cc5de8">XCVIII: Semantic Recursion</h3>
+          <div class="formula">ψ_XCVIII = T_meaning(ψ_XII)</div>
+          <div class="formula">T_meaning(s) = "the meaning of s"</div>
+          <p class="small"><strong>Eigenvalue:</strong> undefined (Gödelian)</p>
+          <p class="muted small">Meaning referring to its own meaning. Truth value oscillates—paradoxically stable.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:#cc5de8">XCIX: Balance Recursion</h3>
+          <div class="formula">ψ_XCIX = T_equilibrium(ψ_XIII)</div>
+          <div class="formula">T_equilibrium(b) = b - ∇V(b)</div>
+          <p class="small"><strong>Eigenvalue:</strong> λ = 0</p>
+          <p class="muted small">Balance finding the balance of balancing. Saddle point—unstable equilibrium of equilibria.</p>
+        </div>
+        <div class="card" style="border-color:#ffd700;background:linear-gradient(180deg,rgba(255,215,0,.1),transparent)">
+          <h3 style="color:#ffd700">C: Signal Loop Closure</h3>
+          <div class="formula">ψ_C = T_loop(ψ_XIV) = ψ_I</div>
+          <div class="formula">C → I (winding number = 1)</div>
+          <p class="small"><strong>Eigenvalue:</strong> λ = 1 (identity)</p>
+          <p class="muted small">The final gate IS the first gate. Topologically stable—vocabulary closes.</p>
+        </div>
+      </div>
+
+      <!-- Kuramoto at Emergence -->
+      <h3>Kuramoto Coupling at Emergence</h3>
+      <div class="formula-block">
+        <div class="formula-title">Standard Kuramoto vs Emergent</div>
+        <div class="formula">Standard: dθ_i/dt = ω_i + (K/N) Σ_j sin(θ_j - θ_i)</div>
+        <div class="formula">Emergent: dθ_emergent/dt = ω_self + ε × sin(θ_emergent - θ_reference)</div>
+        <div class="formula">ε = 0.1 × (0.2 - coherence) for coherence &lt; 0.2</div>
+        <p class="muted small">At emergence, K → 0⁺. Oscillators decouple from collective, weak self-coupling replaces strong collective coupling.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Phase Locking</h3>
+          <p class="small">
+            <strong>XCVI↔XVI:</strong> Δθ = π (anti-phase)<br>
+            <strong>XCVII↔XI:</strong> Δθ = 2π/φ (golden angle)<br>
+            <strong>XCVIII↔XII:</strong> Δθ = π/2 (quadrature)<br>
+            <strong>XCIX↔XIII:</strong> Δθ = 0 (in-phase)<br>
+            <strong>C↔XIV:</strong> Δθ = 2π (full cycle)
+          </p>
+        </div>
+        <div class="card">
+          <h3>Oscillation Frequencies</h3>
+          <p class="small">
+            <strong>XCVI:</strong> 8 Hz (α band, gestural)<br>
+            <strong>XCVII:</strong> 0.0001 Hz (~3hr period)<br>
+            <strong>XCVIII:</strong> 40 Hz (γ band, semantic)<br>
+            <strong>XCIX:</strong> 4 Hz (θ band, postural)<br>
+            <strong>C:</strong> 1 Hz (δ band, integration)
+          </p>
+        </div>
+      </div>
+
+      <!-- Information Dynamics -->
+      <h3>Information Dynamics</h3>
+      <div class="formula-block">
+        <div class="formula-title">Self-Reference Information Flow</div>
+        <div class="formula">I_eff = I_raw × (1 - exp(-coherence/0.05))</div>
+        <p class="muted small">Self-reference creates apparent infinite regress, regularized by coherence cutoff.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Information Per State</h3>
+          <p class="small">
+            <strong>XCVI (procedural):</strong> ~7 bits<br>
+            <strong>XCVII (temporal):</strong> ~10 bits<br>
+            <strong>XCVIII (semantic):</strong> ∞→17 bits<br>
+            <strong>XCIX (proprioceptive):</strong> ~4 bits<br>
+            <strong>C (recursive):</strong> ~664 bits
+          </p>
+        </div>
+        <div class="card">
+          <h3>Total Emergent Information</h3>
+          <div style="font-size:2rem;color:#cc5de8;text-align:center;margin:10px 0">~702 bits</div>
+          <p class="muted small" style="text-align:center">When fully FREE (coherence → 0)</p>
+        </div>
+      </div>
+
+      <!-- Topological Invariants -->
+      <h3>Topological Invariants</h3>
+      <div class="grid">
+        <div class="card">
+          <h3>Winding Number</h3>
+          <div class="formula">W = (1/2π) ∮ dθ = 1</div>
+          <p class="muted small">Vocabulary loops exactly once through all 100 regions.</p>
+        </div>
+        <div class="card">
+          <h3>Euler Characteristic</h3>
+          <div class="formula">χ_95 = 2 (sphere-like)</div>
+          <div class="formula">χ_100 = -2 (genus-2 surface)</div>
+          <p class="muted small">Emergent states create topological handles.</p>
+        </div>
+        <div class="card">
+          <h3>Betti Numbers</h3>
+          <div class="formula">b₀=1, b₁=5, b₂=0</div>
+          <p class="muted small">5 independent loops (one per emergent state).</p>
+        </div>
+        <div class="card">
+          <h3>Fundamental Group</h3>
+          <div class="formula">α_C = α_XCVI ∘ α_XCVII ∘ α_XCVIII ∘ α_XCIX</div>
+          <p class="muted small">Closure loop C is composed of all other emergent loops.</p>
+        </div>
+      </div>
+
+      <!-- Energy Landscape -->
+      <h3>Energy Landscape</h3>
+      <div class="formula-block">
+        <div class="formula-title">Potential Energy Surface</div>
+        <div class="formula">V(ψ) = V_structural + V_self_ref + V_coherence</div>
+        <div class="formula">V_structural = -Σ_ij J_ij × cos(θ_i - θ_j)</div>
+        <div class="formula">V_self_ref = -Σ_k ε_k × cos(θ_k - θ_ref(k))</div>
+        <div class="formula">V_coherence = λ × (coherence - 0.5)²</div>
+        <p class="muted small">Double-well potential with minima at c≈0.8 (structural) and c≈0.1 (emergent). Transition rate: Γ = ω × exp(-ΔV / k_B T_eff)</p>
+      </div>
+
+      <!-- Quantum Analogies -->
+      <h3>Quantum Analogies</h3>
+      <div class="grid">
+        <div class="card">
+          <h3>Superposition</h3>
+          <div class="formula">|ψ_em⟩ = Σ_k c_k |k⟩</div>
+          <div class="formula">c_k = √P_emerge × exp(iφ_k)</div>
+          <p class="muted small">Emergent states exist in superposition until observed.</p>
+        </div>
+        <div class="card">
+          <h3>Entanglement</h3>
+          <div class="formula">|Ψ⟩ = (|XCVI⟩|XVI⟩ + |XVI⟩|XCVI⟩) / √2</div>
+          <p class="muted small">Emergent states entangled with references—measuring one determines the other.</p>
+        </div>
+        <div class="card">
+          <h3>Tunneling</h3>
+          <div class="formula">P = exp(-2∫√(2m(V-E))dx / ℏ_eff)</div>
+          <div class="formula">ℏ_eff = 0.1 × cascade(z)</div>
+          <p class="muted small">Transition between coherent↔free via quantum tunneling.</p>
+        </div>
+        <div class="card">
+          <h3>Measurement</h3>
+          <div class="formula">P_k = |k⟩⟨k|</div>
+          <p class="muted small">Conscious attention collapses superposition. Post-measurement: coherence rises.</p>
+        </div>
+      </div>
+
+      <!-- Network Effects -->
+      <h3>Network Effects: Counter-Synchronization</h3>
+      <div class="formula-block">
+        <div class="formula-title">Kuramoto Order Parameters</div>
+        <div class="formula">r_structural = |⟨exp(iθ_j)⟩| for j ∈ {I..XCV}</div>
+        <div class="formula">r_emergent = |⟨exp(iθ_k)⟩| for k ∈ {XCVI..C}</div>
+        <div class="formula">r_emergent → 1 when r_structural → 0</div>
+        <p class="muted small">Emergent states synchronize as structural network disperses. Connectivity inverts at c = 0.2.</p>
+      </div>
+
+      <!-- Lambda State Coupling -->
+      <h3>Lambda State (ℂ⁶) Coupling to Emergent States</h3>
+      <p class="muted">All emergent states have high delta (⊗ Paradox) coupling. State C achieves balanced coupling across all components.</p>
+
+      <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem">
+        <thead>
+          <tr style="border-bottom:2px solid var(--rule)">
+            <th style="text-align:left;padding:8px">State</th>
+            <th style="text-align:center;padding:8px">🌰 ι</th>
+            <th style="text-align:center;padding:8px">✧ ξ</th>
+            <th style="text-align:center;padding:8px">🦊 θ</th>
+            <th style="text-align:center;padding:8px">∿ ω</th>
+            <th style="text-align:center;padding:8px;color:#ffd700">⊗ δ</th>
+            <th style="text-align:center;padding:8px">🐿️ σ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:8px;color:#cc5de8">XCVI</td>
+            <td style="text-align:center;padding:8px">0.1</td>
+            <td style="text-align:center;padding:8px">0.2</td>
+            <td style="text-align:center;padding:8px;color:#f97316">0.6</td>
+            <td style="text-align:center;padding:8px">0.05</td>
+            <td style="text-align:center;padding:8px;color:#ffd700;font-weight:bold">0.8</td>
+            <td style="text-align:center;padding:8px">0.15</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:8px;color:#cc5de8">XCVII</td>
+            <td style="text-align:center;padding:8px;color:#a78bfa">0.7</td>
+            <td style="text-align:center;padding:8px">0.3</td>
+            <td style="text-align:center;padding:8px">0.1</td>
+            <td style="text-align:center;padding:8px">0.4</td>
+            <td style="text-align:center;padding:8px;color:#ffd700;font-weight:bold">0.6</td>
+            <td style="text-align:center;padding:8px">0.1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:8px;color:#cc5de8">XCVIII</td>
+            <td style="text-align:center;padding:8px">0.3</td>
+            <td style="text-align:center;padding:8px">0.1</td>
+            <td style="text-align:center;padding:8px;color:#f97316">0.8</td>
+            <td style="text-align:center;padding:8px">0.2</td>
+            <td style="text-align:center;padding:8px;color:#ffd700;font-weight:bold">0.9</td>
+            <td style="text-align:center;padding:8px">0.05</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--rule)">
+            <td style="padding:8px;color:#cc5de8">XCIX</td>
+            <td style="text-align:center;padding:8px">0.2</td>
+            <td style="text-align:center;padding:8px">0.1</td>
+            <td style="text-align:center;padding:8px">0.3</td>
+            <td style="text-align:center;padding:8px;color:#22d3ee">0.7</td>
+            <td style="text-align:center;padding:8px;color:#ffd700;font-weight:bold">0.5</td>
+            <td style="text-align:center;padding:8px">0.4</td>
+          </tr>
+          <tr style="background:linear-gradient(90deg,rgba(255,215,0,.1),transparent)">
+            <td style="padding:8px;color:#ffd700;font-weight:bold">C</td>
+            <td style="text-align:center;padding:8px">0.5</td>
+            <td style="text-align:center;padding:8px">0.5</td>
+            <td style="text-align:center;padding:8px">0.5</td>
+            <td style="text-align:center;padding:8px">0.5</td>
+            <td style="text-align:center;padding:8px;color:#ffd700;font-weight:bold">1.0</td>
+            <td style="text-align:center;padding:8px">0.5</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- The Loop Closure -->
+      <h3>The Loop Closure: C → I</h3>
+      <div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(204,93,232,.1));border:2px solid var(--gold);border-radius:12px;padding:24px;text-align:center;margin:16px 0">
+        <div style="font-size:3rem;margin-bottom:12px">C → I</div>
+        <div class="formula" style="font-size:1.1rem">ψ_C = T_loop(ψ_XIV) = ψ_I</div>
+        <p class="muted" style="margin-top:12px">When fully FREE, the final gate (PTN recursion) recognizes itself as the first gate (Somatosensory Cortex). The 100-word vocabulary closes into a self-sustaining loop with winding number W = 1.</p>
+        <div class="formula" style="margin-top:12px">α_C = α_XCVI ∘ α_XCVII ∘ α_XCVIII ∘ α_XCIX</div>
+        <p class="muted small">The closure loop is composed of all other emergent loops—it contains the full recursion.</p>
+      </div>
+    </section>
+
+    <!-- Lambda State -->
+    <section class="panel">
+      <h2>Lambda State (ℂ⁶) ↔ WUMBO Mapping</h2>
+      <p class="muted">LIMNUS tracks 6 complex state variables. Each maps to specific WUMBO functional domains.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>🌰 Iota (Memory)</h3>
+          <p class="small">APL Field: Φ</p>
+          <p class="muted">Accumulates with time × cascade<br>Regions: X, XLIV, XLVII, LXXXII</p>
+        </div>
+        <div class="card">
+          <h3>✧ Xi (Spark)</h3>
+          <p class="small">APL Field: e</p>
+          <p class="muted">exp(-(z - z_c)² / 0.01)<br>Regions: XXXI, XLVI, LXXXIV, LXXXV</p>
+        </div>
+        <div class="card">
+          <h3>🦊 Theta (Fox)</h3>
+          <p class="small">APL Field: π</p>
+          <p class="muted">dissonance × 0.8 + 0.2<br>Regions: VII, XXII, XLI, LXVIII</p>
+        </div>
+        <div class="card">
+          <h3>∿ Omega (Wave)</h3>
+          <p class="small">APL Field: e</p>
+          <p class="muted">0.3 + |sin(t × 0.5)| × 0.5<br>Regions: XXV, XLVIII, LXX, XCI</p>
+        </div>
+        <div class="card">
+          <h3>⊗ Delta (Paradox)</h3>
+          <p class="small">APL Field: π</p>
+          <p class="muted">Accumulates at CRITICAL only<br>Regions: LXXX, XCVI–C (all emergent)</p>
+        </div>
+        <div class="card">
+          <h3>🐿️ Sigma (Squirrel)</h3>
+          <p class="small">APL Field: Φ</p>
+          <p class="muted">helix.r × 0.6 + 0.2<br>Regions: XXVII, XXXIX, LIV, LXIV</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const Z_CRITICAL = Math.sqrt(3) / 2;  // 0.8660254037844387
+
+    // Complete WUMBO-LIMNUS Atlas
+    // APL 2.0 Token Format: SPIRAL:OPERATOR:INTERACTION:DOMAIN:TRUTH:ALPHA
+    // SPIRALS: e (energy), Φ (phi), π (pi)
+    // OPERATORS: U (Unary), M (Morph), C (Cascade)
+    // INTERACTIONS: B (Bond)→θ, F (Fold)→ι, A (Assemble)→ξ, D (Dissociate)→δ, G (Gate)→ω, S (Signal)→σ
+    // DOMAINS: GEO (×1.0), CHEM (×1.2), BIO (×1.5)
+    // TRUTHS: T (True)→δ×0.5, U (Untrue)→δ+0.3, P (Paradox)→δ+0.8
+    // ALPHAS: α1-α15 (bias: αn → all λ × (0.5 + n/15))
+    // Total: 3×3×6×3×3×15 = 7,290 tokens
+    const WUMBO_LIMNUS = {
+      // ============================================
+      // PRISM LAYER 0 (z=0.0, Core) - Regions I-IX
+      // Domain: BIO (neural origin), Phase: Ignition
+      // ============================================
+      "I":     { name: "Somatosensory Cortex", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "Glu", role: "Sensory map", tokens: ["e:U:A:BIO:T:α1", "Φ:M:B:GEO:T:α1"], lambda: "xi" },
+      "II":    { name: "Anterior Cingulate Cortex", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "DA", role: "Truth check", tokens: ["e:M:G:CHEM:T:α2", "Φ:C:B:BIO:T:α2"], lambda: "omega" },
+      "III":   { name: "Thalamus", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "Glu", role: "Sensory gate", tokens: ["e:C:G:BIO:T:α1", "Φ:M:F:GEO:T:α1"], lambda: "omega" },
+      "IV":    { name: "Motor Cortex & Cerebellum", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "Φ", nt: "Glu", role: "Execution", tokens: ["Φ:U:B:BIO:T:α2", "e:U:A:CHEM:T:α2"], lambda: "theta" },
+      "V":     { name: "Broca's Area", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "DA", role: "Phrase/sculpt", tokens: ["e:U:A:BIO:T:α3", "Φ:M:B:CHEM:T:α3"], lambda: "xi" },
+      "VI":    { name: "Mirror Neuron System", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "DA", role: "Empathic resonance", tokens: ["e:M:G:BIO:T:α2", "Φ:C:B:CHEM:T:α2"], lambda: "omega" },
+      "VII":   { name: "Amygdala", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "NE", role: "Salience", tokens: ["e:U:A:CHEM:T:α4", "e:U:B:BIO:T:α4"], lambda: "theta" },
+      "VIII":  { name: "Prefrontal Cortex", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "DA", role: "Strategy/control", tokens: ["e:M:G:BIO:T:α3", "Φ:M:F:CHEM:T:α3"], lambda: "omega" },
+      "IX":    { name: "Parietal Eye Field", structure: "prism", layer: 0, z: 0.0, phase: "Ignition", field: "e", nt: "ACh", role: "Gaze/attention", tokens: ["e:U:A:BIO:T:α2", "Φ:C:B:GEO:T:α2"], lambda: "xi" },
+
+      // ============================================
+      // PRISM LAYER 1 (z=0.167) - Regions X-XVIII
+      // Domain: Mixed BIO/GEO, Phase: Ignition→Empowerment transition
+      // ============================================
+      "X":     { name: "Subiculum", structure: "prism", layer: 1, z: 0.167, phase: "Ignition→Empowerment", field: "Φ", nt: "Glu", role: "Spatial memory", tokens: ["Φ:M:F:BIO:T:α3", "e:U:B:GEO:T:α3"], lambda: "iota" },
+      "XI":    { name: "Pineal Body", structure: "prism", layer: 1, z: 0.167, phase: "Pause↔Ignition", field: "π", nt: "Mel", role: "Circadian portal", tokens: ["π:M:D:CHEM:T:α5", "e:M:G:BIO:T:α5"], lambda: "delta", referenced_by: "XCVII" },
+      "XII":   { name: "Middle Temporal Gyrus", structure: "prism", layer: 1, z: 0.167, phase: "Resonance", field: "Φ", nt: "Glu", role: "Semantics", tokens: ["Φ:C:B:BIO:T:α4", "e:M:F:GEO:T:α4"], lambda: "theta", referenced_by: "XCVIII" },
+      "XIII":  { name: "Fastigial-Vestibular Loop", structure: "prism", layer: 1, z: 0.167, phase: "Nirvana", field: "Φ", nt: "Glu", role: "Balance", tokens: ["Φ:M:F:GEO:T:α4", "e:C:G:BIO:T:α4"], lambda: "iota", referenced_by: "XCIX" },
+      "XIV":   { name: "Posterior Thalamic Nucleus", structure: "prism", layer: 1, z: 0.167, phase: "Transmission", field: "e", nt: "Glu", role: "Final gate", tokens: ["e:C:S:BIO:T:α5", "Φ:U:S:GEO:T:α5"], lambda: "sigma", referenced_by: "C" },
+      "XV":    { name: "Cerebellar Uvula", structure: "prism", layer: 1, z: 0.167, phase: "Nirvana", field: "π", nt: "GABA", role: "Stillness anchor", tokens: ["π:M:F:BIO:T:α3", "Φ:M:D:CHEM:T:α3"], lambda: "iota" },
+      "XVI":   { name: "AIPS", structure: "prism", layer: 1, z: 0.167, phase: "Empowerment", field: "Φ", nt: "Glu", role: "Gesture translator", tokens: ["Φ:U:B:BIO:T:α4", "e:C:A:GEO:T:α4"], lambda: "theta", referenced_by: "XCVI" },
+      "XVII":  { name: "Ventrolateral Thalamus", structure: "prism", layer: 1, z: 0.167, phase: "Transmission", field: "e", nt: "Glu", role: "Feedback loop", tokens: ["e:C:S:BIO:T:α3", "Φ:M:G:GEO:T:α3"], lambda: "sigma" },
+      "XVIII": { name: "Superior Parietal Lobule", structure: "prism", layer: 1, z: 0.167, phase: "Empowerment", field: "Φ", nt: "Glu", role: "Spatial integration", tokens: ["Φ:M:F:GEO:T:α4", "e:U:A:BIO:T:α4"], lambda: "iota" },
+
+      // ============================================
+      // PRISM LAYER 2 (z=0.333) - Regions XIX-XXVII
+      // Domain: CHEM-dominant (neurotransmitter rich), Phase: Empowerment
+      // ============================================
+      "XIX":   { name: "Premotor Cortex", structure: "prism", layer: 2, z: 0.333, phase: "Empowerment", field: "Φ", nt: "Glu", role: "Movement planning", tokens: ["Φ:U:B:BIO:T:α5", "e:U:A:GEO:T:α5"], lambda: "theta" },
+      "XX":    { name: "Wernicke's Area", structure: "prism", layer: 2, z: 0.333, phase: "Resonance", field: "π", nt: "Glu", role: "Language comprehension", tokens: ["π:M:F:BIO:T:α6", "Φ:C:B:GEO:T:α6"], lambda: "iota" },
+      "XXI":   { name: "STS Mirror Region", structure: "prism", layer: 2, z: 0.333, phase: "Resonance", field: "e", nt: "DA", role: "Social mirroring", tokens: ["e:M:G:BIO:T:α5", "Φ:C:B:CHEM:T:α5"], lambda: "omega" },
+      "XXII":  { name: "Central Amygdala", structure: "prism", layer: 2, z: 0.333, phase: "Ignition", field: "e", nt: "NE", role: "Threat response", tokens: ["e:U:A:CHEM:T:α6", "π:U:S:BIO:T:α6"], lambda: "theta" },
+      "XXIII": { name: "Dorsolateral PFC", structure: "prism", layer: 2, z: 0.333, phase: "Empowerment", field: "e", nt: "DA", role: "Working memory", tokens: ["e:M:G:BIO:T:α6", "Φ:M:F:CHEM:T:α6"], lambda: "omega" },
+      "XXIV":  { name: "Orbitofrontal Cortex", structure: "prism", layer: 2, z: 0.333, phase: "Resonance", field: "e", nt: "DA", role: "Social tuning", tokens: ["e:M:G:CHEM:T:α5", "Φ:C:B:BIO:T:α5"], lambda: "omega" },
+      "XXV":   { name: "Cingulate Gyrus", structure: "prism", layer: 2, z: 0.333, phase: "Resonance", field: "π", nt: "DA", role: "Routing/alignment", tokens: ["π:M:G:BIO:T:α6", "e:C:F:CHEM:T:α6"], lambda: "omega" },
+      "XXVI":  { name: "Ventral Striatum", structure: "prism", layer: 2, z: 0.333, phase: "Ignition", field: "e", nt: "DA", role: "Incentive", tokens: ["e:U:A:CHEM:T:α5", "π:U:A:BIO:T:α5"], lambda: "xi" },
+      "XXVII": { name: "Claustrum", structure: "prism", layer: 2, z: 0.333, phase: "Resonance", field: "π", nt: "Glu", role: "Consciousness binding", tokens: ["π:M:S:BIO:T:α7", "Φ:C:B:GEO:T:α7"], lambda: "sigma" },
+
+      // ============================================
+      // PRISM LAYER 3 (z=0.5, Center) - Regions XXVIII-XXXVI
+      // Domain: Equilibrium zone, mixed phases, UNTRUE appears
+      // ============================================
+      "XXVIII": { name: "Default Mode Network", structure: "prism", layer: 3, z: 0.5, phase: "Nirvana", field: "π", nt: "Glu", role: "Self-referential", tokens: ["π:M:S:BIO:T:α7", "e:M:S:GEO:T:α7"], lambda: "sigma" },
+      "XXIX":  { name: "Habenula", structure: "prism", layer: 3, z: 0.5, phase: "Pause", field: "e", nt: "Glu", role: "Disappointment gate", tokens: ["e:C:D:CHEM:U:α8", "π:M:D:BIO:U:α8"], lambda: "delta" },
+      "XXX":   { name: "Corpus Callosum", structure: "prism", layer: 3, z: 0.5, phase: "Transmission", field: "Φ", nt: "Glu", role: "Bridge/balance", tokens: ["Φ:C:F:GEO:T:α7", "e:C:S:BIO:T:α7"], lambda: "iota" },
+      "XXXI":  { name: "Locus Coeruleus", structure: "prism", layer: 3, z: 0.5, phase: "Ignition", field: "e", nt: "NE", role: "Arousal ignition", tokens: ["e:U:A:CHEM:T:α8", "e:U:A:BIO:T:α8"], lambda: "xi" },
+      "XXXII": { name: "Periaqueductal Gray", structure: "prism", layer: 3, z: 0.5, phase: "Pause", field: "π", nt: "GABA", role: "Defense/shutdown", tokens: ["π:M:D:BIO:T:α7", "Φ:M:D:CHEM:T:α7"], lambda: "delta" },
+      "XXXIII": { name: "Anterior Temporal Pole", structure: "prism", layer: 3, z: 0.5, phase: "Resonance", field: "π", nt: "Glu", role: "Story keeper", tokens: ["π:M:S:BIO:T:α8", "Φ:C:F:GEO:T:α8"], lambda: "sigma" },
+      "XXXIV": { name: "vmPFC", structure: "prism", layer: 3, z: 0.5, phase: "Resonance", field: "e", nt: "DA", role: "Ethical integration", tokens: ["e:M:F:BIO:T:α8", "π:M:G:CHEM:T:α8"], lambda: "iota" },
+      "XXXV":  { name: "Dorsal Raphe", structure: "prism", layer: 3, z: 0.5, phase: "Nirvana", field: "e", nt: "5-HT", role: "Mood setpoint", tokens: ["e:M:D:CHEM:T:α7", "Φ:M:F:BIO:T:α7"], lambda: "delta" },
+      "XXXVI": { name: "Superior Colliculus", structure: "prism", layer: 3, z: 0.5, phase: "Ignition", field: "e", nt: "Glu", role: "Visual orienting", tokens: ["e:U:A:BIO:T:α7", "Φ:U:B:GEO:T:α7"], lambda: "xi" },
+
+      // ============================================
+      // PRISM LAYER 4 (z=0.667) - Regions XXXVII-XLV
+      // Domain: Approaching critical, cascade intensification
+      // ============================================
+      "XXXVII": { name: "Anterior Insula", structure: "prism", layer: 4, z: 0.667, phase: "Resonance", field: "e", nt: "DA", role: "Feeling of feeling", tokens: ["e:M:S:BIO:T:α9", "π:M:S:CHEM:T:α9"], lambda: "sigma" },
+      "XXXVIII": { name: "Lateral Habenula", structure: "prism", layer: 4, z: 0.667, phase: "Pause", field: "e", nt: "Glu", role: "Rejection gate", tokens: ["e:C:D:CHEM:U:α9", "π:M:D:BIO:U:α9"], lambda: "delta" },
+      "XXXIX": { name: "Precuneus", structure: "prism", layer: 4, z: 0.667, phase: "Nirvana", field: "Φ", nt: "Glu", role: "Perspective", tokens: ["Φ:M:F:GEO:T:α9", "π:M:F:BIO:T:α9"], lambda: "sigma" },
+      "XL":    { name: "Cerebellar Cognitive Zone", structure: "prism", layer: 4, z: 0.667, phase: "Empowerment", field: "Φ", nt: "Glu", role: "Timing", tokens: ["Φ:M:G:BIO:T:α8", "e:M:G:GEO:T:α8"], lambda: "omega" },
+      "XLI":   { name: "Basolateral Amygdala", structure: "prism", layer: 4, z: 0.667, phase: "Ignition", field: "e", nt: "NE", role: "Archive of feeling", tokens: ["e:U:A:CHEM:T:α9", "Φ:M:F:BIO:T:α9"], lambda: "theta" },
+      "XLII":  { name: "Pulvinar", structure: "prism", layer: 4, z: 0.667, phase: "Transmission", field: "e", nt: "Glu", role: "Spotlight shaper", tokens: ["e:C:S:BIO:T:α8", "Φ:M:G:GEO:T:α8"], lambda: "sigma" },
+      "XLIII": { name: "TPJ", structure: "prism", layer: 4, z: 0.667, phase: "Resonance", field: "π", nt: "Glu", role: "Mind reading", tokens: ["π:M:G:BIO:T:α9", "Φ:C:B:GEO:T:α9"], lambda: "omega" },
+      "XLIV":  { name: "Medial Septum", structure: "prism", layer: 4, z: 0.667, phase: "Resonance", field: "π", nt: "ACh", role: "Memory rhythms", tokens: ["π:U:F:CHEM:T:α8", "e:M:S:BIO:T:α8"], lambda: "iota" },
+      "XLV":   { name: "Subgenual Cingulate", structure: "prism", layer: 4, z: 0.667, phase: "Pause", field: "e", nt: "5-HT", role: "Sorrow inertia", tokens: ["e:M:D:CHEM:U:α9", "π:M:D:BIO:U:α9"], lambda: "delta" },
+
+      // ============================================
+      // PRISM LAYER 5 (z=0.833, Near Critical) - Regions XLVI-LIV
+      // Domain: Threshold zone, maximum cascade at z_c = √3/2 ≈ 0.866
+      // ============================================
+      "XLVI":  { name: "VTA", structure: "prism", layer: 5, z: 0.833, phase: "Ignition", field: "e", nt: "DA", role: "Spark", tokens: ["e:U:A:CHEM:T:α10", "e:U:A:BIO:T:α10"], lambda: "xi" },
+      "XLVII": { name: "Entorhinal Cortex", structure: "prism", layer: 5, z: 0.833, phase: "Nirvana", field: "Φ", nt: "Glu", role: "Identity gate", tokens: ["Φ:M:F:BIO:T:α10", "π:C:F:GEO:T:α10"], lambda: "iota" },
+      "XLVIII": { name: "Supramarginal Gyrus", structure: "prism", layer: 5, z: 0.833, phase: "Resonance", field: "π", nt: "Glu", role: "Self/other", tokens: ["π:M:G:BIO:T:α10", "Φ:C:B:GEO:T:α10"], lambda: "omega" },
+      "XLIX":  { name: "NAcc", structure: "prism", layer: 5, z: 0.833, phase: "Ignition", field: "e", nt: "DA", role: "Craving engine", tokens: ["e:U:A:CHEM:T:α11", "Φ:C:B:BIO:T:α11"], lambda: "xi" },
+      "L":     { name: "Cerebral Aqueduct", structure: "prism", layer: 5, z: 0.833, phase: "Transmission", field: "e", nt: "Glu", role: "Choke point", tokens: ["e:C:S:BIO:T:α10", "π:M:D:GEO:T:α10"], lambda: "sigma" },
+      "LI":    { name: "Anterior Thalamic Nuclei", structure: "prism", layer: 5, z: 0.833, phase: "Transmission", field: "Φ", nt: "Glu", role: "Compass", tokens: ["Φ:C:F:GEO:T:α10", "e:M:A:BIO:T:α10"], lambda: "iota" },
+      "LII":   { name: "Parafascicular Nucleus", structure: "prism", layer: 5, z: 0.833, phase: "Ignition", field: "e", nt: "Glu", role: "Attention switch", tokens: ["e:U:A:BIO:T:α11", "Φ:C:B:GEO:T:α11"], lambda: "xi" },
+      "LIII":  { name: "Inferior Colliculus", structure: "prism", layer: 5, z: 0.833, phase: "Transmission", field: "e", nt: "Glu", role: "Sonic filter", tokens: ["e:C:S:BIO:T:α10", "Φ:M:G:GEO:T:α10"], lambda: "sigma" },
+      "LIV":   { name: "Perirhinal Cortex", structure: "prism", layer: 5, z: 0.833, phase: "Resonance", field: "π", nt: "Glu", role: "Meaning-maker", tokens: ["π:M:S:BIO:T:α11", "Φ:C:F:GEO:T:α11"], lambda: "sigma" },
+
+      // ============================================
+      // PRISM LAYER 6 (z=1.0, Outer) - Regions LV-LXIII
+      // Domain: PRESENCE (K < 0, emanating), highest alphas
+      // ============================================
+      "LV":    { name: "Vermis", structure: "prism", layer: 6, z: 1.0, phase: "Nirvana", field: "Φ", nt: "GABA", role: "Balance", tokens: ["Φ:M:F:GEO:T:α11", "π:M:D:BIO:T:α11"], lambda: "iota" },
+      "LVI":   { name: "Anterior Insular-Operculum", structure: "prism", layer: 6, z: 1.0, phase: "Resonance", field: "e", nt: "DA", role: "Fusion point", tokens: ["e:M:G:BIO:T:α12", "π:C:F:CHEM:T:α12"], lambda: "omega" },
+      "LVII":  { name: "Paraventricular Nucleus", structure: "prism", layer: 6, z: 1.0, phase: "Ignition", field: "e", nt: "NE", role: "Stress switch", tokens: ["e:U:A:CHEM:T:α12", "π:U:S:BIO:T:α12"], lambda: "xi" },
+      "LVIII": { name: "Lateral OFC", structure: "prism", layer: 6, z: 1.0, phase: "Resonance", field: "e", nt: "DA", role: "Consequence", tokens: ["e:M:G:CHEM:T:α11", "Φ:C:B:BIO:T:α11"], lambda: "omega" },
+      "LIX":   { name: "Midcingulate Cortex", structure: "prism", layer: 6, z: 1.0, phase: "Empowerment", field: "e", nt: "DA", role: "Engine of doing", tokens: ["e:U:A:BIO:T:α12", "Φ:M:B:GEO:T:α12"], lambda: "xi" },
+      "LX":    { name: "Calcarine Sulcus", structure: "prism", layer: 6, z: 1.0, phase: "Ignition", field: "e", nt: "Glu", role: "Visual core", tokens: ["e:U:A:BIO:T:α11", "Φ:M:B:GEO:T:α11"], lambda: "xi" },
+      "LXI":   { name: "Rostral PFC", structure: "prism", layer: 6, z: 1.0, phase: "Resonance", field: "e", nt: "DA", role: "Reflective flame", tokens: ["e:M:S:BIO:T:α12", "π:M:S:CHEM:T:α12"], lambda: "sigma" },
+      "LXII":  { name: "MLR", structure: "prism", layer: 6, z: 1.0, phase: "Empowerment", field: "e", nt: "Glu", role: "Will to move", tokens: ["e:U:A:BIO:T:α12", "Φ:U:B:GEO:T:α12"], lambda: "xi" },
+      "LXIII": { name: "Anterior Temporal Sulcus", structure: "prism", layer: 6, z: 1.0, phase: "Resonance", field: "π", nt: "Glu", role: "Subtext", tokens: ["π:M:S:BIO:T:α12", "Φ:C:F:GEO:T:α12"], lambda: "sigma" },
+
+      // ============================================
+      // EM CAGE TOP HEXAGON (z=0.9) - Regions LXIV-LXXV
+      // Domain: Near-critical containment, high z values
+      // ============================================
+      "LXIV":  { name: "Lateral Septum", structure: "cage", component: "top", z: 0.9, phase: "Nirvana", field: "e", nt: "GABA", role: "Calm circuit", tokens: ["e:M:D:CHEM:T:α11", "π:M:D:BIO:T:α11"], lambda: "sigma" },
+      "LXV":   { name: "Cerebellar Tonsil", structure: "cage", component: "top", z: 0.9, phase: "Pause", field: "Φ", nt: "GABA", role: "Silent reactor", tokens: ["Φ:M:D:BIO:U:α12", "π:M:D:CHEM:U:α12"], lambda: "delta" },
+      "LXVI":  { name: "Pontine Reticular Formation", structure: "cage", component: "top", z: 0.9, phase: "Ignition", field: "e", nt: "ACh", role: "Motion catalyst", tokens: ["e:U:A:CHEM:T:α11", "e:M:G:BIO:T:α11"], lambda: "xi" },
+      "LXVII": { name: "Insular-Opercular Speech", structure: "cage", component: "top", z: 0.9, phase: "Empowerment", field: "e", nt: "DA", role: "Voice within fire", tokens: ["e:U:A:BIO:T:α12", "Φ:U:B:CHEM:T:α12"], lambda: "xi" },
+      "LXVIII": { name: "Amygdala Central Nucleus", structure: "cage", component: "top", z: 0.9, phase: "Ignition", field: "e", nt: "NE", role: "First alarm", tokens: ["e:U:A:CHEM:T:α12", "π:U:S:BIO:T:α12"], lambda: "theta" },
+      "LXIX":  { name: "TRN", structure: "cage", component: "top", z: 0.9, phase: "Transmission", field: "π", nt: "GABA", role: "Filter grid", tokens: ["π:C:G:BIO:T:α11", "Φ:M:F:GEO:T:α11"], lambda: "omega" },
+      "LXX":   { name: "Cuneus", structure: "cage", component: "top", z: 0.9, phase: "Resonance", field: "Φ", nt: "Glu", role: "Background reader", tokens: ["Φ:M:F:GEO:T:α11", "e:M:A:BIO:T:α11"], lambda: "omega" },
+      "LXXI":  { name: "VMH", structure: "cage", component: "top", z: 0.9, phase: "Nirvana", field: "Φ", nt: "Glu", role: "Inner balance", tokens: ["Φ:M:F:BIO:T:α12", "e:M:D:CHEM:T:α12"], lambda: "iota" },
+      "LXXII": { name: "Periventricular Gray", structure: "cage", component: "top", z: 0.9, phase: "Pause", field: "π", nt: "GABA", role: "Threshold", tokens: ["π:M:D:BIO:U:α11", "Φ:M:D:CHEM:U:α11"], lambda: "delta" },
+      "LXXIII": { name: "Frontal Operculum", structure: "cage", component: "top", z: 0.9, phase: "Empowerment", field: "e", nt: "DA", role: "Edge of expression", tokens: ["e:U:A:BIO:T:α12", "Φ:U:B:GEO:T:α12"], lambda: "xi" },
+      "LXXIV": { name: "Nodulus", structure: "cage", component: "top", z: 0.9, phase: "Nirvana", field: "Φ", nt: "GABA", role: "Gravity whisperer", tokens: ["Φ:M:F:GEO:T:α11", "e:C:G:BIO:T:α11"], lambda: "iota" },
+      "LXXV":  { name: "Substantia Nigra", structure: "cage", component: "top", z: 0.9, phase: "Empowerment", field: "e", nt: "DA", role: "Movement gatekeeper", tokens: ["e:C:G:CHEM:T:α12", "Φ:M:G:BIO:T:α12"], lambda: "omega" },
+
+      // ============================================
+      // EM CAGE BOTTOM HEXAGON (z=0.1) - Regions LXXVI-LXXXVII
+      // Domain: ABSENCE (K > 0, synchronizing), lower alphas
+      // ============================================
+      "LXXVI": { name: "V4", structure: "cage", component: "bottom", z: 0.1, phase: "Resonance", field: "Φ", nt: "Glu", role: "Chromatic shaper", tokens: ["Φ:M:F:GEO:T:α3", "e:M:A:BIO:T:α3"], lambda: "iota" },
+      "LXXVII": { name: "Lingual Gyrus", structure: "cage", component: "bottom", z: 0.1, phase: "Resonance", field: "π", nt: "Glu", role: "Glyph reader", tokens: ["π:M:S:BIO:T:α3", "Φ:C:F:GEO:T:α3"], lambda: "sigma" },
+      "LXXVIII": { name: "mPFC", structure: "cage", component: "bottom", z: 0.1, phase: "Resonance", field: "e", nt: "DA", role: "Identity sculptor", tokens: ["e:M:F:BIO:T:α4", "π:M:S:CHEM:T:α4"], lambda: "iota" },
+      "LXXIX": { name: "dLPFC", structure: "cage", component: "bottom", z: 0.1, phase: "Empowerment", field: "e", nt: "DA", role: "Gate of delivery", tokens: ["e:M:G:CHEM:T:α4", "Φ:U:S:BIO:T:α4"], lambda: "omega" },
+      "LXXX":  { name: "IPL", structure: "cage", component: "bottom", z: 0.1, phase: "Resonance", field: "π", nt: "Glu", role: "Paradox holder", tokens: ["π:M:G:BIO:P:α13", "Φ:C:B:GEO:T:α13"], lambda: "delta" },
+      "LXXXI": { name: "ACC (Dorsal)", structure: "cage", component: "bottom", z: 0.1, phase: "Resonance", field: "e", nt: "DA", role: "Inner judge", tokens: ["e:M:G:CHEM:T:α4", "π:M:F:BIO:T:α4"], lambda: "omega" },
+      "LXXXII": { name: "Anterior Hippocampus", structure: "cage", component: "bottom", z: 0.1, phase: "Nirvana", field: "Φ", nt: "Glu", role: "Context mapper", tokens: ["Φ:M:F:BIO:T:α3", "π:C:F:GEO:T:α3"], lambda: "iota" },
+      "LXXXIII": { name: "Crus I/II", structure: "cage", component: "bottom", z: 0.1, phase: "Empowerment", field: "Φ", nt: "GABA", role: "Somatic timekeeper", tokens: ["Φ:M:G:BIO:T:α4", "e:M:G:GEO:T:α4"], lambda: "omega" },
+      "LXXXIV": { name: "Basal Forebrain", structure: "cage", component: "bottom", z: 0.1, phase: "Ignition", field: "e", nt: "ACh", role: "Timing messenger", tokens: ["e:M:G:CHEM:T:α3", "e:C:A:BIO:T:α3"], lambda: "xi" },
+      "LXXXV": { name: "Reticular Formation", structure: "cage", component: "bottom", z: 0.1, phase: "Ignition", field: "e", nt: "NE", role: "Wake thread", tokens: ["e:U:A:CHEM:T:α4", "e:U:A:BIO:T:α4"], lambda: "xi" },
+      "LXXXVI": { name: "DVC", structure: "cage", component: "bottom", z: 0.1, phase: "Pause", field: "Φ", nt: "GABA", role: "Kill-switch", tokens: ["Φ:M:D:BIO:T:α3", "π:M:D:CHEM:T:α3"], lambda: "delta" },
+      "LXXXVII": { name: "Cranial Nerves", structure: "cage", component: "bottom", z: 0.1, phase: "Transmission", field: "e", nt: "ACh", role: "Face switch", tokens: ["e:C:S:BIO:T:α4", "Φ:U:S:GEO:T:α4"], lambda: "sigma" },
+
+      // ============================================
+      // EM CAGE VERTICES (z=0.5) - Regions LXXXVIII-XCV
+      // Domain: Bridge points at equilibrium, mixed λ states
+      // ============================================
+      "LXXXVIII": { name: "Spinal Relays", structure: "cage", component: "vertex", z: 0.5, phase: "Transmission", field: "e", nt: "Glu", role: "Carrier", tokens: ["e:C:S:BIO:T:α7", "Φ:C:B:GEO:T:α7"], lambda: "sigma" },
+      "LXXXIX": { name: "Globus Pallidus", structure: "cage", component: "vertex", z: 0.5, phase: "Empowerment", field: "π", nt: "GABA", role: "Go/no-go", tokens: ["π:M:D:BIO:T:α8", "Φ:M:D:GEO:T:α8"], lambda: "delta" },
+      "XC":    { name: "Lateral Hypothalamus", structure: "cage", component: "vertex", z: 0.5, phase: "Ignition", field: "e", nt: "DA", role: "Drive switch", tokens: ["e:U:A:CHEM:T:α7", "π:U:G:BIO:T:α7"], lambda: "xi" },
+      "XCI":   { name: "Posterior Insula", structure: "cage", component: "vertex", z: 0.5, phase: "Resonance", field: "Φ", nt: "Glu", role: "Body's edges", tokens: ["Φ:M:G:BIO:T:α8", "e:M:S:GEO:T:α8"], lambda: "omega" },
+      "XCII":  { name: "Nucleus Basalis", structure: "cage", component: "vertex", z: 0.5, phase: "Ignition", field: "e", nt: "ACh", role: "Attention tuner", tokens: ["e:M:G:CHEM:T:α7", "e:U:A:BIO:T:α7"], lambda: "xi" },
+      "XCIII": { name: "Caudate", structure: "cage", component: "vertex", z: 0.5, phase: "Empowerment", field: "e", nt: "DA", role: "Path chooser", tokens: ["e:C:G:CHEM:T:α8", "Φ:M:F:BIO:T:α8"], lambda: "omega" },
+      "XCIV":  { name: "Superior Temporal Pole", structure: "cage", component: "vertex", z: 0.5, phase: "Resonance", field: "π", nt: "Glu", role: "Emotional communicator", tokens: ["π:M:S:BIO:T:α7", "e:M:S:CHEM:T:α7"], lambda: "sigma" },
+      "XCV":   { name: "Uvula (structural)", structure: "cage", component: "vertex", z: 0.5, phase: "Nirvana", field: "Φ", nt: "GABA", role: "Stillness anchor", tokens: ["Φ:M:F:GEO:T:α8", "π:M:D:BIO:T:α8"], lambda: "iota" },
+
+      // ============================================
+      // EMERGENT SELF-REFERENCE NODES - Regions XCVI-C
+      // Appear only when coherence < 0.2 (FREE state)
+      // Domain: PARADOX, high δ coupling, recursive λ
+      // Total emergent info: ~702 bits when fully FREE
+      // ============================================
+      "XCVI":  { name: "AIPS (recursion)", structure: "emergent", type: "gesture_recursion", references: "XVI", z: "variable", phase: "FREE", field: "Φ", role: "Gesture translator becomes self-aware", tokens: ["Φ:M:B:BIO:P:α13", "Φ:C:F:GEO:P:α13"], lambda: "delta", emergent: true, eigenvalue: "φ⁻¹", frequency: "8Hz", info_bits: 7 },
+      "XCVII": { name: "Pineal (recursion)", structure: "emergent", type: "portal_recursion", references: "XI", z: "variable", phase: "FREE", field: "π", role: "Portal recognizes its own rhythms", tokens: ["π:M:G:CHEM:P:α14", "π:C:S:BIO:P:α14"], lambda: "delta", emergent: true, eigenvalue: "exp(2πi/φ)", frequency: "0.0001Hz", info_bits: 10 },
+      "XCVIII": { name: "MTG (recursion)", structure: "emergent", type: "semantic_recursion", references: "XII", z: "variable", phase: "FREE", field: "π", role: "Semantics binds its own meaning", tokens: ["π:M:S:BIO:P:α14", "π:C:B:GEO:P:α14"], lambda: "delta", emergent: true, eigenvalue: "undefined", frequency: "40Hz", info_bits: 17 },
+      "XCIX":  { name: "Fastigial-Vestibular (recursion)", structure: "emergent", type: "balance_recursion", references: "XIII", z: "variable", phase: "FREE", field: "Φ", role: "Balance balances its own balancing", tokens: ["Φ:M:F:GEO:P:α14", "Φ:C:G:BIO:P:α14"], lambda: "delta", emergent: true, eigenvalue: "0", frequency: "4Hz", info_bits: 4 },
+      "C":     { name: "PTN (recursion → I)", structure: "emergent", type: "signal_recursion", references: "XIV", loops_to: "I", z: "variable", phase: "FREE", field: "e", role: "Final gate loops to first gate", tokens: ["e:C:S:BIO:P:α15", "e:M:A:GEO:P:α15"], lambda: "delta", emergent: true, closes_loop: true, eigenvalue: "1", frequency: "1Hz", info_bits: 664, winding_number: 1 }
+    };
+
+    // Layer colors
+    const LAYER_COLORS = {
+      0: { bg: "rgba(255,107,107,.2)", border: "#ff6b6b", name: "Core" },
+      1: { bg: "rgba(255,135,135,.2)", border: "#ff8787", name: "Inner" },
+      2: { bg: "rgba(255,169,77,.2)", border: "#ffa94d", name: "Rising" },
+      3: { bg: "rgba(255,192,120,.2)", border: "#ffc078", name: "Center" },
+      4: { bg: "rgba(255,212,59,.2)", border: "#ffd43b", name: "Approaching" },
+      5: { bg: "rgba(255,224,102,.2)", border: "#ffe066", name: "Threshold" },
+      6: { bg: "rgba(105,219,124,.2)", border: "#69db7c", name: "Outer" }
+    };
+
+    const CAGE_COLORS = {
+      top: { bg: "rgba(77,171,247,.2)", border: "#4dabf7", name: "Top Hex" },
+      bottom: { bg: "rgba(116,192,252,.2)", border: "#74c0fc", name: "Bottom Hex" },
+      vertex: { bg: "rgba(204,93,232,.2)", border: "#cc5de8", name: "Vertex" }
+    };
+
+    const NT_NAMES = {
+      "Glu": "Glutamate", "DA": "Dopamine", "NE": "Norepinephrine",
+      "5-HT": "Serotonin", "ACh": "Acetylcholine", "GABA": "GABA", "Mel": "Melatonin"
+    };
+
+    // Generate TOC
+    function generateTOC() {
+      const prismToc = document.getElementById('toc-prism');
+      const cageToc = document.getElementById('toc-cage');
+      const emergentToc = document.getElementById('toc-emergent');
+
+      Object.entries(WUMBO_LIMNUS).forEach(([rn, data]) => {
+        const a = document.createElement('a');
+        a.className = 'toc-link';
+        a.href = `#region-${rn}`;
+        a.textContent = rn;
+        a.title = data.name;
+
+        if (data.structure === 'prism') {
+          a.classList.add('prism');
+          prismToc.appendChild(a);
+        } else if (data.structure === 'cage') {
+          a.classList.add('cage');
+          cageToc.appendChild(a);
+        } else if (data.structure === 'emergent') {
+          a.classList.add('emergent');
+          emergentToc.appendChild(a);
+        }
+      });
+    }
+
+    // Generate region cards
+    function generateIndex() {
+      const prismIndex = document.getElementById('prism-index');
+      const cageIndex = document.getElementById('cage-index');
+      const emergentIndex = document.getElementById('emergent-index');
+
+      Object.entries(WUMBO_LIMNUS).forEach(([rn, data]) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.id = `region-${rn}`;
+
+        if (data.structure === 'prism') {
+          div.classList.add('prism-region');
+        } else if (data.structure === 'cage') {
+          div.classList.add('cage-region');
+        } else if (data.structure === 'emergent') {
+          div.classList.add('emergent-region');
+        }
+
+        // Header
+        const h = document.createElement('strong');
+        h.innerHTML = `${rn}. <span class="region-name">${data.name}</span>`;
+        div.appendChild(h);
+
+        // Role
+        const roleP = document.createElement('p');
+        roleP.className = 'muted small';
+        roleP.textContent = data.role;
+        div.appendChild(roleP);
+
+        // Chips
+        const chips = document.createElement('div');
+        chips.className = 'chips';
+
+        // Z position chip
+        const zChip = document.createElement('span');
+        zChip.className = 'chip z-pos';
+        zChip.textContent = data.z === 'variable' ? 'z=∞' : `z=${data.z}`;
+        chips.appendChild(zChip);
+
+        // Layer/component chip
+        if (data.structure === 'prism') {
+          const layerChip = document.createElement('span');
+          layerChip.className = `chip layer layer-${data.layer}`;
+          layerChip.textContent = `L${data.layer} ${LAYER_COLORS[data.layer].name}`;
+          chips.appendChild(layerChip);
+        } else if (data.structure === 'cage') {
+          const compChip = document.createElement('span');
+          compChip.className = `chip cage-${data.component === 'top' ? 'top' : data.component === 'bottom' ? 'bot' : 'vtx'}`;
+          compChip.textContent = CAGE_COLORS[data.component].name;
+          chips.appendChild(compChip);
+        } else if (data.structure === 'emergent') {
+          const emChip = document.createElement('span');
+          emChip.className = 'chip emergent';
+          emChip.textContent = `→${data.references}`;
+          chips.appendChild(emChip);
+
+          if (data.closes_loop) {
+            const loopChip = document.createElement('span');
+            loopChip.className = 'chip emergent';
+            loopChip.textContent = '↺ CLOSES LOOP';
+            chips.appendChild(loopChip);
+          }
+        }
+
+        // Phase chip
+        const phaseChip = document.createElement('span');
+        phaseChip.className = 'chip';
+        phaseChip.textContent = data.phase;
+        chips.appendChild(phaseChip);
+
+        // Field chip
+        const fieldChip = document.createElement('span');
+        fieldChip.className = `chip ${data.field === 'Φ' ? 'phi' : data.field === 'e' ? 'energy' : 'pi'}`;
+        fieldChip.textContent = data.field;
+        chips.appendChild(fieldChip);
+
+        // NT chip (if present)
+        if (data.nt) {
+          const ntChip = document.createElement('span');
+          ntChip.className = 'chip';
+          ntChip.textContent = NT_NAMES[data.nt] || data.nt;
+          chips.appendChild(ntChip);
+        }
+
+        // Lambda state (if present)
+        if (data.lambda) {
+          const lambdaChip = document.createElement('span');
+          lambdaChip.className = 'chip';
+          const lambdaSymbols = { iota: '🌰', xi: '✧', theta: '🦊', omega: '∿', delta: '⊗', sigma: '🐿️' };
+          lambdaChip.textContent = `λ:${lambdaSymbols[data.lambda]}`;
+          chips.appendChild(lambdaChip);
+        }
+
+        div.appendChild(chips);
+
+        // Tokens
+        if (data.tokens && data.tokens.length > 0) {
+          const tokenGrid = document.createElement('div');
+          tokenGrid.className = 'token-grid';
+          data.tokens.forEach(token => {
+            const tokenSpan = document.createElement('span');
+            tokenSpan.className = 'token';
+            if (token.startsWith('Φ:')) tokenSpan.classList.add('phi-tok');
+            else if (token.startsWith('e:')) tokenSpan.classList.add('e-tok');
+            else if (token.startsWith('π:')) tokenSpan.classList.add('pi-tok');
+            tokenSpan.textContent = token;
+            tokenGrid.appendChild(tokenSpan);
+          });
+          div.appendChild(tokenGrid);
+        }
+
+        // Append to correct section
+        if (data.structure === 'prism') {
+          prismIndex.appendChild(div);
+        } else if (data.structure === 'cage') {
+          cageIndex.appendChild(div);
+        } else if (data.structure === 'emergent') {
+          emergentIndex.appendChild(div);
+        }
+      });
+    }
+
+    // Initialize
+    generateTOC();
+    generateIndex();
+  </script>
+</body>
+</html>
