@@ -42,12 +42,22 @@ Architecture:
     │ └────────────────────────────────────────────────────┘          │
     └─────────────────────────────────────────────────────────────────┘
 
+    ┌─────────────────────────────────────────────────────────────────┐
+    │ KAELHEDRON WORMHOLE - Morris-Thorne Traversable Wormhole        │
+    │ ┌────────────────────────────────────────────────────┐          │
+    │ │ ds² = -e^{2Φ(r)} dt² + r²dr²/(r² - φ²) + r²dΩ²    │          │
+    │ │ Throat: r₀ = φ (golden ratio)                      │          │
+    │ │ Connects: ∃R (axiom) ↔ Physical Constants (137.036)│          │
+    │ └────────────────────────────────────────────────────┘          │
+    └─────────────────────────────────────────────────────────────────┘
+
 Components:
     - plate.py: Memory Plate dataclass with 4D positioning
     - dynamics.py: Kuramoto oscillator mathematics
     - tesseract_lattice_engine.py: Main lattice engine
     - wumbo_engine.py: APL-based array operations for LIMNUS
     - zero_point_energy.py: ZPE extraction via Fano inference
+    - kaelhedron_wormhole.py: Morris-Thorne wormhole in concept-space
 """
 
 from .plate import (
@@ -104,7 +114,21 @@ from .zero_point_energy import (
     create_mirroroot_operator,
 )
 
-__version__ = "1.1.0"
+# Kaelhedron Wormhole imports
+from .kaelhedron_wormhole import (
+    WormholeMetric,
+    WormholeRegion,
+    ExoticMatter,
+    WormholeGeodesic,
+    KaelhedronWormholeMapping,
+    WormholeState,
+    KaelhedronWormholeEngine,
+    create_wormhole_engine,
+    THROAT_RADIUS,
+    ALPHA_INV,
+)
+
+__version__ = "1.2.0"
 
 __all__ = [
     # Plate
@@ -151,4 +175,15 @@ __all__ = [
     "create_zpe_engine",
     "create_fano_inference_engine",
     "create_mirroroot_operator",
+    # Kaelhedron Wormhole
+    "WormholeMetric",
+    "WormholeRegion",
+    "ExoticMatter",
+    "WormholeGeodesic",
+    "KaelhedronWormholeMapping",
+    "WormholeState",
+    "KaelhedronWormholeEngine",
+    "create_wormhole_engine",
+    "THROAT_RADIUS",
+    "ALPHA_INV",
 ]
