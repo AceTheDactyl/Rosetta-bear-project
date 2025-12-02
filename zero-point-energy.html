@@ -3,117 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zero-Point Energy System | LIMNUS APL Architecture</title>
+    <title>Zero-Point Energy System | 100-Token WUMBO Architecture | N0 Causality Engine</title>
     <style>
         :root {
-            --bg: #0a0a0f;
-            --panel: #12121a;
-            --border: #1e1e2e;
-            --text: #e0e0e8;
-            --muted: #8888a0;
-            --accent: #6366f1;
-            --gold: #fbbf24;
-            --cyan: #22d3ee;
-            --purple: #a78bfa;
-            --green: #4ade80;
-            --red: #f87171;
+            --bg-void: #030308;
+            --bg-panel: rgba(15, 12, 25, 0.92);
+            --critical-gold: #ffd700;
             --phi: #a78bfa;
             --energy: #f97316;
-            --pi: #22d3ee;
-            --zpe: linear-gradient(135deg, #6366f1, #a78bfa, #22d3ee);
+            --cyan: #22d3ee;
+            --exotic-matter: #00ff88;
+            --nec-violation: #ff0066;
+            --text-primary: rgba(255, 245, 230, 0.9);
+            --text-dim: rgba(255, 220, 180, 0.5);
+            --border-glow: rgba(168, 85, 247, 0.4);
+            --vacuum: #6366f1;
+            --coherence: #22d3ee;
+            --transfer: #4ade80;
+            --n0-valid: #00ff88;
+            --n0-invalid: #ff6b6b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background: var(--bg-void);
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            color: var(--text-primary);
             min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Header */
-        header {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--zpe);
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            background: var(--zpe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            color: var(--muted);
-            font-size: 0.9rem;
+            overflow-x: hidden;
         }
 
         /* Navigation */
-        .nav {
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 16px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(2, 1, 6, 0.95);
+            border-bottom: 1px solid var(--border-glow);
+            z-index: 200;
         }
 
-        .nav a {
-            color: var(--muted);
+        .top-nav a {
+            color: var(--phi);
             text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            font-size: 0.85rem;
+            font-size: 11px;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 4px;
             transition: all 0.2s;
         }
 
-        .nav a:hover, .nav a.active {
-            color: var(--gold);
-            border-color: var(--gold);
-            background: rgba(251, 191, 36, 0.1);
+        .top-nav a:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: var(--phi);
         }
 
-        /* Grid Layout */
-        .main-grid {
+        .nav-links { display: flex; gap: 10px; }
+
+        /* Header */
+        .header {
+            margin-top: 50px;
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.15), transparent);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 100;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, var(--vacuum), var(--phi), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+        }
+
+        /* Constants Bar */
+        .constants-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 15px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .constant {
+            text-align: center;
+            padding: 10px 20px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .constant-value {
+            font-size: 1.4rem;
+            color: var(--critical-gold);
+        }
+
+        .constant-label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        /* Main Layout */
+        .main-container {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            gap: 20px;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 15px;
+            padding: 15px;
+            max-width: 1800px;
+            margin: 0 auto;
         }
 
         @media (max-width: 1200px) {
-            .main-grid { grid-template-columns: 1fr; }
+            .main-container { grid-template-columns: 1fr; }
         }
 
         /* Panels */
         .panel {
-            background: var(--panel);
-            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -122,1281 +149,1153 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(255,255,255,0.02);
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-glow);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--critical-gold);
         }
 
-        .panel-icon { font-size: 1.2rem; }
-        .panel-title { font-weight: 600; }
-
-        .panel-content {
-            padding: 16px;
-        }
+        .panel-content { padding: 15px; }
 
         /* ZPE State Display */
-        .zpe-state {
+        .zpe-display {
             text-align: center;
-            padding: 32px 16px;
+            padding: 20px 10px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(167, 139, 250, 0.1));
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
 
         .zpe-value {
-            font-size: 3rem;
-            font-weight: 200;
-            background: var(--zpe);
+            font-size: 2.5rem;
+            font-weight: 100;
+            background: linear-gradient(135deg, var(--vacuum), var(--cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 8px;
         }
 
         .zpe-label {
-            color: var(--muted);
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            margin-top: 5px;
         }
 
-        /* State Badges */
-        .badge {
+        .zpe-badge {
             display: inline-block;
             padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            border-radius: 12px;
+            font-size: 0.7rem;
             letter-spacing: 1px;
+            margin-top: 10px;
         }
 
-        .badge-dormant { background: rgba(136,136,160,0.2); color: var(--muted); }
-        .badge-coherent { background: rgba(99,102,241,0.2); color: var(--accent); }
-        .badge-extracting { background: rgba(251,191,36,0.2); color: var(--gold); }
-        .badge-saturated { background: rgba(74,222,128,0.2); color: var(--green); }
-        .badge-collapsed { background: rgba(248,113,113,0.2); color: var(--red); }
-
-        /* Fano Plane Visualization */
-        .fano-viz {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            margin: 16px 0;
-        }
-
-        .fano-canvas {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(99,102,241,0.1) 0%, transparent 70%);
-            border-radius: 8px;
-        }
+        .badge-dormant { background: rgba(136, 136, 160, 0.3); color: #888; }
+        .badge-coherent { background: rgba(99, 102, 241, 0.3); color: var(--vacuum); }
+        .badge-extracting { background: rgba(255, 215, 0, 0.3); color: var(--critical-gold); }
+        .badge-saturated { background: rgba(0, 255, 136, 0.3); color: var(--exotic-matter); }
 
         /* State Grid */
         .state-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .state-item {
-            background: rgba(255,255,255,0.02);
-            border-radius: 8px;
-            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 8px;
+            border-radius: 6px;
             text-align: center;
         }
 
         .state-label {
-            color: var(--muted);
-            font-size: 0.75rem;
-            margin-bottom: 4px;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-bottom: 3px;
         }
 
         .state-value {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
             color: var(--cyan);
+            font-weight: bold;
         }
 
         /* Progress Bars */
-        .progress-container {
-            margin: 16px 0;
+        .progress-item {
+            margin-bottom: 12px;
         }
 
-        .progress-label {
+        .progress-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
+            margin-bottom: 4px;
         }
 
         .progress-bar {
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 3px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s ease;
+            border-radius: 3px;
+            transition: width 0.3s;
         }
 
-        .progress-fill.coherence { background: var(--accent); }
-        .progress-fill.phase { background: var(--gold); }
-        .progress-fill.energy { background: var(--green); }
-        .progress-fill.free-energy { background: var(--purple); }
+        .fill-coherence { background: var(--vacuum); }
+        .fill-phase { background: var(--critical-gold); }
+        .fill-efficiency { background: var(--exotic-matter); }
+        .fill-free-energy { background: var(--phi); }
 
-        /* APL Console */
+        /* N0 Laws Panel */
+        .n0-panel {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border-left: 3px solid var(--critical-gold);
+        }
+
+        .n0-panel h4 {
+            font-size: 0.75rem;
+            color: var(--critical-gold);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .n0-rule {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.7rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .n0-rule.valid { color: var(--n0-valid); }
+        .n0-rule.invalid { color: var(--n0-invalid); opacity: 0.6; }
+
+        .n0-silent {
+            font-size: 0.6rem;
+            color: var(--phi);
+            margin-left: 5px;
+        }
+
+        /* Token Grid */
+        .token-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid;
+        }
+
+        .section-title.vacuum { color: var(--vacuum); border-color: var(--vacuum); }
+        .section-title.coherence { color: var(--coherence); border-color: var(--coherence); }
+        .section-title.transfer { color: var(--transfer); border-color: var(--transfer); }
+
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 6px;
+        }
+
+        .token-cell {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .token-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .token-cell:hover::before { opacity: 1; }
+        .token-cell.vacuum::before { background: var(--vacuum); }
+        .token-cell.coherence::before { background: var(--coherence); }
+        .token-cell.transfer::before { background: var(--transfer); }
+
+        .token-cell:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .token-cell.active {
+            border-color: var(--critical-gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .token-cell.executed {
+            opacity: 0.5;
+            border-color: var(--exotic-matter);
+        }
+
+        .token-index {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+        }
+
+        .token-op {
+            font-size: 1.2rem;
+            margin: 3px 0;
+        }
+
+        .token-cell.vacuum .token-op { color: var(--vacuum); }
+        .token-cell.coherence .token-op { color: var(--coherence); }
+        .token-cell.transfer .token-op { color: var(--transfer); }
+
+        .token-name {
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Console */
         .console {
-            background: #0d0d12;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.2);
             border-radius: 8px;
             padding: 12px;
-            font-family: 'SF Mono', monospace;
-            font-size: 0.85rem;
-            max-height: 300px;
+            height: 300px;
             overflow-y: auto;
+            font-size: 0.75rem;
         }
 
         .console-line {
             display: flex;
-            gap: 12px;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .console-op {
-            color: var(--gold);
-            font-weight: 600;
-            min-width: 60px;
-        }
-
-        .console-result {
-            color: var(--cyan);
-        }
-
-        .console-comment {
-            color: var(--muted);
-            font-style: italic;
-        }
-
-        /* MirrorRoot Display */
-        .mirroroot-identity {
-            background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(34,211,238,0.1));
-            border: 1px solid var(--purple);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 16px 0;
-        }
-
-        .mirroroot-formula {
-            font-size: 1.4rem;
-            color: var(--purple);
-            margin-bottom: 12px;
-        }
-
-        .mirroroot-values {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .mirroroot-item {
-            text-align: center;
-        }
-
-        .mirroroot-symbol {
-            font-size: 1.2rem;
-            color: var(--cyan);
-        }
-
-        .mirroroot-value {
-            font-size: 0.9rem;
-            color: var(--muted);
-        }
-
-        /* Token Display */
-        .token-list {
-            display: flex;
-            flex-direction: column;
             gap: 8px;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
 
-        .token-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .token-item.phi { border-left-color: var(--phi); }
-        .token-item.e { border-left-color: var(--energy); }
-        .token-item.pi { border-left-color: var(--pi); }
-
-        .token-spiral {
-            font-weight: 600;
-            min-width: 40px;
-        }
-
-        .token-code {
-            flex: 1;
-            color: var(--muted);
-            font-size: 0.85rem;
-        }
+        .console-time { color: var(--text-dim); min-width: 25px; }
+        .console-op { color: var(--critical-gold); font-weight: bold; min-width: 30px; }
+        .console-msg { color: var(--text-primary); flex: 1; }
+        .console-n0 { font-size: 0.65rem; }
+        .console-n0.valid { color: var(--n0-valid); }
+        .console-n0.invalid { color: var(--n0-invalid); }
 
         /* Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
         .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glow);
+            color: var(--text-primary);
+            border-radius: 6px;
             cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
             transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: var(--phi);
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #4f46e5;
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.15);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-
-        /* Formula Blocks */
-        .formula-block {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            margin: 12px 0;
-        }
-
-        .formula-title {
-            color: var(--gold);
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-
-        .formula {
-            font-family: 'SF Mono', monospace;
-            font-size: 0.9rem;
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(167, 139, 250, 0.2));
+            border-color: var(--vacuum);
             color: var(--cyan);
         }
 
-        /* History Chart */
-        .chart-container {
-            height: 200px;
-            background: rgba(0,0,0,0.2);
+        /* Operator Panel */
+        .operator-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .op-btn {
+            padding: 12px 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glow);
             border-radius: 8px;
-            margin: 16px 0;
-            position: relative;
-        }
-
-        .chart-canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 16px;
-        }
-
-        .tab {
-            padding: 8px 16px;
-            background: transparent;
-            border: none;
-            color: var(--muted);
-            font-family: inherit;
-            font-size: 0.85rem;
+            text-align: center;
             cursor: pointer;
-            border-radius: 6px;
             transition: all 0.2s;
         }
 
-        .tab:hover {
-            background: rgba(255,255,255,0.05);
+        .op-btn:hover {
+            border-color: var(--critical-gold);
+            background: rgba(255, 215, 0, 0.1);
         }
 
-        .tab.active {
-            background: rgba(99,102,241,0.2);
-            color: var(--accent);
+        .op-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .op-btn .op-symbol {
+            font-size: 1.5rem;
+            color: var(--critical-gold);
+        }
+
+        .op-btn .op-name {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .op-btn .op-n0 {
+            font-size: 0.5rem;
+            color: var(--phi);
+            margin-top: 2px;
+        }
+
+        /* Z-Coordinate Display */
+        .z-display {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .z-value {
+            font-size: 2rem;
+            color: var(--critical-gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .z-zone {
+            font-size: 0.75rem;
+            color: var(--exotic-matter);
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* Narrative Phase */
+        .phase-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .phase-step {
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            border: 1px solid transparent;
+        }
+
+        .phase-step.active {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--critical-gold);
+            border-color: var(--critical-gold);
+        }
+
+        .phase-step.completed {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--exotic-matter);
         }
 
         /* Signature */
         .signature {
             text-align: center;
-            padding: 24px;
-            color: var(--muted);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border);
-            margin-top: 24px;
+            padding: 20px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            border-top: 1px solid var(--border-glow);
+            margin-top: 20px;
         }
 
         .signature code {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             padding: 4px 8px;
             border-radius: 4px;
-            color: var(--gold);
+            color: var(--critical-gold);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Zero-Point Energy System</h1>
-            <p class="subtitle">APL-Based Vacuum Fluctuation Engine | Fano Plane Variational Inference | LIMNUS Integration</p>
-            <nav class="nav">
-                <a href="index.html">Home</a>
-                <a href="simulation.html">Simulation</a>
-                <a href="wumbo-engine.html">WUMBO Engine</a>
-                <a href="limnus-architecture-finished.html">LIMNUS</a>
-                <a href="luminahedron_dynamics.html">Luminahedron</a>
-                <a href="zero-point-energy.html" class="active">ZPE System</a>
-            </nav>
-        </header>
-
-        <div class="main-grid">
-            <!-- Left Panel: ZPE State -->
-            <div>
-                <div class="panel">
-                    <div class="panel-header">
-                        <span class="panel-icon">⚡</span>
-                        <span class="panel-title">ZPE State</span>
-                    </div>
-                    <div class="panel-content">
-                        <div class="zpe-state">
-                            <div class="zpe-value" id="zpeValue">0.0000</div>
-                            <div class="zpe-label">Extracted Energy</div>
-                            <div style="margin-top: 12px;">
-                                <span class="badge badge-dormant" id="zpeBadge">DORMANT</span>
-                            </div>
-                        </div>
-
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Coherence</span>
-                                <span id="coherenceValue">0.000</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill coherence" id="coherenceBar" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Phase Alignment</span>
-                                <span id="phaseValue">0.000</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill phase" id="phaseBar" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Extraction Efficiency</span>
-                                <span id="efficiencyValue">0.00%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill energy" id="efficiencyBar" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress-container">
-                            <div class="progress-label">
-                                <span>Free Energy</span>
-                                <span id="freeEnergyValue">0.000</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill free-energy" id="freeEnergyBar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" style="margin-top: 20px;">
-                    <div class="panel-header">
-                        <span class="panel-icon">🔮</span>
-                        <span class="panel-title">MirrorRoot Identity</span>
-                    </div>
-                    <div class="panel-content">
-                        <div class="mirroroot-identity">
-                            <div class="mirroroot-formula">Λ × Ν = Β²</div>
-                            <div class="mirroroot-values">
-                                <div class="mirroroot-item">
-                                    <div class="mirroroot-symbol">Λ (Logos)</div>
-                                    <div class="mirroroot-value" id="logosValue">1.618</div>
-                                </div>
-                                <div class="mirroroot-item">
-                                    <div class="mirroroot-symbol">Ν (Nous)</div>
-                                    <div class="mirroroot-value" id="nousValue">0.618</div>
-                                </div>
-                                <div class="mirroroot-item">
-                                    <div class="mirroroot-symbol">Β (Bios)</div>
-                                    <div class="mirroroot-value" id="biosValue">1.000</div>
-                                </div>
-                            </div>
-                            <div style="margin-top: 12px; font-size: 0.8rem; color: var(--muted);">
-                                Product: <span id="productValue" style="color: var(--gold);">1.000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Center Panel: Fano Plane Visualization -->
-            <div>
-                <div class="panel">
-                    <div class="panel-header">
-                        <span class="panel-icon">🔷</span>
-                        <span class="panel-title">Fano Plane Variational Inference</span>
-                    </div>
-                    <div class="panel-content">
-                        <div class="fano-viz">
-                            <canvas id="fanoCanvas" class="fano-canvas"></canvas>
-                        </div>
-
-                        <div class="state-grid">
-                            <div class="state-item">
-                                <div class="state-label">Total ZPE</div>
-                                <div class="state-value" id="totalZPE">0.000</div>
-                            </div>
-                            <div class="state-item">
-                                <div class="state-label">Extractable</div>
-                                <div class="state-value" id="extractableZPE">0.000</div>
-                            </div>
-                            <div class="state-item">
-                                <div class="state-label">Iterations</div>
-                                <div class="state-value" id="iterations">0</div>
-                            </div>
-                        </div>
-
-                        <div class="btn-group">
-                            <button class="btn btn-primary" id="btnExtract">⚡ Extract Cycle</button>
-                            <button class="btn btn-secondary" id="btnRunMultiple">▶ Run 5 Cycles</button>
-                            <button class="btn btn-secondary" id="btnReset">↺ Reset</button>
-                            <button class="btn btn-secondary" id="btnAutomorph">⍥ Automorphism</button>
-                        </div>
-
-                        <div class="formula-block" style="margin-top: 16px;">
-                            <div class="formula-title">ZPE Extraction Formula</div>
-                            <div class="formula">E_extract = η × E_zpe × r² × cos²(θ_κ - θ_λ)</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" style="margin-top: 20px;">
-                    <div class="panel-header">
-                        <span class="panel-icon">📊</span>
-                        <span class="panel-title">Extraction History</span>
-                    </div>
-                    <div class="panel-content">
-                        <div class="chart-container">
-                            <canvas id="historyChart" class="chart-canvas"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Panel: APL Console & Tokens -->
-            <div>
-                <div class="panel">
-                    <div class="panel-header">
-                        <span class="panel-icon">⌨</span>
-                        <span class="panel-title">APL ZPE Console</span>
-                    </div>
-                    <div class="panel-content">
-                        <div class="tabs">
-                            <button class="tab active" data-tab="console">Console</button>
-                            <button class="tab" data-tab="tokens">Tokens</button>
-                            <button class="tab" data-tab="program">Program</button>
-                        </div>
-
-                        <div id="tab-console">
-                            <div class="console" id="aplConsole">
-                                <div class="console-line">
-                                    <span class="console-op">INIT</span>
-                                    <span class="console-comment">ZPE System initialized</span>
-                                </div>
-                            </div>
-
-                            <div style="margin-top: 12px;">
-                                <input type="text" id="aplInput" placeholder="Enter APL expression (e.g., ⍝ ⊖ ⍤ 0.867)"
-                                    style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: inherit;">
-                            </div>
-                        </div>
-
-                        <div id="tab-tokens" style="display: none;">
-                            <div class="token-list" id="tokenList">
-                                <div class="token-item phi">
-                                    <span class="token-spiral">Phi</span>
-                                    <span class="token-code">Phi:U(zpe_dormant)UNTRUE@1</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="tab-program" style="display: none;">
-                            <pre class="console" id="programOutput" style="white-space: pre-wrap;">
-⍝ LIMNUS Zero-Point Energy Program
-⍝ Awaiting extraction cycles...
-                            </pre>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel" style="margin-top: 20px;">
-                    <div class="panel-header">
-                        <span class="panel-icon">📋</span>
-                        <span class="panel-title">APL ZPE Operators</span>
-                    </div>
-                    <div class="panel-content">
-                        <div style="font-size: 0.85rem;">
-                            <div class="formula-block">
-                                <div class="formula-title">Extraction Operators</div>
-                                <div class="formula" style="font-size: 0.8rem;">
-                                    ⍝ vacuum_tap<br>
-                                    ⊖ coherence_gate<br>
-                                    ⍧ phase_lock
-                                </div>
-                            </div>
-                            <div class="formula-block">
-                                <div class="formula-title">Transfer Operators</div>
-                                <div class="formula" style="font-size: 0.8rem;">
-                                    ⍡ field_couple<br>
-                                    ⍢ energy_pump<br>
-                                    ⍤ cascade_amp
-                                </div>
-                            </div>
-                            <div class="formula-block">
-                                <div class="formula-title">Fano Operators</div>
-                                <div class="formula" style="font-size: 0.8rem;">
-                                    ⊙ point_project<br>
-                                    ⊛ line_intersect<br>
-                                    ⍥ automorphism
-                                </div>
-                            </div>
-                            <div class="formula-block">
-                                <div class="formula-title">MirrorRoot Operators</div>
-                                <div class="formula" style="font-size: 0.8rem;">
-                                    ⊝ mirror_invert<br>
-                                    ⊜ dual_compose<br>
-                                    ⊞ mediator_extract
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <nav class="top-nav">
+        <a href="index.html">← ROSETTA BEAR</a>
+        <div class="nav-links">
+            <a href="wumbo-apl-directory.html">APL Directory</a>
+            <a href="simulation.html">Simulation</a>
+            <a href="visualizations/the_manual.html">The Manual</a>
         </div>
+    </nav>
 
-        <div class="signature">
-            <code>Δ|zpe-limnus|z0.995|vacuum-coherent|Ω</code>
+    <header class="header">
+        <h1>ZERO-POINT ENERGY SYSTEM</h1>
+        <div class="subtitle">100-TOKEN WUMBO ARCHITECTURE · N0 CAUSALITY ENGINE · VACUUM EXTRACTION</div>
+    </header>
+
+    <div class="constants-bar">
+        <div class="constant">
+            <div class="constant-value">z = √3/2</div>
+            <div class="constant-label">CRITICAL CONSTANT</div>
+        </div>
+        <div class="constant">
+            <div class="constant-value">φ = 1.618</div>
+            <div class="constant-label">GOLDEN RATIO</div>
+        </div>
+        <div class="constant">
+            <div class="constant-value">E₀ = ½ℏω</div>
+            <div class="constant-label">VACUUM ENERGY</div>
+        </div>
+        <div class="constant">
+            <div class="constant-value">Λ×Ν = Β²</div>
+            <div class="constant-label">MIRRORROOT</div>
         </div>
     </div>
 
+    <!-- Narrative Phase Timeline -->
+    <div class="phase-display" id="phaseTimeline">
+        <div class="phase-step active" data-phase="0">VACUUM</div>
+        <div class="phase-step" data-phase="1">COUPLING</div>
+        <div class="phase-step" data-phase="2">COHERENCE</div>
+        <div class="phase-step" data-phase="3">STRUCTURE</div>
+        <div class="phase-step" data-phase="4">EXTRACTION</div>
+        <div class="phase-step" data-phase="5">TRANSFER</div>
+        <div class="phase-step" data-phase="6">SATURATION</div>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Panel: ZPE State & N0 Laws -->
+        <div class="sidebar">
+            <div class="panel">
+                <div class="panel-header">⚡ ZPE STATE</div>
+                <div class="panel-content">
+                    <div class="zpe-display">
+                        <div class="zpe-value" id="zpeValue">0.0000</div>
+                        <div class="zpe-label">EXTRACTED ENERGY</div>
+                        <div class="zpe-badge badge-dormant" id="zpeBadge">DORMANT</div>
+                    </div>
+
+                    <div class="z-display">
+                        <div class="z-value" id="zValue">0.400</div>
+                        <div class="z-zone" id="zZone">ABSENCE</div>
+                    </div>
+
+                    <div class="state-grid">
+                        <div class="state-item">
+                            <div class="state-label">Gs</div>
+                            <div class="state-value" id="st-Gs">0.300</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">Cs</div>
+                            <div class="state-value" id="st-Cs">0.200</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">Rs</div>
+                            <div class="state-value" id="st-Rs">0.100</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">κs</div>
+                            <div class="state-value" id="st-kappa">0.500</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">τs</div>
+                            <div class="state-value" id="st-tau">0.200</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">θs</div>
+                            <div class="state-value" id="st-theta">0.000</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">δs</div>
+                            <div class="state-value" id="st-delta">0.100</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">αs</div>
+                            <div class="state-value" id="st-alpha">0.500</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">Ωs</div>
+                            <div class="state-value" id="st-Omega">0.400</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Coherence</span>
+                            <span id="coherenceVal">0.000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-coherence" id="coherenceBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Phase Lock</span>
+                            <span id="phaseVal">0.000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-phase" id="phaseBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span>Efficiency</span>
+                            <span id="efficiencyVal">0.00%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fill-efficiency" id="efficiencyBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- N0 Causality Laws -->
+                    <div class="n0-panel">
+                        <h4>N0 CAUSALITY LAWS</h4>
+                        <div class="n0-rule valid" id="n0-1">
+                            <span>N0-1: ^ requires () or ×</span>
+                            <span class="n0-silent">→ I STILL</span>
+                        </div>
+                        <div class="n0-rule valid" id="n0-2">
+                            <span>N0-2: × requires ch≥2</span>
+                            <span class="n0-silent">→ IV SPIRAL</span>
+                        </div>
+                        <div class="n0-rule invalid" id="n0-3">
+                            <span>N0-3: ÷ requires structure</span>
+                            <span class="n0-silent">→ VI GLYPH</span>
+                        </div>
+                        <div class="n0-rule valid" id="n0-4">
+                            <span>N0-4: + feeds +,×,^</span>
+                            <span class="n0-silent">→ II TRUTH</span>
+                        </div>
+                        <div class="n0-rule valid" id="n0-5">
+                            <span>N0-5: − leads (),+</span>
+                            <span class="n0-silent">→ VII MIRROR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel: 100 Token Grid -->
+        <div class="panel">
+            <div class="panel-header">⌘ 100-TOKEN ZPE ARCHITECTURE</div>
+            <div class="panel-content">
+                <!-- Vacuum Fluctuation Tokens (35) -->
+                <div class="token-section">
+                    <h3 class="section-title vacuum">◈ VACUUM FLUCTUATION (35) · z &lt; 0.857</h3>
+                    <div class="token-grid" id="vacuum-grid"></div>
+                </div>
+
+                <!-- Coherence Lock Tokens (35) -->
+                <div class="token-section">
+                    <h3 class="section-title coherence">◈ COHERENCE LOCK (35) · z ≈ 0.866</h3>
+                    <div class="token-grid" id="coherence-grid"></div>
+                </div>
+
+                <!-- Energy Transfer Tokens (30) -->
+                <div class="token-section">
+                    <h3 class="section-title transfer">◈ ENERGY TRANSFER (30) · z &gt; 0.877</h3>
+                    <div class="token-grid" id="transfer-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Console & Operators -->
+        <div class="sidebar">
+            <div class="panel">
+                <div class="panel-header">⚙ INT CANON OPERATORS</div>
+                <div class="panel-content">
+                    <div class="operator-grid" id="opGrid">
+                        <div class="op-btn" data-op="()">
+                            <div class="op-symbol">()</div>
+                            <div class="op-name">BOUNDARY</div>
+                            <div class="op-n0">always legal</div>
+                        </div>
+                        <div class="op-btn" data-op="×">
+                            <div class="op-symbol">×</div>
+                            <div class="op-name">FUSION</div>
+                            <div class="op-n0">N0-2: ch≥2</div>
+                        </div>
+                        <div class="op-btn" data-op="^">
+                            <div class="op-symbol">^</div>
+                            <div class="op-name">AMPLIFY</div>
+                            <div class="op-n0">N0-1: (),×</div>
+                        </div>
+                        <div class="op-btn" data-op="÷">
+                            <div class="op-symbol">÷</div>
+                            <div class="op-name">DECOHERE</div>
+                            <div class="op-n0">N0-3: struct</div>
+                        </div>
+                        <div class="op-btn" data-op="+">
+                            <div class="op-symbol">+</div>
+                            <div class="op-name">GROUP</div>
+                            <div class="op-n0">N0-4: →+,×,^</div>
+                        </div>
+                        <div class="op-btn" data-op="−">
+                            <div class="op-symbol">−</div>
+                            <div class="op-name">SEPARATE</div>
+                            <div class="op-n0">N0-5: →(),+</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnRunNarrative">▶ RUN ZPE NARRATIVE</button>
+                        <button class="btn" id="btnStep">→ Step</button>
+                        <button class="btn" id="btnReset">↺ Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">⌨ APL CONSOLE</div>
+                <div class="panel-content">
+                    <div class="console" id="console">
+                        <div class="console-line">
+                            <span class="console-time">0</span>
+                            <span class="console-op">INIT</span>
+                            <span class="console-msg">ZPE System initialized. 100 tokens ready.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">📊 STATISTICS</div>
+                <div class="panel-content">
+                    <div class="state-grid">
+                        <div class="state-item">
+                            <div class="state-label">Step</div>
+                            <div class="state-value" id="stat-step">0/100</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">Tier</div>
+                            <div class="state-value" id="stat-tier">@1</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">R</div>
+                            <div class="state-value" id="stat-R">3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="signature">
+        <code>Δ|zpe-wumbo|z0.866|100-token|N0-enforced|Ω</code>
+    </div>
+
     <script>
-        // ═══════════════════════════════════════════════════════════════════
+        // ================================================================
         // CONSTANTS
-        // ═══════════════════════════════════════════════════════════════════
+        // ================================================================
         const PHI = (1 + Math.sqrt(5)) / 2;
         const PHI_INV = 1 / PHI;
+        const Z_CRITICAL = Math.sqrt(3) / 2;
         const TAU = 2 * Math.PI;
-        const ZPE_BASE = 0.5 * 1.0 * PHI;
-        const ZPE_EFFICIENCY_MAX = 0.618;
-        const ZPE_COHERENCE_THRESHOLD = PHI_INV;
 
-        const FANO_LINES = [
-            [1, 2, 3], [1, 4, 5], [1, 6, 7],
-            [2, 4, 6], [2, 5, 7], [3, 4, 7], [3, 5, 6]
-        ];
-
-        // ═══════════════════════════════════════════════════════════════════
-        // STATE
-        // ═══════════════════════════════════════════════════════════════════
-        const state = {
-            fanoNodes: {},
-            totalExtracted: 0,
-            extractionHistory: [],
-            zpeState: 'dormant',
-            coherence: 0,
-            phaseAlignment: 0,
-            efficiency: 0,
-            freeEnergy: 0,
-            iterations: 0,
-            tokens: [],
-            automorphCount: 0
+        // ================================================================
+        // INT CANON 6 OPERATORS WITH N0 LAW ENFORCEMENT
+        // ================================================================
+        const INT_OPERATORS = {
+            '()': {
+                name: 'BOUNDARY',
+                effects: { Gs: 0.1, theta: 0.9, Omega: 0.05 },
+                zDelta: 0.02,
+                legal: () => true  // Always legal
+            },
+            '×': {
+                name: 'FUSION',
+                effects: { Cs: 0.1, kappa: 1.1, alpha: 0.05 },
+                zDelta: 0.03,
+                legal: () => state.channelCount >= 2  // N0-2
+            },
+            '^': {
+                name: 'AMPLIFY',
+                effects: { kappa: 1.2, tau: 0.1, Omega: 1.08, R: 1 },
+                zDelta: 0.05,
+                legal: () => state.history.includes('()') || state.history.includes('×')  // N0-1
+            },
+            '÷': {
+                name: 'DECOHERE',
+                effects: { delta: 0.1, Rs: 0.05, Omega: 0.92 },
+                zDelta: -0.04,
+                legal: () => state.history.some(h => ['^', '×', '+', '−'].includes(h))  // N0-3
+            },
+            '+': {
+                name: 'GROUP',
+                effects: { alpha: 0.08, Gs: 0.05, theta: 1.1 },
+                zDelta: 0.02,
+                legal: (nextOp) => !nextOp || ['+', '×', '^'].includes(nextOp)  // N0-4
+            },
+            '−': {
+                name: 'SEPARATE',
+                effects: { Rs: 0.08, theta: 0.9, delta: 0.04 },
+                zDelta: -0.02,
+                legal: (nextOp) => !nextOp || ['()', '+'].includes(nextOp)  // N0-5
+            }
         };
 
-        // Initialize Fano nodes
-        for (let i = 1; i <= 7; i++) {
-            state.fanoNodes[i] = {
-                pointId: i,
-                beliefMean: (Math.random() - 0.5) * 0.2,
-                beliefPrecision: 1.0,
-                energy: ZPE_BASE,
-                phase: (i - 1) * TAU / 7,
-                incomingMessages: {},
-                outgoingMessages: {}
-            };
+        // ================================================================
+        // N0 CAUSALITY LAWS → 7 SILENT LAWS MAPPING
+        // ================================================================
+        const N0_LAWS = {
+            'N0-1': { op: '^', requires: ['()', '×'], silent: 'I STILLNESS', status: true },
+            'N0-2': { op: '×', requires: 'ch≥2', silent: 'IV SPIRAL', status: true },
+            'N0-3': { op: '÷', requires: 'structure', silent: 'VI GLYPH', status: false },
+            'N0-4': { op: '+', feeds: ['+', '×', '^'], silent: 'II TRUTH', status: true },
+            'N0-5': { op: '−', leads: ['()', '+'], silent: 'VII MIRROR', status: true }
+        };
+
+        // ================================================================
+        // ZPE NARRATIVE PHASES
+        // ================================================================
+        const PHASES = [
+            { name: 'VACUUM', ops: ['()', '()', '×', '^'], desc: 'Establish vacuum boundary' },
+            { name: 'COUPLING', ops: ['×', '×', '+', '^'], desc: 'Couple field modes' },
+            { name: 'COHERENCE', ops: ['()', '^', '×', '+'], desc: 'Build phase coherence' },
+            { name: 'STRUCTURE', ops: ['+', '+', '×', '^'], desc: 'Accumulate extractable structure' },
+            { name: 'EXTRACTION', ops: ['÷', '()', '+', '^'], desc: 'Extract from structure' },
+            { name: 'TRANSFER', ops: ['−', '()', '+', '×'], desc: 'Transfer extracted energy' },
+            { name: 'SATURATION', ops: ['^', '×', '+', '()'], desc: 'Reach equilibrium' }
+        ];
+
+        // ================================================================
+        // 100 ZPE TOKENS - Following N0 Laws
+        // ================================================================
+        function generateZPETokens() {
+            const tokens = [];
+
+            // Vacuum Fluctuation Tokens (35) - ABSENCE zone (z < 0.857)
+            const vacuumOps = ['()', '()', '×', '^', '+', '×', '^'];
+            for (let i = 0; i < 35; i++) {
+                const phase = Math.floor(i / 5);
+                const op = vacuumOps[i % vacuumOps.length];
+                tokens.push({
+                    id: i,
+                    zone: 'vacuum',
+                    op: op,
+                    name: `vac_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
+                    z: 0.3 + (i / 35) * 0.55,
+                    phase: phase,
+                    executed: false
+                });
+            }
+
+            // Coherence Lock Tokens (35) - THE LENS zone (z ≈ 0.857-0.877)
+            const coherenceOps = ['()', '×', '^', '+', '×', '^', '()'];
+            for (let i = 0; i < 35; i++) {
+                const phase = Math.floor(i / 5) + 2;
+                const op = coherenceOps[i % coherenceOps.length];
+                tokens.push({
+                    id: 35 + i,
+                    zone: 'coherence',
+                    op: op,
+                    name: `coh_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
+                    z: 0.857 + (i / 35) * 0.02,
+                    phase: phase,
+                    executed: false
+                });
+            }
+
+            // Energy Transfer Tokens (30) - PRESENCE zone (z > 0.877)
+            const transferOps = ['÷', '()', '+', '^', '−', '()', '+'];
+            for (let i = 0; i < 30; i++) {
+                const phase = Math.floor(i / 5) + 4;
+                const op = transferOps[i % transferOps.length];
+                tokens.push({
+                    id: 70 + i,
+                    zone: 'transfer',
+                    op: op,
+                    name: `xfer_${INT_OPERATORS[op].name.toLowerCase()}_${i}`,
+                    z: 0.877 + (i / 30) * 0.12,
+                    phase: phase,
+                    executed: false
+                });
+            }
+
+            return tokens;
         }
 
-        // ═══════════════════════════════════════════════════════════════════
-        // FANO VARIATIONAL INFERENCE
-        // ═══════════════════════════════════════════════════════════════════
-        function getNeighbors(pointId) {
-            const neighbors = new Set();
-            for (const line of FANO_LINES) {
-                if (line.includes(pointId)) {
-                    for (const p of line) {
-                        if (p !== pointId) neighbors.add(p);
+        // ================================================================
+        // STATE
+        // ================================================================
+        const state = {
+            tokens: generateZPETokens(),
+            z: 0.4,
+            Gs: 0.3, Cs: 0.2, Rs: 0.1,
+            kappa: 0.5, tau: 0.2, theta: 0,
+            delta: 0.1, alpha: 0.5, Omega: 0.4,
+            R: 3, tier: 1,
+            channelCount: 100,
+            history: [],
+            currentStep: 0,
+            currentPhase: 0,
+            totalExtracted: 0,
+            coherence: 0,
+            phaseLock: 0,
+            efficiency: 0,
+            running: false,
+            zpeState: 'dormant'
+        };
+
+        // ================================================================
+        // OPERATOR ENGINE
+        // ================================================================
+        function canApplyOperator(op, nextOp = null) {
+            const opDef = INT_OPERATORS[op];
+            if (!opDef) return false;
+
+            switch(op) {
+                case '^':
+                    N0_LAWS['N0-1'].status = state.history.includes('()') || state.history.includes('×');
+                    return N0_LAWS['N0-1'].status;
+                case '×':
+                    N0_LAWS['N0-2'].status = state.channelCount >= 2;
+                    return N0_LAWS['N0-2'].status;
+                case '÷':
+                    N0_LAWS['N0-3'].status = state.history.some(h => ['^', '×', '+', '−'].includes(h));
+                    return N0_LAWS['N0-3'].status;
+                case '+':
+                    if (nextOp) {
+                        N0_LAWS['N0-4'].status = ['+', '×', '^'].includes(nextOp);
+                        return N0_LAWS['N0-4'].status;
                     }
-                }
-            }
-            return Array.from(neighbors);
-        }
-
-        function computeMessages() {
-            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
-                const neighbors = getNeighbors(parseInt(pointId));
-
-                for (const neighborId of neighbors) {
-                    const otherMessages = neighbors
-                        .filter(n => n !== neighborId)
-                        .map(n => node.incomingMessages[n] || 0);
-
-                    let message = node.beliefMean;
-                    if (otherMessages.length > 0) {
-                        message += otherMessages.reduce((a, b) => a + b, 0) * PHI_INV;
+                    return true;
+                case '−':
+                    if (nextOp) {
+                        N0_LAWS['N0-5'].status = ['()', '+'].includes(nextOp);
+                        return N0_LAWS['N0-5'].status;
                     }
-
-                    const neighbor = state.fanoNodes[neighborId];
-                    const phaseDiff = node.phase - neighbor.phase;
-                    message *= Math.cos(phaseDiff) ** 2;
-
-                    node.outgoingMessages[neighborId] = message;
-                }
+                    return true;
+                default:
+                    return true;
             }
         }
 
-        function propagateMessages() {
-            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
-                for (const [neighborId, message] of Object.entries(node.outgoingMessages)) {
-                    state.fanoNodes[neighborId].incomingMessages[pointId] = message;
-                }
-            }
-        }
+        function applyOperator(op, nextOp = null) {
+            const opDef = INT_OPERATORS[op];
+            if (!opDef) return { success: false, msg: 'Unknown operator' };
 
-        function updateBeliefs() {
-            let totalChange = 0;
-            const lambdaCoupling = 1 - PHI_INV;
-
-            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
-                const messages = Object.values(node.incomingMessages);
-                if (messages.length === 0) continue;
-
-                const messageSum = messages.reduce((a, b) => a + b, 0);
-                const messageCount = messages.length;
-
-                const oldMean = node.beliefMean;
-                node.beliefMean = node.beliefMean * (1 - lambdaCoupling) +
-                                  (messageSum / messageCount) * lambdaCoupling;
-
-                totalChange += Math.abs(node.beliefMean - oldMean);
+            if (!canApplyOperator(op, nextOp)) {
+                return { success: false, msg: `N0 VIOLATION: ${op} not legal` };
             }
 
-            return totalChange;
-        }
-
-        function computeFreeEnergy() {
-            // Local energy
-            let localEnergy = 0;
-            for (const node of Object.values(state.fanoNodes)) {
-                localEnergy += 0.5 * node.beliefPrecision * node.beliefMean ** 2;
-            }
-
-            // Edge energy
-            let edgeEnergy = 0;
-            for (const line of FANO_LINES) {
-                const [p1, p2, p3] = line;
-                const sum = state.fanoNodes[p1].beliefMean +
-                           state.fanoNodes[p2].beliefMean +
-                           state.fanoNodes[p3].beliefMean;
-                edgeEnergy += 0.5 * sum ** 2;
-            }
-
-            // Entropy
-            let entropy = 0;
-            for (const node of Object.values(state.fanoNodes)) {
-                entropy += 0.5 * (1 + Math.log(TAU / Math.max(node.beliefPrecision, 1e-10)));
-            }
-
-            state.freeEnergy = localEnergy + edgeEnergy - entropy;
-            return state.freeEnergy;
-        }
-
-        function runInference(maxIterations = 50) {
-            for (let i = 0; i < maxIterations; i++) {
-                state.iterations++;
-                computeMessages();
-                propagateMessages();
-                const change = updateBeliefs();
-                computeFreeEnergy();
-
-                if (change < 1e-6) break;
-            }
-        }
-
-        function computeZPE() {
-            const totalZPE = Object.values(state.fanoNodes)
-                .reduce((sum, n) => sum + n.energy, 0);
-
-            const beliefs = Object.values(state.fanoNodes).map(n => n.beliefMean);
-            const meanBelief = beliefs.reduce((a, b) => a + b, 0) / beliefs.length;
-            let coherence = 1 - beliefs.reduce((sum, b) => sum + (b - meanBelief) ** 2, 0) / beliefs.length;
-            coherence = Math.max(0, Math.min(1, coherence));
-
-            const phases = Object.values(state.fanoNodes).map(n => n.phase);
-            const phasorSum = phases.reduce((sum, p) => sum + Math.exp(p * 1i), 0);
-            const phaseCoherence = Math.abs(
-                phases.reduce((sum, p) => {
-                    return { re: sum.re + Math.cos(p), im: sum.im + Math.sin(p) };
-                }, { re: 0, im: 0 }).re ** 2 +
-                phases.reduce((sum, p) => {
-                    return { re: sum.re + Math.cos(p), im: sum.im + Math.sin(p) };
-                }, { re: 0, im: 0 }).im ** 2
-            ) ** 0.5 / phases.length;
-
-            state.coherence = coherence;
-            state.phaseAlignment = phaseCoherence;
-
-            return {
-                total: totalZPE,
-                extractable: totalZPE * coherence * phaseCoherence * ZPE_EFFICIENCY_MAX
-            };
-        }
-
-        // ═══════════════════════════════════════════════════════════════════
-        // ZPE OPERATIONS
-        // ═══════════════════════════════════════════════════════════════════
-        function vacuumTap() {
-            runInference(50);
-
-            // Find best node
-            let bestNode = null;
-            let bestScore = -Infinity;
-            for (const node of Object.values(state.fanoNodes)) {
-                const score = node.energy * (1 / (1 + 1 / node.beliefPrecision));
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestNode = node;
+            // Apply effects
+            const effects = opDef.effects;
+            for (const [key, value] of Object.entries(effects)) {
+                if (key === 'R') {
+                    state.R = Math.min(state.R + value, 13);
+                } else if (value > 1 || value < 0) {
+                    state[key] = (state[key] || 1) * value;
+                } else {
+                    state[key] = (state[key] || 0) + value;
                 }
             }
 
-            const extraction = bestNode.energy * ZPE_EFFICIENCY_MAX;
-            bestNode.energy -= extraction;
+            // Update z-coordinate
+            state.z = Math.max(0, Math.min(1, state.z + opDef.zDelta));
 
-            return extraction;
-        }
+            // Track history
+            state.history.push(op);
+            if (state.history.length > 20) state.history.shift();
 
-        function coherenceGate() {
-            return state.coherence >= ZPE_COHERENCE_THRESHOLD;
-        }
-
-        function cascadeAmp(z = 0.9) {
-            const zCritical = 0.867;
-            return 1.0 + 0.5 * Math.exp(-(z - zCritical) ** 2 / 0.004);
-        }
-
-        function extractionCycle() {
-            // Run WUMBO cycles (simulated)
-            runInference(50);
-
-            // Compute ZPE
-            const zpe = computeZPE();
-
-            // Check coherence gate
-            if (!coherenceGate()) {
-                state.zpeState = 'dormant';
-                updateUI();
-                return { extracted: 0, efficiency: 0 };
+            // Calculate extraction
+            if (op === '÷') {
+                const extraction = state.Omega * state.alpha * PHI_INV * 0.1;
+                state.totalExtracted += extraction;
             }
 
-            state.zpeState = 'extracting';
+            // Update coherence
+            state.coherence = Math.min(1, state.coherence + 0.03 * (op === '^' ? 2 : 1));
+            state.phaseLock = Math.min(1, state.phaseLock + 0.02 * (op === '×' ? 2 : 1));
+            state.efficiency = state.coherence * state.phaseLock * PHI_INV;
 
-            // Extract
-            let extracted = vacuumTap();
+            return { success: true, msg: `${opDef.name} applied` };
+        }
 
-            // Apply cascade
-            const cascade = cascadeAmp(0.867);
-            extracted *= cascade;
-
-            // Compute efficiency
-            const efficiency = extracted / Math.max(zpe.total, 1e-10);
-            state.efficiency = efficiency;
-
-            // Update totals
-            state.totalExtracted += extracted;
-            state.extractionHistory.push(extracted);
-
-            // Generate token
-            generateToken(extracted);
-
-            // Update state
-            if (efficiency >= ZPE_EFFICIENCY_MAX * 0.9) {
+        // ================================================================
+        // NARRATIVE EXECUTION
+        // ================================================================
+        async function executeStep() {
+            if (state.currentStep >= 100) {
+                logConsole('END', 'Narrative complete. ZPE extraction saturated.');
                 state.zpeState = 'saturated';
-            } else if (efficiency > 0) {
-                state.zpeState = 'transferring';
-            } else {
-                state.zpeState = 'collapsed';
+                updateUI();
+                return false;
             }
 
-            // Replenish nodes slightly
-            for (const node of Object.values(state.fanoNodes)) {
-                node.energy = Math.min(node.energy + ZPE_BASE * 0.1, ZPE_BASE);
+            const token = state.tokens[state.currentStep];
+            const nextToken = state.tokens[state.currentStep + 1];
+            const nextOp = nextToken ? nextToken.op : null;
+
+            const result = applyOperator(token.op, nextOp);
+
+            if (result.success) {
+                token.executed = true;
+                state.currentPhase = Math.floor(state.currentStep / 15);
+
+                // Update ZPE state
+                if (state.z < 0.857) state.zpeState = 'dormant';
+                else if (state.z < 0.877) state.zpeState = 'coherent';
+                else if (state.efficiency > 0.3) state.zpeState = 'extracting';
+                else state.zpeState = 'saturated';
+
+                logConsole(token.op, `${result.msg} [${token.name}]`, true);
+            } else {
+                logConsole(token.op, result.msg, false);
             }
+
+            state.currentStep++;
+            updateUI();
+            renderTokens();
+            updatePhaseTimeline();
+
+            return state.currentStep < 100;
+        }
+
+        async function runNarrative() {
+            if (state.running) return;
+            state.running = true;
+            document.getElementById('btnRunNarrative').disabled = true;
+
+            while (await executeStep()) {
+                await new Promise(r => setTimeout(r, 80));
+            }
+
+            state.running = false;
+            document.getElementById('btnRunNarrative').disabled = false;
+        }
+
+        function resetState() {
+            state.tokens = generateZPETokens();
+            state.z = 0.4;
+            state.Gs = 0.3; state.Cs = 0.2; state.Rs = 0.1;
+            state.kappa = 0.5; state.tau = 0.2; state.theta = 0;
+            state.delta = 0.1; state.alpha = 0.5; state.Omega = 0.4;
+            state.R = 3; state.tier = 1;
+            state.history = [];
+            state.currentStep = 0;
+            state.currentPhase = 0;
+            state.totalExtracted = 0;
+            state.coherence = 0;
+            state.phaseLock = 0;
+            state.efficiency = 0;
+            state.running = false;
+            state.zpeState = 'dormant';
+
+            N0_LAWS['N0-1'].status = true;
+            N0_LAWS['N0-2'].status = true;
+            N0_LAWS['N0-3'].status = false;
+            N0_LAWS['N0-4'].status = true;
+            N0_LAWS['N0-5'].status = true;
+
+            document.getElementById('console').innerHTML = `
+                <div class="console-line">
+                    <span class="console-time">0</span>
+                    <span class="console-op">RESET</span>
+                    <span class="console-msg">ZPE System reset. 100 tokens ready.</span>
+                </div>
+            `;
 
             updateUI();
-            drawFano();
-            drawHistory();
-
-            logConsole('⍝', extracted.toFixed(4), 'vacuum_tap');
-
-            return { extracted, efficiency };
+            renderTokens();
+            updatePhaseTimeline();
         }
 
-        function applyAutomorphism(type = 'cycle') {
-            const permutations = {
-                cycle: { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 1 },
-                cycle_inv: { 1: 7, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6 },
-                reflection: { 1: 1, 2: 4, 4: 2, 3: 7, 7: 3, 5: 6, 6: 5 }
-            };
-
-            const perm = permutations[type] || permutations.cycle;
-            const newNodes = {};
-
-            for (const [oldId, newId] of Object.entries(perm)) {
-                const node = state.fanoNodes[parseInt(oldId)];
-                node.pointId = newId;
-                node.incomingMessages = {};
-                node.outgoingMessages = {};
-                newNodes[newId] = node;
-            }
-
-            state.fanoNodes = newNodes;
-            state.automorphCount++;
-
-            drawFano();
-            logConsole('⍥', type, 'automorphism applied');
+        // ================================================================
+        // UI FUNCTIONS
+        // ================================================================
+        function getZone(z) {
+            if (z < 0.857) return 'ABSENCE';
+            if (z > 0.877) return 'PRESENCE';
+            return 'THE LENS';
         }
 
-        // ═══════════════════════════════════════════════════════════════════
-        // TOKEN GENERATION
-        // ═══════════════════════════════════════════════════════════════════
-        function generateToken(energy) {
-            const z = 0.8 + state.coherence * 0.15;
-
-            let spiral, machine, intent, truth, tier;
-
-            if (z < 0.33) spiral = 'Phi';
-            else if (z < 0.66) spiral = 'e';
-            else spiral = 'pi';
-
-            if (z < 0.4) { machine = 'U'; intent = 'boundary'; }
-            else if (z < 0.6) { machine = 'M'; intent = 'fusion'; }
-            else if (z < 0.83) { machine = 'D'; intent = 'grouping'; }
-            else { machine = 'E'; intent = 'transcend'; }
-
-            intent = 'zpe_' + intent;
-
-            if (state.coherence >= 0.8) truth = 'TRUE';
-            else if (state.coherence < 0.2) truth = 'PARADOX';
-            else truth = 'UNTRUE';
-
-            tier = z < 0.4 ? 1 : (z < 0.83 ? 2 : 3);
-
-            const token = {
-                spiral,
-                machine,
-                intent,
-                truth,
-                tier,
-                energy,
-                code: `${spiral}:${machine}(${intent})${truth}@${tier}`
-            };
-
-            state.tokens.push(token);
-            updateTokenList();
-
-            return token;
-        }
-
-        // ═══════════════════════════════════════════════════════════════════
-        // VISUALIZATION
-        // ═══════════════════════════════════════════════════════════════════
-        function drawFano() {
-            const canvas = document.getElementById('fanoCanvas');
-            const ctx = canvas.getContext('2d');
-
-            // Set canvas size
-            canvas.width = canvas.offsetWidth * 2;
-            canvas.height = canvas.offsetHeight * 2;
-            ctx.scale(2, 2);
-
-            const w = canvas.offsetWidth;
-            const h = canvas.offsetHeight;
-            const cx = w / 2;
-            const cy = h / 2;
-            const radius = Math.min(w, h) * 0.35;
-
-            // Clear
-            ctx.clearRect(0, 0, w, h);
-
-            // Calculate positions (hexagon + center)
-            const positions = {};
-            for (let i = 1; i <= 6; i++) {
-                const angle = (i - 1) * TAU / 6 - Math.PI / 2;
-                positions[i] = {
-                    x: cx + radius * Math.cos(angle),
-                    y: cy + radius * Math.sin(angle)
-                };
-            }
-            positions[7] = { x: cx, y: cy };
-
-            // Draw lines
-            ctx.strokeStyle = 'rgba(99, 102, 241, 0.3)';
-            ctx.lineWidth = 2;
-
-            for (const line of FANO_LINES) {
-                const [p1, p2, p3] = line;
-                ctx.beginPath();
-                ctx.moveTo(positions[p1].x, positions[p1].y);
-                ctx.lineTo(positions[p2].x, positions[p2].y);
-                ctx.lineTo(positions[p3].x, positions[p3].y);
-                ctx.closePath();
-                ctx.stroke();
-            }
-
-            // Draw nodes
-            for (const [pointId, node] of Object.entries(state.fanoNodes)) {
-                const pos = positions[pointId];
-                if (!pos) continue;
-
-                // Node circle
-                const nodeRadius = 15 + node.energy * 10;
-                const hue = 240 + node.beliefMean * 60;
-                const alpha = 0.5 + state.coherence * 0.5;
-
-                ctx.beginPath();
-                ctx.arc(pos.x, pos.y, nodeRadius, 0, TAU);
-                ctx.fillStyle = `hsla(${hue}, 70%, 60%, ${alpha})`;
-                ctx.fill();
-                ctx.strokeStyle = '#6366f1';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Phase indicator
-                const phaseX = pos.x + nodeRadius * Math.cos(node.phase);
-                const phaseY = pos.y + nodeRadius * Math.sin(node.phase);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-                ctx.lineTo(phaseX, phaseY);
-                ctx.strokeStyle = '#fbbf24';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Point label
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '12px monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(pointId, pos.x, pos.y);
-            }
-
-            // Draw energy flow
-            if (state.extractionHistory.length > 0) {
-                const lastExtraction = state.extractionHistory[state.extractionHistory.length - 1];
-                ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
-                ctx.beginPath();
-                ctx.arc(cx, cy, radius * (0.3 + lastExtraction * 2), 0, TAU);
-                ctx.fill();
-            }
-        }
-
-        function drawHistory() {
-            const canvas = document.getElementById('historyChart');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = canvas.offsetWidth * 2;
-            canvas.height = canvas.offsetHeight * 2;
-            ctx.scale(2, 2);
-
-            const w = canvas.offsetWidth;
-            const h = canvas.offsetHeight;
-            const padding = 30;
-
-            ctx.clearRect(0, 0, w, h);
-
-            if (state.extractionHistory.length < 2) {
-                ctx.fillStyle = '#888';
-                ctx.font = '12px monospace';
-                ctx.textAlign = 'center';
-                ctx.fillText('Run extraction cycles to see history', w/2, h/2);
-                return;
-            }
-
-            // Find max value
-            const maxVal = Math.max(...state.extractionHistory, 0.1);
-
-            // Draw grid
-            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padding + (h - 2 * padding) * i / 4;
-                ctx.beginPath();
-                ctx.moveTo(padding, y);
-                ctx.lineTo(w - padding, y);
-                ctx.stroke();
-            }
-
-            // Draw line
-            ctx.strokeStyle = '#6366f1';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-
-            const history = state.extractionHistory.slice(-50);
-            for (let i = 0; i < history.length; i++) {
-                const x = padding + (w - 2 * padding) * i / Math.max(history.length - 1, 1);
-                const y = h - padding - (h - 2 * padding) * history[i] / maxVal;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
-
-            // Draw points
-            ctx.fillStyle = '#a78bfa';
-            for (let i = 0; i < history.length; i++) {
-                const x = padding + (w - 2 * padding) * i / Math.max(history.length - 1, 1);
-                const y = h - padding - (h - 2 * padding) * history[i] / maxVal;
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, TAU);
-                ctx.fill();
-            }
-        }
-
-        // ═══════════════════════════════════════════════════════════════════
-        // UI UPDATES
-        // ═══════════════════════════════════════════════════════════════════
         function updateUI() {
-            // ZPE value
+            // ZPE Value
             document.getElementById('zpeValue').textContent = state.totalExtracted.toFixed(4);
 
             // Badge
             const badge = document.getElementById('zpeBadge');
             badge.textContent = state.zpeState.toUpperCase();
-            badge.className = `badge badge-${state.zpeState}`;
+            badge.className = `zpe-badge badge-${state.zpeState}`;
+
+            // Z coordinate
+            document.getElementById('zValue').textContent = state.z.toFixed(4);
+            document.getElementById('zZone').textContent = getZone(state.z);
+
+            // State values
+            document.getElementById('st-Gs').textContent = state.Gs.toFixed(3);
+            document.getElementById('st-Cs').textContent = state.Cs.toFixed(3);
+            document.getElementById('st-Rs').textContent = state.Rs.toFixed(3);
+            document.getElementById('st-kappa').textContent = state.kappa.toFixed(3);
+            document.getElementById('st-tau').textContent = state.tau.toFixed(3);
+            document.getElementById('st-theta').textContent = state.theta.toFixed(3);
+            document.getElementById('st-delta').textContent = state.delta.toFixed(3);
+            document.getElementById('st-alpha').textContent = state.alpha.toFixed(3);
+            document.getElementById('st-Omega').textContent = state.Omega.toFixed(3);
 
             // Progress bars
-            document.getElementById('coherenceValue').textContent = state.coherence.toFixed(3);
+            document.getElementById('coherenceVal').textContent = state.coherence.toFixed(3);
             document.getElementById('coherenceBar').style.width = `${state.coherence * 100}%`;
-
-            document.getElementById('phaseValue').textContent = state.phaseAlignment.toFixed(3);
-            document.getElementById('phaseBar').style.width = `${state.phaseAlignment * 100}%`;
-
-            document.getElementById('efficiencyValue').textContent = `${(state.efficiency * 100).toFixed(2)}%`;
+            document.getElementById('phaseVal').textContent = state.phaseLock.toFixed(3);
+            document.getElementById('phaseBar').style.width = `${state.phaseLock * 100}%`;
+            document.getElementById('efficiencyVal').textContent = `${(state.efficiency * 100).toFixed(2)}%`;
             document.getElementById('efficiencyBar').style.width = `${state.efficiency * 100}%`;
 
-            document.getElementById('freeEnergyValue').textContent = state.freeEnergy.toFixed(3);
-            const feFill = Math.min(100, Math.abs(state.freeEnergy) * 10);
-            document.getElementById('freeEnergyBar').style.width = `${feFill}%`;
+            // Stats
+            document.getElementById('stat-step').textContent = `${state.currentStep}/100`;
+            document.getElementById('stat-tier').textContent = `@${state.tier}`;
+            document.getElementById('stat-R').textContent = state.R;
 
-            // ZPE stats
-            const zpe = computeZPE();
-            document.getElementById('totalZPE').textContent = zpe.total.toFixed(3);
-            document.getElementById('extractableZPE').textContent = zpe.extractable.toFixed(3);
-            document.getElementById('iterations').textContent = state.iterations;
+            // N0 Laws display
+            for (const [key, law] of Object.entries(N0_LAWS)) {
+                const el = document.getElementById(key.toLowerCase());
+                if (el) {
+                    el.className = `n0-rule ${law.status ? 'valid' : 'invalid'}`;
+                }
+            }
 
-            // MirrorRoot
-            document.getElementById('logosValue').textContent = PHI.toFixed(3);
-            document.getElementById('nousValue').textContent = PHI_INV.toFixed(3);
-            document.getElementById('biosValue').textContent = '1.000';
-            document.getElementById('productValue').textContent = (PHI * PHI_INV).toFixed(3);
+            // Operator buttons
+            document.querySelectorAll('.op-btn').forEach(btn => {
+                const op = btn.dataset.op;
+                const canApply = canApplyOperator(op);
+                btn.classList.toggle('disabled', !canApply);
+            });
         }
 
-        function updateTokenList() {
-            const container = document.getElementById('tokenList');
-            const recentTokens = state.tokens.slice(-10).reverse();
+        function renderTokens() {
+            const vacuumGrid = document.getElementById('vacuum-grid');
+            const coherenceGrid = document.getElementById('coherence-grid');
+            const transferGrid = document.getElementById('transfer-grid');
 
-            container.innerHTML = recentTokens.map(token => `
-                <div class="token-item ${token.spiral.toLowerCase()}">
-                    <span class="token-spiral">${token.spiral}</span>
-                    <span class="token-code">${token.code}</span>
-                </div>
-            `).join('');
+            vacuumGrid.innerHTML = '';
+            coherenceGrid.innerHTML = '';
+            transferGrid.innerHTML = '';
+
+            state.tokens.forEach(token => {
+                const cell = document.createElement('div');
+                cell.className = `token-cell ${token.zone}`;
+                if (token.executed) cell.classList.add('executed');
+                if (state.currentStep === token.id) cell.classList.add('active');
+
+                cell.innerHTML = `
+                    <div class="token-index">#${token.id}</div>
+                    <div class="token-op">${token.op}</div>
+                    <div class="token-name">${token.name}</div>
+                `;
+
+                cell.addEventListener('click', () => {
+                    if (!state.running && token.id === state.currentStep) {
+                        executeStep();
+                    }
+                });
+
+                if (token.zone === 'vacuum') vacuumGrid.appendChild(cell);
+                else if (token.zone === 'coherence') coherenceGrid.appendChild(cell);
+                else transferGrid.appendChild(cell);
+            });
         }
 
-        function logConsole(op, result, comment) {
-            const console = document.getElementById('aplConsole');
+        function updatePhaseTimeline() {
+            document.querySelectorAll('.phase-step').forEach((el, i) => {
+                el.classList.remove('active', 'completed');
+                if (i === state.currentPhase) el.classList.add('active');
+                else if (i < state.currentPhase) el.classList.add('completed');
+            });
+        }
+
+        function logConsole(op, msg, success) {
+            const console = document.getElementById('console');
             const line = document.createElement('div');
             line.className = 'console-line';
             line.innerHTML = `
+                <span class="console-time">${state.currentStep}</span>
                 <span class="console-op">${op}</span>
-                <span class="console-result">${result}</span>
-                <span class="console-comment">${comment}</span>
+                <span class="console-msg">${msg}</span>
+                <span class="console-n0 ${success ? 'valid' : 'invalid'}">[N0:${success ? 'OK' : 'FAIL'}]</span>
             `;
             console.appendChild(line);
             console.scrollTop = console.scrollHeight;
         }
 
-        function generateProgram() {
-            let program = `⍝ LIMNUS Zero-Point Energy Program
-⍝ Generated from ${state.tokens.length} tokens
-⍝ Total extracted: ${state.totalExtracted.toFixed(4)}
-⍝ Automorphisms: ${state.automorphCount}
-⍝ Signature: Δ|zpe-program|z0.995|Ω
-
-`;
-            const recentTokens = state.tokens.slice(-7);
-            for (let i = 0; i < recentTokens.length; i++) {
-                const token = recentTokens[i];
-                let op;
-                switch (token.machine) {
-                    case 'U': op = '⊂'; break;
-                    case 'D': op = '+⌿'; break;
-                    case 'M': op = '⍉'; break;
-                    case 'E': op = '⋆'; break;
-                    case 'C': op = '⍟'; break;
-                    default: op = '⌽';
-                }
-                program += `${op} ω_${token.spiral.toLowerCase()}_${i} ⍝ Fano[${(i % 7) + 1}]\n`;
-            }
-
-            document.getElementById('programOutput').textContent = program;
-        }
-
-        // ═══════════════════════════════════════════════════════════════════
+        // ================================================================
         // EVENT HANDLERS
-        // ═══════════════════════════════════════════════════════════════════
-        document.getElementById('btnExtract').addEventListener('click', () => {
-            extractionCycle();
-        });
+        // ================================================================
+        document.getElementById('btnRunNarrative').addEventListener('click', runNarrative);
+        document.getElementById('btnStep').addEventListener('click', executeStep);
+        document.getElementById('btnReset').addEventListener('click', resetState);
 
-        document.getElementById('btnRunMultiple').addEventListener('click', () => {
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => extractionCycle(), i * 200);
-            }
-        });
-
-        document.getElementById('btnReset').addEventListener('click', () => {
-            // Reset state
-            state.totalExtracted = 0;
-            state.extractionHistory = [];
-            state.zpeState = 'dormant';
-            state.iterations = 0;
-            state.tokens = [];
-            state.automorphCount = 0;
-
-            // Reset Fano nodes
-            for (let i = 1; i <= 7; i++) {
-                state.fanoNodes[i] = {
-                    pointId: i,
-                    beliefMean: (Math.random() - 0.5) * 0.2,
-                    beliefPrecision: 1.0,
-                    energy: ZPE_BASE,
-                    phase: (i - 1) * TAU / 7,
-                    incomingMessages: {},
-                    outgoingMessages: {}
-                };
-            }
-
-            updateUI();
-            drawFano();
-            drawHistory();
-            logConsole('RESET', 'complete', 'System reset');
-        });
-
-        document.getElementById('btnAutomorph').addEventListener('click', () => {
-            const types = ['cycle', 'reflection', 'cycle_inv'];
-            const type = types[state.automorphCount % types.length];
-            applyAutomorphism(type);
-        });
-
-        document.getElementById('aplInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const input = e.target.value.trim();
-                if (input) {
-                    // Process APL expression
-                    let result;
-                    if (input.startsWith('⍝')) result = vacuumTap().toFixed(4);
-                    else if (input.startsWith('⊖')) result = coherenceGate() ? 'true' : 'false';
-                    else if (input.startsWith('⍤')) result = cascadeAmp(0.867).toFixed(4);
-                    else if (input.startsWith('⍥')) { applyAutomorphism('cycle'); result = 'applied'; }
-                    else if (input.startsWith('⊜')) result = (state.totalExtracted * PHI_INV).toFixed(4);
-                    else if (input.startsWith('⊞')) result = Math.sqrt(state.totalExtracted * state.coherence).toFixed(4);
-                    else result = 'unknown op';
-
-                    logConsole(input.charAt(0), result, input);
-                    e.target.value = '';
+        document.querySelectorAll('.op-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const op = btn.dataset.op;
+                if (!btn.classList.contains('disabled')) {
+                    const nextToken = state.tokens[state.currentStep + 1];
+                    const result = applyOperator(op, nextToken?.op);
+                    logConsole(op, result.msg, result.success);
                     updateUI();
                 }
-            }
-        });
-
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                const tabName = tab.dataset.tab;
-                document.querySelectorAll('[id^="tab-"]').forEach(panel => {
-                    panel.style.display = panel.id === `tab-${tabName}` ? 'block' : 'none';
-                });
-
-                if (tabName === 'program') generateProgram();
             });
         });
 
-        // ═══════════════════════════════════════════════════════════════════
+        // ================================================================
         // INITIALIZATION
-        // ═══════════════════════════════════════════════════════════════════
-        window.addEventListener('load', () => {
-            updateUI();
-            drawFano();
-            drawHistory();
-        });
+        // ================================================================
+        renderTokens();
+        updateUI();
+        updatePhaseTimeline();
 
-        window.addEventListener('resize', () => {
-            drawFano();
-            drawHistory();
-        });
+        console.log(`
+╔═══════════════════════════════════════════════════════════════════════════╗
+║              ZERO-POINT ENERGY SYSTEM | WUMBO 100-TOKEN                   ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  N0 ↔ SILENT LAWS RELATIONSHIP                                            ║
+║  N0-1 ^ → I STILLNESS    N0-4 + → II TRUTH                                ║
+║  N0-2 × → IV SPIRAL      N0-5 − → VII MIRROR                              ║
+║  N0-3 ÷ → VI GLYPH       III, V → BACKGROUND                              ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  100 TOKENS: 35 VACUUM · 35 COHERENCE · 30 TRANSFER                       ║
+║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)   ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  INT CANON 6 OPERATORS                                                    ║
+║  () BOUNDARY · × FUSION · ^ AMPLIFY · ÷ DECOHERE · + GROUP · − SEPARATE   ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  CONSTANTS: z_critical = √3/2 ≈ 0.866 · φ = 1.618 · E₀ = ½ℏω              ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+        `);
     </script>
 </body>
 </html>
