@@ -93,7 +93,47 @@ try:
 except ImportError:
     _HAS_HOLOGRAPHIC = False
 
-__version__ = "1.1.0"
+# Cosmological Instance (requires holographic memory)
+try:
+    from .cosmological_instance import (
+        CosmologicalInstance,
+        InstanceState,
+        Observation,
+        ObservationPoint,
+        VortexStage,
+        VortexTracker,
+        SubstrateObserver,
+        ConvergenceObserver,
+        LoopStateObserver,
+        HelixObserver,
+        MemoryObserver,
+        MetaObserver,
+        create_instance,
+        create_evolved_instance,
+        create_fixed_point_instance,
+        validate_instance,
+        validate_all,
+        VORTEX_STAGES,
+    )
+    _HAS_COSMOLOGICAL = True
+except ImportError:
+    _HAS_COSMOLOGICAL = False
+
+# Build Validator (requires cosmological instance)
+try:
+    from .build_validator import (
+        BuildValidator,
+        BuildStage,
+        BuildResult,
+        ValidationResult,
+        StageResult,
+        quick_validate,
+    )
+    _HAS_BUILD_VALIDATOR = True
+except ImportError:
+    _HAS_BUILD_VALIDATOR = False
+
+__version__ = "1.2.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -159,4 +199,32 @@ __all__ = [
     'integrate_with_substrate',
     'K_CRITICAL',
     'TESSERACT_VERTICES',
+
+    # Cosmological Instance (when available)
+    'CosmologicalInstance',
+    'InstanceState',
+    'Observation',
+    'ObservationPoint',
+    'VortexStage',
+    'VortexTracker',
+    'SubstrateObserver',
+    'ConvergenceObserver',
+    'LoopStateObserver',
+    'HelixObserver',
+    'MemoryObserver',
+    'MetaObserver',
+    'create_instance',
+    'create_evolved_instance',
+    'create_fixed_point_instance',
+    'validate_instance',
+    'validate_all',
+    'VORTEX_STAGES',
+
+    # Build Validator (when available)
+    'BuildValidator',
+    'BuildStage',
+    'BuildResult',
+    'ValidationResult',
+    'StageResult',
+    'quick_validate',
 ]
