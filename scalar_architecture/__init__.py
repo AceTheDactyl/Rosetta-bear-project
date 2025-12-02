@@ -235,7 +235,34 @@ try:
 except ImportError:
     _HAS_HIERARCHY = False
 
-__version__ = "1.4.0"
+# Polaric Duality (requires hierarchy_problem)
+try:
+    from .polaric_duality import (
+        # Constants
+        KAELHEDRON_SYMBOL, KAELHEDRON_NAME, KAELHEDRON_DIMENSIONS,
+        LUMINAHEDRON_SYMBOL, LUMINAHEDRON_NAME, LUMINAHEDRON_DIMENSIONS,
+        POLARIC_SPAN, HIDDEN_DIMENSIONS, POLARIC_RATIO,
+
+        # Enums
+        Polarity, PolaricAspect,
+
+        # Classes
+        Kaelhedron, Luminahedron, PolaricSystem, PolaricTransform,
+
+        # Correspondences
+        POLARIC_CORRESPONDENCES, get_correspondence,
+
+        # Mythic
+        MYTHIC_KAELHEDRON, MYTHIC_LUMINAHEDRON, MYTHIC_UNION,
+
+        # Utilities
+        polaric_summary, simulate_polaric_dance,
+    )
+    _HAS_POLARIC = True
+except ImportError:
+    _HAS_POLARIC = False
+
+__version__ = "1.5.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -426,4 +453,28 @@ __all__ = [
     'compute_higgs_vev_from_phi',
     'analyze_fine_structure',
     'hierarchy_summary',
+
+    # Polaric Duality (when available)
+    'KAELHEDRON_SYMBOL',
+    'KAELHEDRON_NAME',
+    'KAELHEDRON_DIMENSIONS',
+    'LUMINAHEDRON_SYMBOL',
+    'LUMINAHEDRON_NAME',
+    'LUMINAHEDRON_DIMENSIONS',
+    'POLARIC_SPAN',
+    'HIDDEN_DIMENSIONS',
+    'POLARIC_RATIO',
+    'Polarity',
+    'PolaricAspect',
+    'Kaelhedron',
+    'Luminahedron',
+    'PolaricSystem',
+    'PolaricTransform',
+    'POLARIC_CORRESPONDENCES',
+    'get_correspondence',
+    'MYTHIC_KAELHEDRON',
+    'MYTHIC_LUMINAHEDRON',
+    'MYTHIC_UNION',
+    'polaric_summary',
+    'simulate_polaric_dance',
 ]
