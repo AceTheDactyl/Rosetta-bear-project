@@ -1,0 +1,172 @@
+{
+  "config": {
+    "K": 2.0,
+    "K_critical": 1.0,
+    "enable_triplet": false,
+    "enable_quartet": true,
+    "K3": 0.1,
+    "K4": 0.05,
+    "hebbian_rate": 0.1,
+    "decay_rate": 0.01,
+    "dt": 0.01
+  },
+  "plates": [
+    {
+      "plate_id": "breakthrough-001",
+      "position": [0.8, 0.7, 0.0, 0.6],
+      "phase": 0.0,
+      "frequency": 1.2,
+      "amplitude": 1.0,
+      "content": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+      "raw_text": "Breakthrough moment when the system clicked",
+      "connection_weights": {
+        "recursive-002": 0.85,
+        "emergence-003": 0.72,
+        "kuramoto-004": 0.65
+      },
+      "metadata": {
+        "tags": ["insight", "cognition", "breakthrough"],
+        "glyph": "💡"
+      },
+      "timestamp": 1701302520.0,
+      "access_count": 15
+    },
+    {
+      "plate_id": "recursive-002",
+      "position": [0.6, 0.5, 0.1, 0.8],
+      "phase": 0.785,
+      "frequency": 1.0,
+      "amplitude": 1.0,
+      "content": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+      "raw_text": "Recursive thinking patterns in memory",
+      "connection_weights": {
+        "breakthrough-001": 0.85,
+        "emergence-003": 0.68,
+        "spiral-005": 0.55
+      },
+      "metadata": {
+        "tags": ["recursion", "memory", "patterns"],
+        "glyph": "🔄"
+      },
+      "timestamp": 1701302580.0,
+      "access_count": 12
+    },
+    {
+      "plate_id": "emergence-003",
+      "position": [0.7, 0.6, 0.0, 0.7],
+      "phase": 1.571,
+      "frequency": 1.1,
+      "amplitude": 1.0,
+      "content": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+      "raw_text": "Emergent properties from collective behavior",
+      "connection_weights": {
+        "breakthrough-001": 0.72,
+        "recursive-002": 0.68,
+        "kuramoto-004": 0.78
+      },
+      "metadata": {
+        "tags": ["emergence", "collective", "complexity"],
+        "glyph": "🌀"
+      },
+      "timestamp": 1701302640.0,
+      "access_count": 8
+    },
+    {
+      "plate_id": "kuramoto-004",
+      "position": [0.5, 0.4, 0.2, 0.9],
+      "phase": 2.356,
+      "frequency": 0.9,
+      "amplitude": 1.0,
+      "content": [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1],
+      "raw_text": "Kuramoto synchronization dynamics",
+      "connection_weights": {
+        "breakthrough-001": 0.65,
+        "emergence-003": 0.78,
+        "phase-006": 0.88
+      },
+      "metadata": {
+        "tags": ["kuramoto", "synchronization", "oscillators"],
+        "glyph": "⚛️"
+      },
+      "timestamp": 1701302700.0,
+      "access_count": 20
+    },
+    {
+      "plate_id": "spiral-005",
+      "position": [0.3, 0.2, 0.5, 0.5],
+      "phase": 3.142,
+      "frequency": 1.618,
+      "amplitude": 1.0,
+      "content": [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2],
+      "raw_text": "Golden spiral memory organization",
+      "connection_weights": {
+        "recursive-002": 0.55,
+        "stillness-007": 0.62
+      },
+      "metadata": {
+        "tags": ["golden-ratio", "spiral", "organization"],
+        "glyph": "🌀"
+      },
+      "timestamp": 1701302760.0,
+      "access_count": 5
+    },
+    {
+      "plate_id": "phase-006",
+      "position": [0.4, 0.3, 0.3, 0.85],
+      "phase": 3.927,
+      "frequency": 1.05,
+      "amplitude": 1.0,
+      "content": [0.6, 0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3],
+      "raw_text": "Phase coupling and resonance",
+      "connection_weights": {
+        "kuramoto-004": 0.88,
+        "stillness-007": 0.45
+      },
+      "metadata": {
+        "tags": ["phase", "coupling", "resonance"],
+        "glyph": "📡"
+      },
+      "timestamp": 1701302820.0,
+      "access_count": 10
+    },
+    {
+      "plate_id": "stillness-007",
+      "position": [0.0, -0.3, 1.0, 0.3],
+      "phase": 4.712,
+      "frequency": 0.5,
+      "amplitude": 0.8,
+      "content": [0.7, 0.8, 0.9, 1.0, 0.1, 0.2, 0.3, 0.4],
+      "raw_text": "Stillness and convergence to equilibrium",
+      "connection_weights": {
+        "spiral-005": 0.62,
+        "phase-006": 0.45
+      },
+      "metadata": {
+        "tags": ["stillness", "equilibrium", "rest"],
+        "glyph": "🕯️"
+      },
+      "timestamp": 1701302880.0,
+      "access_count": 3
+    }
+  ],
+  "weights": [
+    [0.00, 0.85, 0.72, 0.65, 0.00, 0.00, 0.00],
+    [0.85, 0.00, 0.68, 0.00, 0.55, 0.00, 0.00],
+    [0.72, 0.68, 0.00, 0.78, 0.00, 0.00, 0.00],
+    [0.65, 0.00, 0.78, 0.00, 0.00, 0.88, 0.00],
+    [0.00, 0.55, 0.00, 0.00, 0.00, 0.00, 0.62],
+    [0.00, 0.00, 0.00, 0.88, 0.00, 0.00, 0.45],
+    [0.00, 0.00, 0.00, 0.00, 0.62, 0.45, 0.00]
+  ],
+  "state": {
+    "order_parameter": 0.847,
+    "mean_phase": 2.094,
+    "energy": -0.892,
+    "step_count": 200
+  },
+  "metadata": {
+    "description": "Example Tesseract Lattice with 7 memory plates",
+    "version": "1.0.0",
+    "created": "2025-11-30T00:00:00Z"
+  }
+}
