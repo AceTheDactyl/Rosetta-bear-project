@@ -7,7 +7,8 @@
 ║  • 7 Scalar Domains ↔ 7 Kaelhedron Seals (Fano points)                       ║
 ║  • 21 Interference Nodes ↔ 21 Kaelhedron Cells ↔ 21 so(7) Generators         ║
 ║  • Kaelhedron (21D) + Luminahedron (12D) = 33D Polaric Span → E₈ (248D)      ║
-║  Signature: Δ|unified-bridge|z0.99|rhythm-native|Ω                            ║
+║  • Fano Polarity Feedback: Forward ↔ Backward arcs with PSL(3,2)             ║
+║  Signature: Δ|unified-bridge|polarity-integrated|z0.99|rhythm-native|Ω       ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 """
 
@@ -19,6 +20,23 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Tuple, Any, Callable
 import numpy as np
+
+# Polarity feedback integration
+from fano_polarity.core import line_from_points, point_from_lines
+from fano_polarity.loop import PolarityLoop, GateState
+from fano_polarity.automorphisms import (
+    CoherenceAutomorphismEngine,
+    compute_polarity_automorphism,
+    enumerate_psl32,
+    IDENTITY,
+)
+from fano_polarity.unified_state import (
+    UnifiedSystemState,
+    UnifiedStateRegistry,
+    get_state_registry,
+    PolarityPhase,
+    KFormationStatus as PolarityKFormationStatus,
+)
 
 # =============================================================================
 # SACRED CONSTANTS
@@ -287,9 +305,10 @@ class UnifiedMathBridge:
     - 7 Scalar Domains ↔ 7 Kaelhedron Seals
     - 21 Interference Nodes ↔ 21 Cells ↔ 21 so(7) generators
     - Kaelhedron (21D) + Luminahedron (12D) = 33D → E₈ (248D)
+    - Fano Polarity Feedback with PSL(3,2) automorphisms
     """
 
-    def __init__(self, initial_z: float = 0.41):
+    def __init__(self, initial_z: float = 0.41, polarity_delay: float = 0.25):
         self.z_level = initial_z
         self.time = 0.0
 
@@ -320,6 +339,21 @@ class UnifiedMathBridge:
         # K-Formation
         self.k_formation_status = KFormationStatus.INACTIVE
         self.k_formation_progress = 0.0
+
+        # =======================================================================
+        # POLARITY FEEDBACK INTEGRATION
+        # =======================================================================
+        self.polarity_loop = PolarityLoop(delay=polarity_delay)
+        self.automorphism_engine = CoherenceAutomorphismEngine()
+        self._polarity_phase = PolarityPhase.IDLE
+        self._forward_points: Optional[Tuple[int, int]] = None
+        self._forward_line: Optional[Tuple[int, int, int]] = None
+        self._coherence_point: Optional[int] = None
+        self._state_registry = get_state_registry()
+
+        # Polarity callbacks
+        self._on_polarity_release: List[Callable[[int, Dict[int, int]], None]] = []
+        self._on_coherence: List[Callable[[float], None]] = []
 
     def domain_to_seal(self, domain: DomainType) -> Seal:
         return DOMAIN_SEAL_MAP[domain]
@@ -387,6 +421,122 @@ class UnifiedMathBridge:
             'K_FORMED': coh_met and rec_met and chg_met
         }
 
+    # =========================================================================
+    # POLARITY FEEDBACK METHODS
+    # =========================================================================
+
+    def inject_polarity(self, p1: int, p2: int) -> Dict[str, Any]:
+        """
+        Inject two Fano points into the polarity loop (forward polarity).
+
+        This triggers the forward polarity (positive arc) - points define a line.
+        Coherence is gated until the phase delay elapses and backward polarity
+        is triggered.
+
+        Args:
+            p1: First Fano point (1-7, maps to domain/seal)
+            p2: Second Fano point (1-7, maps to domain/seal)
+
+        Returns:
+            Dictionary with the computed Fano line and phase state
+        """
+        line = self.polarity_loop.forward(p1, p2)
+        self._polarity_phase = PolarityPhase.FORWARD_TRIGGERED
+        self._forward_points = (p1, p2)
+        self._forward_line = line
+        self._coherence_point = None
+
+        return {
+            "line": line,
+            "phase": self._polarity_phase.value,
+            "points": (p1, p2),
+        }
+
+    def release_polarity(
+        self, line_a: Tuple[int, int, int], line_b: Tuple[int, int, int]
+    ) -> Dict[str, Any]:
+        """
+        Release coherence via backward polarity (lines define a point).
+
+        If the phase delay has elapsed, coherence is released and a PSL(3,2)
+        automorphism is applied to the Kaelhedron cell activations.
+
+        Args:
+            line_a: First Fano line (3-tuple of points)
+            line_b: Second Fano line (3-tuple of points)
+
+        Returns:
+            Dictionary with coherence status, intersection point, and automorphism
+        """
+        result = self.polarity_loop.backward(line_a, line_b)
+
+        if result["coherence"]:
+            self._polarity_phase = PolarityPhase.COHERENCE_RELEASED
+            self._coherence_point = result["point"]
+
+            # Compute and apply PSL(3,2) automorphism
+            automorphism = IDENTITY.copy()
+            if self._forward_points:
+                automorphism = self.automorphism_engine.apply(
+                    self._forward_points, result["point"]
+                )
+                self._apply_automorphism(automorphism)
+
+            # Fire callbacks
+            for cb in self._on_polarity_release:
+                cb(result["point"], automorphism)
+
+            return {
+                "coherence": True,
+                "point": result["point"],
+                "remaining": 0.0,
+                "phase": self._polarity_phase.value,
+                "automorphism": automorphism,
+                "automorphism_description": self.automorphism_engine.describe(),
+            }
+        else:
+            self._polarity_phase = PolarityPhase.GATED
+            return {
+                "coherence": False,
+                "point": None,
+                "remaining": result["remaining"],
+                "phase": self._polarity_phase.value,
+                "automorphism": None,
+            }
+
+    def _apply_automorphism(self, perm: Dict[int, int]) -> None:
+        """Apply a PSL(3,2) automorphism to the cell activations."""
+        new_activations = np.zeros_like(self.cell_activations)
+        for seal in range(1, 8):
+            target_seal = perm.get(seal, seal)
+            new_activations[target_seal - 1, :] = self.cell_activations[seal - 1, :]
+        self.cell_activations = new_activations
+
+    def get_polarity_state(self) -> Dict[str, Any]:
+        """Get current polarity loop state."""
+        gate_remaining = 0.0
+        if self.polarity_loop.state:
+            elapsed = time.time() - self.polarity_loop.state.start_time
+            gate_remaining = max(0, self.polarity_loop.state.delay - elapsed)
+
+        return {
+            "phase": self._polarity_phase.value,
+            "forward_points": self._forward_points,
+            "forward_line": self._forward_line,
+            "coherence_point": self._coherence_point,
+            "gate_remaining": gate_remaining,
+            "cumulative_automorphism": self.automorphism_engine.cumulative,
+            "automorphism_history_length": self.automorphism_engine.history_length,
+        }
+
+    def on_polarity_release(self, callback: Callable[[int, Dict[int, int]], None]) -> None:
+        """Register callback for polarity coherence release events."""
+        self._on_polarity_release.append(callback)
+
+    def on_coherence_threshold(self, callback: Callable[[float], None]) -> None:
+        """Register callback for coherence threshold crossing."""
+        self._on_coherence.append(callback)
+
     def step(self, dt: float = 0.01) -> UnifiedBridgeState:
         self.time += dt
 
@@ -413,7 +563,13 @@ class UnifiedMathBridge:
         self.cell_activations = np.clip(self.cell_activations, 0, 1)
 
         # Update coherence
+        old_coherence = self.kaelhedron_coherence
         self.kaelhedron_coherence = self.compute_coherence()
+
+        # Fire coherence callbacks if threshold crossed
+        if old_coherence <= PHI_INV < self.kaelhedron_coherence:
+            for cb in self._on_coherence:
+                cb(self.kaelhedron_coherence)
 
         # Polaric coupling
         kappa_field = self.kaelhedron_coherence * (1 - self.polaric_balance)
@@ -460,7 +616,13 @@ class UnifiedMathBridge:
                 'coupling': self.coupling_strength, 'balance': self.polaric_balance
             },
             'k_formation': self.detect_k_formation(),
-            'e8': {'polaric_span': 33, 'hidden': 215, 'total': 248}
+            'e8': {'polaric_span': 33, 'hidden': 215, 'total': 248},
+            'polarity': self.get_polarity_state(),
+            'psl32': {
+                'total_automorphisms': 168,
+                'applied_count': self.automorphism_engine.history_length,
+                'cumulative': self.automorphism_engine.describe(),
+            }
         }
 
 # =============================================================================
@@ -492,6 +654,7 @@ class WebSocketBridge:
 def demonstrate():
     print("=" * 70)
     print("UNIFIED MATHEMATICAL STRUCTURES BRIDGE")
+    print("with Polarity Feedback Integration")
     print("=" * 70)
 
     bridge = UnifiedMathBridge(initial_z=0.41)
@@ -527,8 +690,27 @@ def demonstrate():
         k = bridge.detect_k_formation()
         print(f"  z={z:.2f}: η={state.kaelhedron_coherence:.3f}, K={k['status']}, β={state.polaric_balance:.3f}")
 
+    print("\n§6 POLARITY FEEDBACK")
+    print("-" * 50)
+    print(f"  PSL(3,2) group order: 168 automorphisms")
+
+    # Demonstrate polarity injection
+    result = bridge.inject_polarity(1, 2)
+    print(f"  Forward polarity: points (1,2) → line {result['line']}")
+
+    # Wait for gate delay
+    import time
+    time.sleep(0.3)
+
+    # Release polarity
+    result = bridge.release_polarity((1, 2, 3), (1, 4, 5))
+    print(f"  Backward polarity: lines intersect at point {result['point']}")
+    print(f"  Coherence released: {result['coherence']}")
+    if result.get('automorphism'):
+        print(f"  Automorphism applied: {result.get('automorphism_description', 'Identity')}")
+
     print("\n" + "=" * 70)
-    print(f"Signature: Δ|unified-bridge|z{bridge.z_level:.2f}|rhythm-native|Ω")
+    print(f"Signature: Δ|unified-bridge|polarity-integrated|z{bridge.z_level:.2f}|Ω")
 
 if __name__ == "__main__":
     demonstrate()

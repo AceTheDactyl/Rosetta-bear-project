@@ -548,12 +548,14 @@ class ScalarArchitecture:
     Layer 1: Convergence Dynamics
     Layer 2: Loop States
     Layer 3: Helix State
+    Layer 4: Polarity Feedback (integrated from fano_polarity)
     """
 
     def __init__(
         self,
         initial_z: float = 0.0,
         telemetry_publisher: Optional[Callable[[Dict[str, object]], None]] = None,
+        enable_polarity: bool = True,
     ):
         # Layer 0: Scalar Substrate
         self.substrate = ScalarSubstrate()
@@ -570,6 +572,65 @@ class ScalarArchitecture:
         # Current z-level
         self.z_level = initial_z
         self._telemetry_publisher = telemetry_publisher
+
+        # Layer 4: Polarity Feedback Integration
+        self._polarity_enabled = enable_polarity
+        self._polarity_loop = None
+        self._polarity_engine = None
+        self._on_loop_closure: List[Callable[[DomainType, LoopState], None]] = []
+        self._previous_loop_states: Dict[DomainType, LoopState] = {
+            dt: LoopState.DIVERGENT for dt in DomainType
+        }
+        if enable_polarity:
+            self._init_polarity_integration()
+
+    def _init_polarity_integration(self) -> None:
+        """Initialize polarity feedback integration."""
+        try:
+            from fano_polarity.loop import PolarityLoop
+            from fano_polarity.automorphisms import CoherenceAutomorphismEngine
+            self._polarity_loop = PolarityLoop(delay=0.25)
+            self._polarity_engine = CoherenceAutomorphismEngine()
+        except ImportError:
+            self._polarity_enabled = False
+
+    def inject_polarity(self, p1: int, p2: int) -> Optional[Dict[str, Any]]:
+        """
+        Inject two domain indices as Fano points into the polarity loop.
+
+        Args:
+            p1: First domain index (0-6) → Fano point (1-7)
+            p2: Second domain index (0-6) → Fano point (1-7)
+
+        Returns:
+            Result dict with line, or None if polarity not enabled
+        """
+        if not self._polarity_enabled or self._polarity_loop is None:
+            return None
+        # Convert domain indices to Fano points (1-indexed)
+        line = self._polarity_loop.forward(p1 + 1, p2 + 1)
+        return {"line": line, "domains": (p1, p2)}
+
+    def release_polarity(
+        self, line_a: Tuple[int, int, int], line_b: Tuple[int, int, int]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Release polarity via backward arc.
+
+        Args:
+            line_a: First Fano line
+            line_b: Second Fano line
+
+        Returns:
+            Result dict with coherence status, or None if not enabled
+        """
+        if not self._polarity_enabled or self._polarity_loop is None:
+            return None
+        return self._polarity_loop.backward(line_a, line_b)
+
+    def on_loop_closure(self, callback: Callable[[DomainType, LoopState], None]) -> None:
+        """Register callback for loop closure events."""
+        self._on_loop_closure.append(callback)
 
     def step(self, dt: float, external_inputs: Optional[List[float]] = None) -> ScalarArchitectureState:
         """
@@ -591,7 +652,15 @@ class ScalarArchitecture:
         # Update Layer 2: Loop states
         loop_states = {}
         for dt_type in DomainType:
-            loop_states[dt_type] = self.loop_controllers[dt_type].update(self.z_level)
+            new_state = self.loop_controllers[dt_type].update(self.z_level)
+            loop_states[dt_type] = new_state
+
+            # Detect loop closure transitions and fire callbacks
+            old_state = self._previous_loop_states.get(dt_type, LoopState.DIVERGENT)
+            if old_state != LoopState.CLOSED and new_state == LoopState.CLOSED:
+                for cb in self._on_loop_closure:
+                    cb(dt_type, new_state)
+            self._previous_loop_states[dt_type] = new_state
 
         # Update Layer 3: Helix evolution
         composite_s = ConvergenceDynamics.composite_saturation(self.z_level)
