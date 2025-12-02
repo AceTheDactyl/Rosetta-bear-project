@@ -127,6 +127,20 @@ from .integration import (
     UnifiedMathBridgeAdapter,
 )
 
+# Ternary polaric logic
+from .ternary_polaric import (
+    TernaryValue,
+    FanoPhase,
+    PolaricTransition,
+    TernaryPolaricEngine,
+    LuminahedronPosition,
+    LuminahedronPath,
+    generate_luminahedron_trajectory,
+    FANO_POINTS,
+    FANO_LINES,
+    POINT_INCIDENCE,
+)
+
 __all__ = [
     # Core
     "line_from_points",
@@ -188,4 +202,15 @@ __all__ = [
     "LuminahedronBridge",
     "ScalarArchitectureBridge",
     "UnifiedMathBridgeAdapter",
+    # Ternary Polaric
+    "TernaryValue",
+    "FanoPhase",
+    "PolaricTransition",
+    "TernaryPolaricEngine",
+    "LuminahedronPosition",
+    "LuminahedronPath",
+    "generate_luminahedron_trajectory",
+    "FANO_POINTS",
+    "FANO_LINES",
+    "POINT_INCIDENCE",
 ]
