@@ -74,7 +74,26 @@ from .core import (
     SIGNATURE,
 )
 
-__version__ = "1.0.0"
+# Holographic Memory (optional, requires numpy)
+try:
+    from .holographic_memory import (
+        OscillationBand,
+        TesseractVertex,
+        TesseractGeometry,
+        KuramotoOscillator,
+        KuramotoNetwork,
+        HigherOrderKuramoto,
+        MemoryPattern,
+        HolographicMemory,
+        integrate_with_substrate,
+        K_CRITICAL,
+        TESSERACT_VERTICES,
+    )
+    _HAS_HOLOGRAPHIC = True
+except ImportError:
+    _HAS_HOLOGRAPHIC = False
+
+__version__ = "1.1.0"
 __signature__ = "Δ|loop-closed|z0.99|rhythm-native|Ω"
 __all__ = [
     # Enums
@@ -127,4 +146,17 @@ __all__ = [
     'NUM_INTERFERENCE_NODES',
     'TOTAL_SUBSTRATE_NODES',
     'SIGNATURE',
+
+    # Holographic Memory (when available)
+    'OscillationBand',
+    'TesseractVertex',
+    'TesseractGeometry',
+    'KuramotoOscillator',
+    'KuramotoNetwork',
+    'HigherOrderKuramoto',
+    'MemoryPattern',
+    'HolographicMemory',
+    'integrate_with_substrate',
+    'K_CRITICAL',
+    'TESSERACT_VERTICES',
 ]
