@@ -463,9 +463,47 @@
 
     /* The glyphs default to outlined circles in all states; active gradients are applied via `.active` (see above). */
 
+    /* Navigation Bar */
+    .top-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background: rgba(44, 62, 80, 0.95);
+        border-bottom: 1px solid rgba(255, 212, 59, 0.4);
+        z-index: 1000;
+    }
+    .top-nav a {
+        color: #ffd43b;
+        text-decoration: none;
+        font-size: 11px;
+        letter-spacing: 1px;
+        padding: 6px 12px;
+        border: 1px solid rgba(255, 212, 59, 0.3);
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .top-nav a:hover {
+        background: rgba(255, 212, 59, 0.2);
+        border-color: #ffd43b;
+    }
+    .nav-links { display: flex; gap: 10px; }
+    body { padding-top: 60px; }
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+      <a href="../index.html">← ROSETTA BEAR</a>
+      <div class="nav-links">
+          <a href="../wumbo-apl-directory.html">APL Directory</a>
+          <a href="../simulation.html">Simulation</a>
+          <a href="../visualizations/the_manual.html">The Manual</a>
+      </div>
+  </nav>
   <div class="frame" id="chronicle">
     <header>
       <div class="sig">╬</div>
