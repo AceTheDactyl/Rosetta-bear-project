@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rosetta-bear.dev/schemas/plate.json",
+  "title": "MemoryPlate",
+  "description": "Schema for a Memory Plate in the Tesseract Lattice",
+  "type": "object",
+  "required": ["plate_id", "position", "phase"],
+  "properties": {
+    "plate_id": {
+      "type": "string",
+      "description": "Unique identifier for the plate",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "position": {
+      "type": "array",
+      "description": "4D position: [valence, arousal, temporal, abstraction]",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "phase": {
+      "type": "number",
+      "description": "Current oscillation phase θ ∈ [0, 2π)",
+      "minimum": 0,
+      "maximum": 6.283185307179587
+    },
+    "frequency": {
+      "type": "number",
+      "description": "Natural frequency ω (Hz)",
+      "default": 1.0,
+      "minimum": 0
+    },
+    "amplitude": {
+      "type": "number",
+      "description": "Oscillation amplitude",
+      "default": 1.0,
+      "minimum": 0
+    },
+    "content": {
+      "type": ["array", "null"],
+      "description": "Embedding vector for semantic content",
+      "items": {
+        "type": "number"
+      }
+    },
+    "raw_text": {
+      "type": ["string", "null"],
+      "description": "Original text content (if applicable)"
+    },
+    "connection_weights": {
+      "type": "object",
+      "description": "Map of plate_id → connection weight",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "properties": {
+        "vertex_index": {
+          "type": "integer",
+          "description": "Tesseract vertex index (0-15)"
+        },
+        "is_tesseract_vertex": {
+          "type": "boolean",
+          "description": "Whether this is a tesseract vertex plate"
+        },
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Semantic tags"
+        },
+        "glyph": {
+          "type": "string",
+          "description": "Visual glyph representation"
+        }
+      },
+      "additionalProperties": true
+    },
+    "timestamp": {
+      "type": "number",
+      "description": "Creation/modification timestamp",
+      "default": 0
+    },
+    "access_count": {
+      "type": "integer",
+      "description": "Number of times this plate has been accessed",
+      "default": 0,
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "emotional_position": {
+      "type": "object",
+      "description": "Emotional coordinates in 4D space",
+      "properties": {
+        "valence": {
+          "type": "number",
+          "description": "Emotional valence (-1 negative to +1 positive)",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "arousal": {
+          "type": "number",
+          "description": "Arousal level (-1 calm to +1 excited)",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "temporal": {
+          "type": "number",
+          "description": "Temporal position (0 = now, positive = past)",
+          "minimum": 0
+        },
+        "abstraction": {
+          "type": "number",
+          "description": "Abstraction level (0 concrete to 1 abstract)",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}
