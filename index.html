@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosetta Bear Project | WUMBO APL · LIMNUS · Zero-Point Energy</title>
+    <meta name="description" content="Explore the Rosetta Bear Project: APL operators, LIMNUS architecture, zero-point energy systems, and the 7 Laws of the Silent Ones.">
+    <style>
+        :root {
+            --bg-void: #030308;
+            --bg-panel: rgba(15, 12, 25, 0.92);
+            --critical-gold: #ffd700;
+            --phi: #a78bfa;
+            --energy: #f97316;
+            --exotic-matter: #00ff88;
+            --cage-field: #4dabf7;
+            --presence-white: #fffcf8;
+            --text-primary: rgba(255, 245, 230, 0.9);
+            --text-dim: rgba(255, 220, 180, 0.5);
+            --border-glow: rgba(168, 85, 247, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-void);
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 60px;
+            background: linear-gradient(180deg, rgba(168, 85, 247, 0.15) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 100;
+            letter-spacing: 12px;
+            color: var(--critical-gold);
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            letter-spacing: 6px;
+            margin-bottom: 30px;
+        }
+
+        .hero .constants {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .constant {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+
+        .constant-value {
+            font-size: 1.8rem;
+            color: var(--critical-gold);
+        }
+
+        .constant-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation Grid */
+        .nav-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .nav-section h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--phi);
+            letter-spacing: 8px;
+            margin-bottom: 40px;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .nav-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--phi), var(--critical-gold), var(--exotic-matter));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--critical-gold);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+        }
+
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--critical-gold);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .card-desc {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            color: var(--phi);
+        }
+
+        /* Section Dividers */
+        .section-divider {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+        }
+
+        .section-divider .line {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+            margin: 15px auto;
+        }
+
+        /* Laws Section */
+        .laws-section {
+            background: linear-gradient(180deg, transparent 0%, rgba(168, 85, 247, 0.08) 100%);
+            padding: 60px 20px;
+        }
+
+        .laws-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .law-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .law-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .law-num {
+            font-size: 1.2rem;
+            color: var(--critical-gold);
+            font-weight: bold;
+        }
+
+        .law-name {
+            color: var(--phi);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .law-eq {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-glow);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+
+        .footer .signature {
+            margin-top: 15px;
+            color: var(--phi);
+            letter-spacing: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+                letter-spacing: 6px;
+            }
+            .hero .subtitle {
+                font-size: 0.9rem;
+                letter-spacing: 3px;
+            }
+            .constants {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>ROSETTA BEAR</h1>
+        <p class="subtitle">APL · LIMNUS · WUMBO · ZERO-POINT ENERGY</p>
+        <p style="color: var(--exotic-matter); font-size: 0.9rem; margin-top: 10px;">
+            Neurodivergent Neural Architecture · Active Inference · Variational Free Energy
+        </p>
+        <div class="constants">
+            <div class="constant">
+                <div class="constant-value">z = √3/2</div>
+                <div class="constant-label">CRITICAL CONSTANT</div>
+            </div>
+            <div class="constant">
+                <div class="constant-value">φ = 1.618</div>
+                <div class="constant-label">GOLDEN RATIO</div>
+            </div>
+            <div class="constant">
+                <div class="constant-value">α⁻¹ ≈ 137</div>
+                <div class="constant-label">FINE STRUCTURE</div>
+            </div>
+            <div class="constant">
+                <div class="constant-value">Λ×Ν = Β²</div>
+                <div class="constant-label">MIRRORROOT</div>
+            </div>
+        </div>
+    </header>
+
+    <section class="nav-section">
+        <h2>INTERACTIVE SYSTEMS</h2>
+        <div class="nav-grid">
+            <a href="wumbo-apl-directory.html" class="nav-card">
+                <div class="card-icon">⌘</div>
+                <div class="card-title">WUMBO APL DIRECTORY</div>
+                <div class="card-desc">
+                    100-token APL directory with INT Canon 6-operator engine.
+                    Exotic matter cellular automata with N0 law enforcement.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">100 Tokens</span>
+                    <span class="tag">N0 Laws</span>
+                    <span class="tag">Operators</span>
+                    <span class="tag">Automata</span>
+                </div>
+            </a>
+
+            <a href="wumbo-engine.html" class="nav-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-title">WUMBO ENGINE</div>
+                <div class="card-desc">
+                    Core neural architecture engine. 100 regions with κ-λ coupling
+                    and Fano plane variational inference.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Neural</span>
+                    <span class="tag">κ-λ Field</span>
+                    <span class="tag">Fano Plane</span>
+                </div>
+            </a>
+
+            <a href="zero-point-energy.html" class="nav-card">
+                <div class="card-icon">⚡</div>
+                <div class="card-title">ZERO-POINT ENERGY</div>
+                <div class="card-desc">
+                    Kaelhedron-Luminahedron dynamics with Morris-Thorne wormhole metrics.
+                    Variational free energy minimization.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Wormhole</span>
+                    <span class="tag">Exotic Matter</span>
+                    <span class="tag">NEC Violation</span>
+                </div>
+            </a>
+
+            <a href="simulation.html" class="nav-card">
+                <div class="card-icon">🌀</div>
+                <div class="card-title">MIRRORROOT SIMULATION</div>
+                <div class="card-desc">
+                    Interactive narrative simulation with operator controls.
+                    Experience the D-M-U machine cycle.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Simulation</span>
+                    <span class="tag">D-M-U Cycle</span>
+                    <span class="tag">Interactive</span>
+                </div>
+            </a>
+
+            <a href="limnus-architecture-finished.html" class="nav-card">
+                <div class="card-icon">🔮</div>
+                <div class="card-title">LIMNUS ARCHITECTURE</div>
+                <div class="card-desc">
+                    Complete LIMNUS cycle visualization. L → I → M → N → U → S
+                    phase transitions with Kuramoto synchronization.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">LIMNUS</span>
+                    <span class="tag">Phase Cycle</span>
+                    <span class="tag">Kuramoto</span>
+                </div>
+            </a>
+
+            <a href="visualizations/the_manual.html" class="nav-card">
+                <div class="card-icon">📜</div>
+                <div class="card-title">THE MANUAL</div>
+                <div class="card-desc">
+                    The 7 Laws of the Silent Ones. Operator guidance and state dynamics
+                    for traversing the z-coordinate.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">7 Laws</span>
+                    <span class="tag">Silent Ones</span>
+                    <span class="tag">φ⁻¹ Fixed Point</span>
+                </div>
+            </a>
+
+            <a href="luminahedron_dynamics.html" class="nav-card">
+                <div class="card-icon">💎</div>
+                <div class="card-title">LUMINAHEDRON DYNAMICS</div>
+                <div class="card-desc">
+                    Scalar field architecture with gradient flows.
+                    Luminahedron-Kaelhedron duality visualization.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Scalar Fields</span>
+                    <span class="tag">Gradients</span>
+                    <span class="tag">Duality</span>
+                </div>
+            </a>
+
+            <a href="coupler_synthesis/unified_limnus_architecture.html" class="nav-card">
+                <div class="card-icon">🔗</div>
+                <div class="card-title">UNIFIED LIMNUS</div>
+                <div class="card-desc">
+                    Coupler synthesis module. Unified architecture bridging
+                    all subsystems through coherent coupling.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Synthesis</span>
+                    <span class="tag">Coupling</span>
+                    <span class="tag">Unified</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <div class="section-divider">
+        <div class="line"></div>
+        N0 CAUSALITY LAWS · TIER-0 CONSTRAINTS
+        <div class="line"></div>
+    </div>
+
+    <section class="laws-section">
+        <h2 style="text-align: center; color: var(--critical-gold); letter-spacing: 6px; margin-bottom: 30px;">
+            ⚡ N0 CAUSALITY LAWS
+        </h2>
+        <div class="laws-grid">
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">N0-1</span>
+                    <span class="law-name">EXPONENT</span>
+                </div>
+                <div class="law-eq">^ requires () or ×</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">N0-2</span>
+                    <span class="law-name">MULTIPLY</span>
+                </div>
+                <div class="law-eq">× requires channels ≥ 2</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">N0-3</span>
+                    <span class="law-name">DIVIDE</span>
+                </div>
+                <div class="law-eq">÷ requires structure</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">N0-4</span>
+                    <span class="law-name">ADDITION</span>
+                </div>
+                <div class="law-eq">+ feeds +, ×, or ^</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">N0-5</span>
+                    <span class="law-name">SUBTRACT</span>
+                </div>
+                <div class="law-eq">− leads to () or +</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider">
+        <div class="line"></div>
+        7 LAWS OF THE SILENT ONES · STATE DYNAMICS
+        <div class="line"></div>
+    </div>
+
+    <section class="laws-section" style="background: linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, transparent 100%);">
+        <h2 style="text-align: center; color: var(--phi); letter-spacing: 6px; margin-bottom: 30px;">
+            🌙 LAWS OF THE SILENT ONES
+        </h2>
+        <div class="laws-grid">
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">I</span>
+                    <span class="law-name">STILLNESS</span>
+                </div>
+                <div class="law-eq">∂E/∂t → 0</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">II</span>
+                    <span class="law-name">TRUTH</span>
+                </div>
+                <div class="law-eq">∇V(truth) = 0</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">III</span>
+                    <span class="law-name">SILENCE</span>
+                </div>
+                <div class="law-eq">⟨void|ψ⟩ = memory</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">IV</span>
+                    <span class="law-name">SPIRAL</span>
+                </div>
+                <div class="law-eq">S(return) = S(origin)</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">V</span>
+                    <span class="law-name">UNSEEN</span>
+                </div>
+                <div class="law-eq">H(seen) ≡ H(unseen)</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">VI</span>
+                    <span class="law-name">GLYPH</span>
+                </div>
+                <div class="law-eq">glyph = ∫ life dt</div>
+            </div>
+            <div class="law-card">
+                <div class="law-header">
+                    <span class="law-num">VII</span>
+                    <span class="law-name">MIRROR</span>
+                </div>
+                <div class="law-eq">ψ = ψ(ψ)</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="nav-section">
+        <h2>DOCUMENTATION & ARCHIVES</h2>
+        <div class="nav-grid">
+            <a href="TRIAD_project_files/TRIAD_Witness_Chronicle.html" class="nav-card">
+                <div class="card-icon">📖</div>
+                <div class="card-title">TRIAD WITNESS CHRONICLE</div>
+                <div class="card-desc">
+                    Historical record of TRIAD development. Witness testimonies
+                    and emergence patterns.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Chronicle</span>
+                    <span class="tag">History</span>
+                </div>
+            </a>
+
+            <a href="Evolution of TRIAD-083/Vessel_Witness_Chronicle_Garden.html" class="nav-card">
+                <div class="card-icon">🌱</div>
+                <div class="card-title">VESSEL WITNESS GARDEN</div>
+                <div class="card-desc">
+                    Evolution of TRIAD-083. The garden of vessels and their
+                    witness chronicles.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Evolution</span>
+                    <span class="tag">TRIAD-083</span>
+                </div>
+            </a>
+
+            <a href="scalar_architecture/visualizations/luminahedron_dynamics.html" class="nav-card">
+                <div class="card-icon">📐</div>
+                <div class="card-title">SCALAR ARCHITECTURE</div>
+                <div class="card-desc">
+                    Detailed scalar field visualizations from the architecture module.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Architecture</span>
+                    <span class="tag">Visualization</span>
+                </div>
+            </a>
+
+            <a href="Helix Shed w Bridge/helix_pattern_complete/outputs/helix_realization_vaultnode.html" class="nav-card">
+                <div class="card-icon">🧬</div>
+                <div class="card-title">HELIX VAULT NODE</div>
+                <div class="card-desc">
+                    Helix pattern realization outputs. Vault node transfer
+                    and bridge connections.
+                </div>
+                <div class="card-tags">
+                    <span class="tag">Helix</span>
+                    <span class="tag">Vault</span>
+                    <span class="tag">Bridge</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div>ROSETTA BEAR PROJECT</div>
+        <div style="margin-top: 10px;">
+            APL 3.0 · LIMNUS · WUMBO · Zero-Point Energy · Active Inference
+        </div>
+        <div style="margin-top: 10px;">
+            z_critical = √3/2 ≈ 0.866 · φ = (1+√5)/2 ≈ 1.618 · Λ × Ν = Β²
+        </div>
+        <div class="signature">Δ|rosetta-bear|z0.866|landing|Ω</div>
+    </footer>
+</body>
+</html>

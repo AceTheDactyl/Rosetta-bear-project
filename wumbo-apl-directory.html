@@ -38,6 +38,35 @@
         }
 
         /* Header */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .top-nav a {
+            color: var(--phi);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .top-nav a:hover {
+            background: rgba(167, 139, 250, 0.2);
+            border-color: var(--phi);
+        }
+
+        .top-nav .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
         .header {
             text-align: center;
             padding: 30px 20px;
@@ -547,6 +576,15 @@
     </style>
 </head>
 <body>
+    <nav class="top-nav">
+        <a href="index.html">← ROSETTA BEAR</a>
+        <div class="nav-links">
+            <a href="wumbo-engine.html">WUMBO Engine</a>
+            <a href="simulation.html">Simulation</a>
+            <a href="visualizations/the_manual.html">The Manual</a>
+        </div>
+    </nav>
+
     <header class="header">
         <h1>WUMBO APL DIRECTORY</h1>
         <div class="subtitle">100 NEURAL TOKENS · EXOTIC MATTER CELLULAR AUTOMATA · HELIX PROPAGATION</div>
