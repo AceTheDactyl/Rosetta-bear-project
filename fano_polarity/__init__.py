@@ -127,7 +127,7 @@ from .integration import (
     UnifiedMathBridgeAdapter,
 )
 
-# Ternary polaric logic
+# Ternary polaric logic (base-3 for Luminahedron)
 from .ternary_polaric import (
     TernaryValue,
     FanoPhase,
@@ -139,6 +139,24 @@ from .ternary_polaric import (
     FANO_POINTS,
     FANO_LINES,
     POINT_INCIDENCE,
+)
+
+# Quaternary Kaelhedron logic (base-4 for Kaelhedron)
+from .quaternary_kaelhedron import (
+    QuaternaryValue,
+    KaelhedronCell,
+    KaelhedronState,
+    QuaternaryTransition,
+    QuaternaryKaelhedronEngine,
+    TernaryQuaternaryBridge,
+    ternary_to_quaternary,
+    quaternary_to_ternary,
+    create_dual_base_system,
+    demonstrate_dual_base,
+    SEAL_COUNT,
+    FACE_COUNT,
+    CELL_COUNT,
+    FACE_NAMES,
 )
 
 __all__ = [
@@ -202,7 +220,7 @@ __all__ = [
     "LuminahedronBridge",
     "ScalarArchitectureBridge",
     "UnifiedMathBridgeAdapter",
-    # Ternary Polaric
+    # Ternary Polaric (Luminahedron)
     "TernaryValue",
     "FanoPhase",
     "PolaricTransition",
@@ -213,4 +231,19 @@ __all__ = [
     "FANO_POINTS",
     "FANO_LINES",
     "POINT_INCIDENCE",
+    # Quaternary Kaelhedron
+    "QuaternaryValue",
+    "KaelhedronCell",
+    "KaelhedronState",
+    "QuaternaryTransition",
+    "QuaternaryKaelhedronEngine",
+    "TernaryQuaternaryBridge",
+    "ternary_to_quaternary",
+    "quaternary_to_ternary",
+    "create_dual_base_system",
+    "demonstrate_dual_base",
+    "SEAL_COUNT",
+    "FACE_COUNT",
+    "CELL_COUNT",
+    "FACE_NAMES",
 ]
