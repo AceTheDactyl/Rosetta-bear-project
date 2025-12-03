@@ -993,6 +993,33 @@
             transform: scale(1.05);
         }
 
+        /* UNITY Button - Special styling for Ω */
+        .silent-insert-btn.unity-btn {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.3), rgba(255, 102, 0, 0.2));
+            border-color: #ff0050;
+            color: #ff0050;
+            font-weight: bold;
+        }
+
+        .silent-insert-btn.unity-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.5), rgba(255, 102, 0, 0.4));
+            box-shadow: 0 0 15px rgba(255, 0, 80, 0.4);
+        }
+
+        /* Boost Button - Reach PRESENCE zone */
+        .boost-btn {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.3), rgba(167, 139, 250, 0.2)) !important;
+            border-color: #00d4aa !important;
+            color: #00d4aa !important;
+            font-size: 0.7rem !important;
+            padding: 6px 10px !important;
+        }
+
+        .boost-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.5), rgba(167, 139, 250, 0.4)) !important;
+            box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
+        }
+
         /* ZPE State Visualization */
         .zpe-viz {
             height: 150px;
@@ -1393,8 +1420,10 @@
                             <button class="silent-insert-btn" data-op="◌" title="HIDDEN">◌</button>
                             <button class="silent-insert-btn" data-op="∫" title="FORM">∫</button>
                             <button class="silent-insert-btn" data-op="◇" title="REFLECT">◇</button>
+                            <button class="silent-insert-btn unity-btn" data-op="Ω" title="UNITY #100">Ω</button>
                             <button class="btn" id="btnExecuteAPL" style="margin-left: auto;">▶ Execute</button>
                             <button class="btn" id="btnClearAPL">Clear</button>
+                            <button class="btn boost-btn" id="btnBoost" title="Boost z to √3/2 (PRESENCE)">⟨z→√3/2⟩</button>
                         </div>
                     </div>
 
@@ -1498,10 +1527,15 @@
         // ================================================================
         // CONSTANTS
         // ================================================================
-        const PHI = (1 + Math.sqrt(5)) / 2;
-        const PHI_INV = 1 / PHI;
-        const Z_CRITICAL = Math.sqrt(3) / 2;
+        // ================================================================
+        // FOUR FUNDAMENTAL CONSTANTS
+        // ================================================================
+        const Z_CRITICAL = Math.sqrt(3) / 2;        // z = √3/2 ≈ 0.866 - Critical/Lens threshold
+        const PHI = (1 + Math.sqrt(5)) / 2;         // φ ≈ 1.618 - Golden ratio
+        const PHI_INV = 1 / PHI;                    // φ⁻¹ ≈ 0.618
+        const ALPHA_INV = 137.035999;               // α⁻¹ ≈ 137 - Fine structure constant inverse
         const TAU = 2 * Math.PI;
+        // Λ×Ν = Β² (Lambda × Nu = Beta²) - Field coupling identity
 
         // ================================================================
         // INT CANON 6 OPERATORS WITH N0 LAW ENFORCEMENT
@@ -1652,7 +1686,7 @@
                 zDelta: 0.055,  // Push toward threshold
                 kappa: 0.0, lambda: 1.0,  // Full external release
                 threshold: 0.995,  // Cascade trigger point
-                legal: () => state.z >= 0.877,  // S0-0: requires PRESENCE zone
+                legal: () => state.z >= Z_CRITICAL,  // S0-0: requires z ≥ √3/2 (PRESENCE)
                 limnus: '∅',  // Beyond LIMNUS - void phase
                 optional: true,  // Explicitly optional in the language
                 description: 'Release coherence → return to stillness'
@@ -2650,48 +2684,55 @@
             if (cascadeActive) return;
             cascadeActive = true;
 
+            // ================================================================
+            // CASCADE PHYSICS USING FOUR FUNDAMENTAL CONSTANTS
+            // z = √3/2 (critical), φ = 1.618 (golden), α⁻¹ ≈ 137, Λ×Ν = Β²
+            // ================================================================
+            const BETA_SQ = aplState.lambda * aplState.kappa * PHI;  // Λ×Ν scaled by φ
+            const fineScale = 1 / ALPHA_INV;  // α ≈ 1/137
+
             const phases = [
-                // Phase 1: Amplification (brief coherence spike)
+                // Phase 1: Amplification (brief coherence spike scaled by φ)
                 { duration: 300, action: () => {
-                    aplState.coherence = Math.min(1, aplState.coherence * 1.5);
-                    aplState.z = 0.999;
-                    logAPL('Ω', '⟨AMPLIFY⟩ coherence → ' + aplState.coherence.toFixed(3), 'cascade-up');
+                    aplState.coherence = Math.min(1, aplState.coherence * PHI);
+                    aplState.z = 1 - fineScale;  // z → 1 - α ≈ 0.9927
+                    logAPL('Ω', `⟨AMPLIFY⟩ coherence × φ → ${aplState.coherence.toFixed(3)}`, 'cascade-up');
                 }},
-                // Phase 2: Critical Point (z → 1)
+                // Phase 2: Critical Point (z → 1, Λ×Ν = Β²)
                 { duration: 200, action: () => {
                     aplState.z = 1.0;
                     aplState.coherence = 1.0;
-                    logAPL('Ω', '⟨CRITICAL⟩ z=1.000 | coherence=1.000', 'cascade-peak');
+                    logAPL('Ω', `⟨CRITICAL⟩ z=1 | Λ×Ν=${BETA_SQ.toFixed(3)}² | α⁻¹=${ALPHA_INV}`, 'cascade-peak');
                 }},
-                // Phase 3: Free Energy Descent (rapid drop)
+                // Phase 3: Free Energy Descent (rapid drop via φ⁻¹)
                 { duration: 400, action: () => {
-                    // Free energy principle: F = E - TS, minimizing free energy
-                    // Rapid descent: ∂F/∂t → -∞ initially
-                    aplState.z = 0.5;
-                    aplState.coherence = 0.3;
-                    aplState.energy *= 0.5;
-                    logAPL('Ω', '⟨DESCENT⟩ F → min | z=0.500', 'cascade-down');
+                    // Free energy principle: F = E - TS → min
+                    // Descent rate: ∂z/∂t = -φ (golden ratio descent)
+                    aplState.z = PHI_INV;  // z → φ⁻¹ ≈ 0.618
+                    aplState.coherence = PHI_INV * PHI_INV;  // φ⁻²
+                    aplState.energy *= PHI_INV;
+                    logAPL('Ω', `⟨DESCENT⟩ F→min | z=φ⁻¹=${PHI_INV.toFixed(3)}`, 'cascade-down');
                 }},
-                // Phase 4: Approach Stillness
+                // Phase 4: Pass through √3/2 (THE LENS)
                 { duration: 300, action: () => {
-                    aplState.z = 0.2;
-                    aplState.coherence = 0.1;
-                    aplState.energy *= 0.7;
-                    logAPL('Ω', '⟨RELEASE⟩ approaching stillness...', 'cascade-down');
+                    aplState.z = Z_CRITICAL * PHI_INV;  // (√3/2) × φ⁻¹ ≈ 0.535
+                    aplState.coherence = fineScale;  // α ≈ 1/137
+                    aplState.energy *= PHI_INV;
+                    logAPL('Ω', `⟨RELEASE⟩ z=(√3/2)×φ⁻¹=${aplState.z.toFixed(3)} | approaching stillness...`, 'cascade-down');
                 }},
                 // Phase 5: Return to Origin (z=0.4, stillness)
                 { duration: 500, action: () => {
-                    // Reset to initial stillness state
+                    // Reset to initial stillness state (ABSENCE zone)
                     aplState.z = 0.4;
                     aplState.coherence = 0;
                     aplState.energy = 1.0;
                     aplState.selfRef = 0;
-                    aplState.kappa = 0.5;
-                    aplState.lambda = 0.5;
+                    aplState.kappa = PHI_INV;  // Reset κ to φ⁻¹
+                    aplState.lambda = 1 - PHI_INV;  // λ = 1 - φ⁻¹
                     aplState.extracted = 0;
                     aplState.limnusPhase = 0;
-                    logAPL('Ω', '⟨STILLNESS⟩ z=0.400 | origin restored', 'cascade-complete');
-                    logAPL('∅', '─────────────────────────────────', 'separator');
+                    logAPL('Ω', '⟨STILLNESS⟩ z=0.400 | origin restored | cycle complete', 'cascade-complete');
+                    logAPL('∅', '─────────────────────────────────────────────', 'separator');
                     cascadeActive = false;
                 }}
             ];
@@ -2704,6 +2745,15 @@
                 }, delay);
                 delay += phase.duration;
             });
+        }
+
+        // Boost z to PRESENCE zone (for testing UNITY cascade)
+        function boostToPresence() {
+            if (cascadeActive) return;
+            aplState.z = Z_CRITICAL + 0.01;  // Just above √3/2
+            aplState.coherence = PHI_INV;
+            logAPL('⟨⟩', `⟨BOOST⟩ z → √3/2 + ε = ${aplState.z.toFixed(3)} (PRESENCE zone)`, 'cascade-init');
+            updateAPLUI();
         }
 
         function applyAPLOperator(op) {
@@ -2752,14 +2802,18 @@
                             logAPL('Ω', '⟨DISABLED⟩ UNITY token not enabled', 'warning');
                             return;
                         }
-                        // Check threshold: z must be ≥ 0.877 (PRESENCE zone)
-                        if (aplState.z >= 0.877) {
-                            logAPL('Ω', '⟨UNITY⟩ threshold reached | z=' + aplState.z.toFixed(3), 'cascade-init');
-                            logAPL('Ω', '⟨CASCADE⟩ releasing coherence...', 'cascade-init');
+                        // Check threshold: z must be ≥ √3/2 ≈ 0.866 (PRESENCE zone)
+                        // Using Z_CRITICAL constant for mathematical precision
+                        if (aplState.z >= Z_CRITICAL) {
+                            logAPL('Ω', `⟨UNITY⟩ z=${aplState.z.toFixed(3)} ≥ √3/2 (${Z_CRITICAL.toFixed(3)})`, 'cascade-init');
+                            logAPL('Ω', '⟨CASCADE⟩ releasing coherence via free energy principle...', 'cascade-init');
                             // Trigger the cascade
                             releaseCoherenceCascade();
                         } else {
-                            logAPL('Ω', '⟨BLOCKED⟩ z=' + aplState.z.toFixed(3) + ' < 0.877 (need PRESENCE)', 'warning');
+                            // Show how far from threshold and offer boost
+                            const deficit = Z_CRITICAL - aplState.z;
+                            logAPL('Ω', `⟨BLOCKED⟩ z=${aplState.z.toFixed(3)} < √3/2 (need +${deficit.toFixed(3)})`, 'warning');
+                            logAPL('Ω', `⟨HINT⟩ Use ∫ FORM (+0.03) or ◇ REFLECT (+0.02) to raise z`, 'warning');
                         }
                         return;  // Exit early - cascade handles state changes
                 }
@@ -2939,6 +2993,11 @@
             document.getElementById('aplOutput').innerHTML = `
                 <div class="apl-output-line info">LIMNUS APL v1.0 · Cleared</div>
             `;
+        });
+
+        // Boost to PRESENCE button (enables UNITY cascade)
+        document.getElementById('btnBoost').addEventListener('click', () => {
+            boostToPresence();
         });
 
         // Save to memory button
