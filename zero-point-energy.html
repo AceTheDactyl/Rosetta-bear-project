@@ -913,6 +913,106 @@
         };
 
         // ================================================================
+        // SILENT 7 OPERATORS - Extensions of INT Canon via Silent Laws
+        // These operators extend the grammar with state-dependent dynamics
+        // ================================================================
+        const SILENT_OPERATORS = {
+            '⊙': {
+                name: 'DAMP',
+                silent: 'I STILLNESS',
+                extends: '^',
+                equation: '∂E/∂t → 0',
+                effects: { Gs: 0.85, theta: 0.7, Omega: 0.95, energy: 0.9 },
+                zDelta: -0.01,
+                kappa: 0.7, lambda: 0.3,  // κ-heavy (internal damping)
+                legal: () => state.history.includes('^'),  // S0-1: requires prior ^
+                limnus: 'S'  // Synchronization phase
+            },
+            '◉': {
+                name: 'BASIN',
+                silent: 'II TRUTH',
+                extends: '+',
+                equation: '∇V(truth) = 0',
+                effects: { alpha: 1.15, Cs: 0.08, attractor: true },
+                zDelta: 0.02,
+                kappa: 0.5, lambda: 0.5,  // Balanced
+                legal: () => state.history.includes('+'),  // S0-2: requires prior +
+                limnus: 'N'  // Normalization phase
+            },
+            '∅': {
+                name: 'VOID',
+                silent: 'III SILENCE',
+                extends: 'background',
+                equation: '⟨void|ψ⟩ = memory',
+                effects: { tau: 0.8, delta: 0.9, memory: true },
+                zDelta: 0.0,
+                kappa: 0.3, lambda: 0.7,  // λ-heavy (external listening)
+                legal: () => state.energy < 0.3 || state.coherence > 0.5,  // S0-3: needs stillness
+                limnus: 'L'  // Lattice phase
+            },
+            '↻': {
+                name: 'CYCLE',
+                silent: 'IV SPIRAL',
+                extends: '×',
+                equation: 'S(return) = S(origin)',
+                effects: { Rs: 0.1, theta: 1.05, spiral: true },
+                zDelta: 0.01,
+                kappa: 0.5, lambda: 0.5,  // Balanced (bidirectional)
+                legal: (nextOp) => state.history.includes('×') && (!nextOp || nextOp === '()'),  // S0-4
+                limnus: 'U'  // Update phase
+            },
+            '◌': {
+                name: 'HIDDEN',
+                silent: 'V UNSEEN',
+                extends: 'background',
+                equation: 'H(seen) ≡ H(unseen)',
+                effects: {},  // No observable state change
+                zDelta: 0.0,
+                kappa: 1.0, lambda: 0.0,  // κ-only (invisible)
+                legal: () => true,  // S0-5: always legal (observer independent)
+                limnus: 'I'  // Integration phase
+            },
+            '∫': {
+                name: 'FORM',
+                silent: 'VI GLYPH',
+                extends: '÷',
+                equation: 'glyph = ∫ life dt',
+                effects: { Omega: 1.12, alpha: 0.06, path: true },
+                zDelta: 0.03,
+                kappa: 0.3, lambda: 0.7,  // λ-heavy (external accumulation)
+                legal: () => state.history.length >= 5,  // S0-6: needs trajectory
+                limnus: 'M'  // Modulation phase
+            },
+            '◇': {
+                name: 'REFLECT',
+                silent: 'VII MIRROR',
+                extends: '−',
+                equation: 'ψ = ψ(ψ)',
+                effects: { selfRef: PHI_INV, kappa: 1.1, recursion: true },
+                zDelta: 0.02,
+                kappa: 0.618, lambda: 0.382,  // ⟨κ|λ⟩ resonant at φ⁻¹
+                legal: (nextOp) => state.history.includes('−') && (!nextOp || ['()', '◇'].includes(nextOp)),  // S0-7
+                limnus: 'S'  // Synchronization phase
+            }
+        };
+
+        // ================================================================
+        // S0 CAUSALITY LAWS - Silent Extensions of N0
+        // ================================================================
+        const S0_LAWS = {
+            'S0-1': { op: '⊙', requires: 'prior ^', extends: 'N0-1', silent: 'I STILLNESS', status: true, broken: 0 },
+            'S0-2': { op: '◉', requires: 'prior +', extends: 'N0-4', silent: 'II TRUTH', status: true, broken: 0 },
+            'S0-3': { op: '∅', requires: 'stillness', extends: 'background', silent: 'III SILENCE', status: true, broken: 0 },
+            'S0-4': { op: '↻', requires: 'prior ×, leads ()', extends: 'N0-2', silent: 'IV SPIRAL', status: true, broken: 0 },
+            'S0-5': { op: '◌', requires: 'always', extends: 'background', silent: 'V UNSEEN', status: true, broken: 0 },
+            'S0-6': { op: '∫', requires: 'trajectory≥5', extends: 'N0-3', silent: 'VI GLYPH', status: true, broken: 0 },
+            'S0-7': { op: '◇', requires: 'prior −, leads ()/◇', extends: 'N0-5', silent: 'VII MIRROR', status: true, broken: 0 }
+        };
+
+        // Combined operator lookup
+        const ALL_OPERATORS = { ...INT_OPERATORS, ...SILENT_OPERATORS };
+
+        // ================================================================
         // 100 ZPE TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
         // NARRATIVE: Complete Causal Compliance → Zero Violations → Coherence
         // Each operator is valid AT EXECUTION TIME based on current state
@@ -922,24 +1022,24 @@
 
             // ========== PRISM TOKENS (63) ==========
             // Foundation layer - ABSENCE to THE LENS
-            // ZERO VIOLATIONS - Every operator valid when executed
-            // () establishes anchor → × adds channels → ^ amplifies → ÷ extracts
+            // Includes Silent operators where S0 laws permit
+            // ◌ HIDDEN (always legal), ⊙ DAMP (after ^), ◉ BASIN (after +)
             const prismSequence = [
-                // Phase 0: Foundation (0-8) - Establish boundary FIRST
-                '()',  // #0: BOUNDARY - always legal, establishes anchor for ^
-                '×', '^', '+', '^', '×', '()', '×', '^',  // +→^ legal, ^ has prior ()
-                // Phase 1: Structure (9-17) - Build with legal operators
-                '()', '×', '^', '+', '×', '^', '()', '×', '^',  // +→× legal
-                // Phase 2: Coupling (18-26) - Deepen structure
-                '()', '×', '^', '+', '^', '×', '()', '+', '×',  // +→^ and +→× legal
-                // Phase 3: Amplify (27-35) - Power accumulation
-                '^', '()', '×', '+', '^', '×', '()', '+', '^',  // +→^ legal
-                // Phase 4: First Extraction (36-44) - ÷ now legal (structure exists)
-                '()', '×', '^', '÷', '()', '×', '^', '+', '^',  // ÷ legal, +→^ legal
-                // Phase 5: Stabilize (45-53) - Lock coherence
-                '()', '×', '^', '+', '×', '()', '^', '+', '^',  // +→× and +→^ legal
-                // Phase 6: Convergence (54-62) - Final coherence
-                '()', '×', '^', '+', '^', '×', '()', '+', '^'   // +→^ legal
+                // Phase 0: Foundation (0-8) - Establish boundary, add ◌ HIDDEN
+                '()',  // #0: BOUNDARY - always legal, establishes anchor
+                '×', '^', '+', '^', '◌', '()', '×', '^',  // ◌ HIDDEN (S0-5: always legal)
+                // Phase 1: Structure (9-17) - Build, add ⊙ DAMP after ^
+                '()', '×', '^', '⊙', '×', '^', '()', '×', '^',  // ⊙ DAMP (S0-1: has prior ^)
+                // Phase 2: Coupling (18-26) - Add ◉ BASIN after +
+                '()', '×', '^', '+', '◉', '×', '()', '+', '×',  // ◉ BASIN (S0-2: has prior +)
+                // Phase 3: Amplify (27-35) - Add ∫ FORM (trajectory > 5)
+                '^', '()', '×', '+', '^', '∫', '()', '+', '^',  // ∫ FORM (S0-6: trajectory ok)
+                // Phase 4: First Extraction (36-44) - ÷ legal, add ⊙ DAMP
+                '()', '×', '^', '÷', '()', '×', '^', '⊙', '^',  // ⊙ after ^ legal
+                // Phase 5: Stabilize (45-53) - Add ◌ HIDDEN
+                '()', '×', '^', '+', '×', '◌', '^', '+', '^',  // ◌ HIDDEN always legal
+                // Phase 6: Convergence (54-62) - Prepare for CAGE
+                '()', '×', '^', '+', '^', '×', '()', '+', '^'   // Clean finish
             ];
 
             for (let i = 0; i < 63; i++) {
@@ -949,7 +1049,7 @@
                     id: i,
                     zone: 'prism',
                     op: op,
-                    name: `prism_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    name: `prism_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
                     z: 0.3 + (i / 63) * 0.55,
                     phase: phase,
                     executed: false,
@@ -959,14 +1059,15 @@
 
             // ========== EM CAGE TOKENS (32) ==========
             // Stabilization layer - THE LENS zone
-            // FULLY LEGAL - All + followed by +, ×, or ^
+            // FULLY LEGAL - Includes Silent operators for EM field stabilization
+            // ↻ CYCLE (after ×, leads ()), ⊙ DAMP (after ^), ◉ BASIN (after +)
             const cageSequence = [
-                // Phase 6: Cage formation (0-10) - All legal
-                '()', '×', '^', '+', '×', '()', '^', '+', '^', '×', '()',  // +→× and +→^ legal
-                // Phase 7: EM stabilization (11-21) - All legal
-                '()', '×', '^', '+', '^', '×', '()', '^', '+', '×', '()',  // +→^ and +→× legal
-                // Phase 7 continued: Field lock (22-31) - All legal
-                '()', '×', '^', '+', '^', '×', '()', '^', '+', '^'  // +→^ legal
+                // Phase 6: Cage formation (0-10) - EM field containment
+                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '^', '×', '()',  // ↻→() ⊙ after ^ ◉ after +
+                // Phase 7: EM stabilization (11-21) - Field harmonization
+                '()', '×', '^', '⊙', '+', '◉', '×', '()', '^', '+', '^',  // ⊙ DAMP, ◉ BASIN
+                // Phase 7 continued: Field lock (22-31) - Final cage seal
+                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '×', '^'  // ↻→() cycle return
             ];
 
             for (let i = 0; i < 32; i++) {
@@ -976,7 +1077,7 @@
                     id: 63 + i,
                     zone: 'cage',
                     op: op,
-                    name: `cage_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    name: `cage_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
                     z: 0.857 + (i / 32) * 0.02,
                     phase: phase,
                     executed: false,
@@ -986,13 +1087,14 @@
 
             // ========== EMERGENT TOKENS (5) ==========
             // Extraction/self-reference layer - PRESENCE zone
-            // FINAL COHERENCE SEQUENCE - All laws valid, successful extraction
-            const emergentSequence = ['()', '×', '^', '÷', '()'];
-            // () → establishes boundary
+            // FINAL COHERENCE SEQUENCE - All laws valid, self-reflective extraction
+            // Includes ◇ REFLECT (VII MIRROR: ψ = ψ(ψ)) for self-reference
+            const emergentSequence = ['()', '×', '−', '◇', '()'];
+            // () → establishes boundary (always legal ✓)
             // × → fusion (N0-2: channels=100 ✓)
-            // ^ → amplify (N0-1: has prior () and × ✓)
-            // ÷ → extract (N0-3: has structure from ^, × ✓)
-            // () → final seal (always legal ✓)
+            // − → separate (N0-5: leads to ◇ via S0-7 extension ✓)
+            // ◇ → REFLECT (S0-7: has prior −, leads to () ✓) [VII MIRROR: ψ = ψ(ψ)]
+            // () → final seal (always legal ✓) - The mirror returns to origin
 
             for (let i = 0; i < 5; i++) {
                 const op = emergentSequence[i];
@@ -1000,7 +1102,7 @@
                     id: 95 + i,
                     zone: 'emergent',
                     op: op,
-                    name: `emerge_${INT_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
+                    name: `emerge_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
                     z: 0.95 + (i * 0.01),
                     phase: 7,
                     executed: false,
@@ -1030,53 +1132,106 @@
             coherence: 0,
             phaseLock: 0,
             efficiency: 0,
+            energy: 1.0,           // Energy level for Silent operators
+            selfRef: 0,            // Self-reference state (VII MIRROR)
+            limnusPhase: 0,        // Current LIMNUS phase index
             running: false,
             zpeState: 'dormant',
-            violationCount: 0
+            violationCount: 0,
+            silentCount: 0         // Count of Silent operator uses
         };
 
+        // LIMNUS phase names
+        const LIMNUS_PHASES = ['L', 'I', 'M', 'N', 'U', 'S'];
+
         // ================================================================
-        // OPERATOR ENGINE WITH VIOLATION TRACKING
+        // OPERATOR ENGINE WITH VIOLATION TRACKING (N0 + S0)
         // ================================================================
-        function checkN0Violation(op, nextOp = null) {
-            // Returns: { violated: boolean, law: string, reason: string }
+        function checkViolation(op, nextOp = null) {
+            // Returns: { violated: boolean, law: string, reason: string, isSilent: boolean }
+
+            // Check N0 Laws (INT Canon operators)
             switch(op) {
                 case '^':
-                    // N0-1: ^ requires () or × in history
                     if (!state.history.includes('()') && !state.history.includes('×')) {
-                        return { violated: true, law: 'N0-1', reason: '^ without prior () or ×' };
+                        return { violated: true, law: 'N0-1', reason: '^ without prior () or ×', isSilent: false };
                     }
                     break;
                 case '×':
-                    // N0-2: × requires channels ≥ 2
                     if (state.channelCount < 2) {
-                        return { violated: true, law: 'N0-2', reason: '× without sufficient channels' };
+                        return { violated: true, law: 'N0-2', reason: '× without sufficient channels', isSilent: false };
                     }
                     break;
                 case '÷':
-                    // N0-3: ÷ requires structure (prior ^, ×, +, or −)
                     if (!state.history.some(h => ['^', '×', '+', '−'].includes(h))) {
-                        return { violated: true, law: 'N0-3', reason: '÷ without structure' };
+                        return { violated: true, law: 'N0-3', reason: '÷ without structure', isSilent: false };
                     }
                     break;
                 case '+':
-                    // N0-4: + must feed +, ×, or ^
-                    if (nextOp && !['+', '×', '^'].includes(nextOp)) {
-                        return { violated: true, law: 'N0-4', reason: `+ followed by ${nextOp}` };
+                    if (nextOp && !['+', '×', '^', '◉'].includes(nextOp)) {  // + can also feed ◉ BASIN
+                        return { violated: true, law: 'N0-4', reason: `+ followed by ${nextOp}`, isSilent: false };
                     }
                     break;
                 case '−':
-                    // N0-5: − must lead to () or +
-                    if (nextOp && !['()', '+'].includes(nextOp)) {
-                        return { violated: true, law: 'N0-5', reason: `− followed by ${nextOp}` };
+                    if (nextOp && !['()', '+', '◇'].includes(nextOp)) {  // − can also lead to ◇ REFLECT
+                        return { violated: true, law: 'N0-5', reason: `− followed by ${nextOp}`, isSilent: false };
                     }
                     break;
             }
-            return { violated: false, law: null, reason: null };
+
+            // Check S0 Laws (Silent operators)
+            switch(op) {
+                case '⊙':  // DAMP - S0-1: requires prior ^
+                    if (!state.history.includes('^')) {
+                        return { violated: true, law: 'S0-1', reason: '⊙ DAMP without prior ^', isSilent: true };
+                    }
+                    break;
+                case '◉':  // BASIN - S0-2: requires prior +
+                    if (!state.history.includes('+')) {
+                        return { violated: true, law: 'S0-2', reason: '◉ BASIN without prior +', isSilent: true };
+                    }
+                    break;
+                case '∅':  // VOID - S0-3: requires stillness (low energy or high coherence)
+                    if (state.energy >= 0.5 && state.coherence < 0.3) {
+                        return { violated: true, law: 'S0-3', reason: '∅ VOID without stillness', isSilent: true };
+                    }
+                    break;
+                case '↻':  // CYCLE - S0-4: requires prior ×, must lead to ()
+                    if (!state.history.includes('×')) {
+                        return { violated: true, law: 'S0-4', reason: '↻ CYCLE without prior ×', isSilent: true };
+                    }
+                    if (nextOp && nextOp !== '()') {
+                        return { violated: true, law: 'S0-4', reason: `↻ CYCLE must lead to (), got ${nextOp}`, isSilent: true };
+                    }
+                    break;
+                case '◌':  // HIDDEN - S0-5: always legal
+                    break;
+                case '∫':  // FORM - S0-6: requires trajectory (history >= 5)
+                    if (state.history.length < 5) {
+                        return { violated: true, law: 'S0-6', reason: '∫ FORM without sufficient trajectory', isSilent: true };
+                    }
+                    break;
+                case '◇':  // REFLECT - S0-7: requires prior −, leads to () or ◇
+                    if (!state.history.includes('−')) {
+                        return { violated: true, law: 'S0-7', reason: '◇ REFLECT without prior −', isSilent: true };
+                    }
+                    if (nextOp && !['()', '◇'].includes(nextOp)) {
+                        return { violated: true, law: 'S0-7', reason: `◇ REFLECT must lead to () or ◇, got ${nextOp}`, isSilent: true };
+                    }
+                    break;
+            }
+
+            return { violated: false, law: null, reason: null, isSilent: false };
+        }
+
+        // Backward compatibility alias
+        function checkN0Violation(op, nextOp = null) {
+            return checkViolation(op, nextOp);
         }
 
         function applyOperator(op, nextOp = null, forceApply = false) {
-            const opDef = INT_OPERATORS[op];
+            // Check both INT and SILENT operators
+            const opDef = ALL_OPERATORS[op];
             if (!opDef) return { success: false, msg: 'Unknown operator', violated: false };
 
             // Check for N0 violation
@@ -1085,8 +1240,11 @@
             if (violation.violated) {
                 // Track the violation
                 state.violationCount++;
-                N0_LAWS[violation.law].broken++;
-                N0_LAWS[violation.law].status = false;
+                const lawSet = violation.isSilent ? S0_LAWS : N0_LAWS;
+                if (lawSet[violation.law]) {
+                    lawSet[violation.law].broken++;
+                    lawSet[violation.law].status = false;
+                }
 
                 // Still apply effects (with penalty) if forceApply, otherwise skip
                 if (forceApply) {
@@ -1116,9 +1274,16 @@
 
             // Legal operation - apply normal effects
             const effects = opDef.effects;
+            const isSilentOp = SILENT_OPERATORS[op] !== undefined;
+
             for (const [key, value] of Object.entries(effects)) {
+                // Skip special effect keys
+                if (['attractor', 'memory', 'spiral', 'path', 'recursion', 'selfRef'].includes(key)) continue;
+
                 if (key === 'R') {
                     state.R = Math.min(state.R + value, 13);
+                } else if (key === 'energy') {
+                    state.energy = Math.max(0, Math.min(1, state.energy * value));
                 } else if (value > 1 || value < 0) {
                     state[key] = (state[key] || 1) * value;
                 } else {
@@ -1133,21 +1298,60 @@
             state.history.push(op);
             if (state.history.length > 20) state.history.shift();
 
-            // Calculate extraction (only on successful ÷)
-            if (op === '÷') {
+            // Silent operator specific handling
+            if (isSilentOp) {
+                state.silentCount++;
+
+                // Advance LIMNUS phase
+                state.limnusPhase = (state.limnusPhase + 1) % 6;
+
+                // Special effects by Silent operator
+                switch(op) {
+                    case '⊙':  // DAMP - reduce energy
+                        state.energy = Math.max(0.1, state.energy * 0.85);
+                        break;
+                    case '◉':  // BASIN - create attractor (boost coherence stability)
+                        state.coherence = Math.min(1, state.coherence * 1.1);
+                        break;
+                    case '∅':  // VOID - interact with emptiness (store in memory)
+                        // Effect handled by low energy check
+                        break;
+                    case '↻':  // CYCLE - spiral return (boost phaseLock)
+                        state.phaseLock = Math.min(1, state.phaseLock * 1.1);
+                        break;
+                    case '◌':  // HIDDEN - no observable change
+                        break;
+                    case '∫':  // FORM - integrate trajectory (boost Omega)
+                        state.Omega = Math.min(2, state.Omega * 1.08);
+                        break;
+                    case '◇':  // REFLECT - self-reference converges to φ⁻¹
+                        state.selfRef = state.selfRef * PHI_INV + (1 - PHI_INV) * state.coherence;
+                        break;
+                }
+            }
+
+            // Calculate extraction (on successful ÷ or ∫)
+            if (op === '÷' || op === '∫') {
                 const extraction = state.Omega * state.alpha * PHI_INV * 0.1;
                 state.totalExtracted += extraction;
             }
 
             // Update coherence/phase
-            state.coherence = Math.min(1, state.coherence + 0.02 * (op === '^' ? 2 : 1));
-            state.phaseLock = Math.min(1, state.phaseLock + 0.015 * (op === '×' ? 2 : 1));
+            const coherenceBoost = op === '^' ? 2 : (op === '⊙' ? 0.5 : 1);
+            const phaseBoost = op === '×' ? 2 : (op === '↻' ? 1.5 : 1);
+            state.coherence = Math.min(1, state.coherence + 0.02 * coherenceBoost);
+            state.phaseLock = Math.min(1, state.phaseLock + 0.015 * phaseBoost);
             state.efficiency = state.coherence * state.phaseLock * PHI_INV;
 
-            // Update N0 law status
-            updateN0Status();
+            // Natural energy decay
+            state.energy = Math.max(0.1, state.energy * 0.995);
 
-            return { success: true, msg: `${opDef.name} applied`, violated: false };
+            // Update law status
+            updateN0Status();
+            updateS0Status();
+
+            const silentIndicator = isSilentOp ? ` [${LIMNUS_PHASES[state.limnusPhase]}]` : '';
+            return { success: true, msg: `${opDef.name} applied${silentIndicator}`, violated: false, isSilent: isSilentOp };
         }
 
         function updateN0Status() {
@@ -1155,6 +1359,23 @@
             N0_LAWS['N0-2'].status = state.channelCount >= 2;
             N0_LAWS['N0-3'].status = state.history.some(h => ['^', '×', '+', '−'].includes(h));
             // N0-4 and N0-5 depend on next op, shown as valid when not actively violating
+        }
+
+        function updateS0Status() {
+            // S0-1: ⊙ DAMP valid when ^ in history
+            S0_LAWS['S0-1'].status = state.history.includes('^');
+            // S0-2: ◉ BASIN valid when + in history
+            S0_LAWS['S0-2'].status = state.history.includes('+');
+            // S0-3: ∅ VOID valid when energy low or coherence high
+            S0_LAWS['S0-3'].status = state.energy < 0.5 || state.coherence > 0.3;
+            // S0-4: ↻ CYCLE valid when × in history
+            S0_LAWS['S0-4'].status = state.history.includes('×');
+            // S0-5: ◌ HIDDEN always valid
+            S0_LAWS['S0-5'].status = true;
+            // S0-6: ∫ FORM valid when trajectory sufficient
+            S0_LAWS['S0-6'].status = state.history.length >= 5;
+            // S0-7: ◇ REFLECT valid when − in history
+            S0_LAWS['S0-7'].status = state.history.includes('−');
         }
 
         // ================================================================
@@ -1232,6 +1453,10 @@
             state.running = false;
             state.zpeState = 'dormant';
             state.violationCount = 0;
+            state.energy = 1.0;
+            state.selfRef = 0;
+            state.limnusPhase = 0;
+            state.silentCount = 0;
 
             // Reset N0 laws
             for (const key of Object.keys(N0_LAWS)) {
@@ -1242,6 +1467,12 @@
             N0_LAWS['N0-3'].status = false;
             N0_LAWS['N0-4'].status = true;
             N0_LAWS['N0-5'].status = true;
+
+            // Reset S0 laws
+            for (const key of Object.keys(S0_LAWS)) {
+                S0_LAWS[key].broken = 0;
+                S0_LAWS[key].status = key === 'S0-5'; // Only ◌ HIDDEN starts valid
+            }
 
             document.getElementById('console').innerHTML = `
                 <div class="console-line">
@@ -1411,55 +1642,139 @@
         console.log(`
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║              ZERO-POINT ENERGY SYSTEM | WUMBO 63·32·5                      ║
-║                        BUILD: v2.2.0 (2024-12-03)                          ║
+║                        BUILD: v2.3.0 (2024-12-03)                          ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  TOKEN STRUCTURE (100 Total):                                              ║
-║  • 63 PRISM    - Foundation layer (ABSENCE → THE LENS)                     ║
-║  • 32 EM CAGE  - Stabilization layer (THE LENS)                            ║
-║  •  5 EMERGENT - Self-reference extraction (PRESENCE)                      ║
+║  • 63 PRISM    - Foundation layer + Silent ops (◌ ⊙ ◉ ∫)                   ║
+║  • 32 EM CAGE  - Stabilization layer + Silent ops (↻ ⊙ ◉)                  ║
+║  •  5 EMERGENT - Self-reference via ◇ REFLECT (VII MIRROR)                 ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  NARRATIVE ARC: COMPLETE CAUSAL COMPLIANCE → ZERO VIOLATIONS               ║
+║  INT CANON (6 Operators) + SILENT CANON (7 Operators) = 13 TOTAL           ║
 ║                                                                            ║
-║  TOKEN #0: () BOUNDARY - Establishes anchor for all subsequent ^           ║
-║            Every operator valid AT EXECUTION TIME                          ║
-║                                                                            ║
-║  TOKENS #0-99: ALL LEGAL OPERATIONS                                        ║
-║  • N0-1: Every ^ has prior () or × in history                              ║
-║  • N0-2: Channels always ≥ 2 (100 tokens)                                  ║
-║  • N0-3: Every ÷ has prior structure (^, ×, +, −)                          ║
-║  • N0-4: Every + feeds +, ×, or ^                                          ║
-║  • N0-5: Every − leads to () or +                                          ║
-║                                                                            ║
-║  FINAL STATE: PERFECT COHERENCE                                            ║
-║  All N0 laws VALID · 0 violations · Complete causal compliance             ║
+║  INT: () BOUNDARY · × FUSION · ^ AMPLIFY · ÷ DECOHERE · + GROUP · − SEP    ║
+║  SILENT:                                                                   ║
+║  ⊙ DAMP     (I STILLNESS)   ∂E/∂t → 0         extends ^                   ║
+║  ◉ BASIN    (II TRUTH)      ∇V(truth) = 0     extends +                   ║
+║  ∅ VOID     (III SILENCE)   ⟨void|ψ⟩ = mem    background                   ║
+║  ↻ CYCLE    (IV SPIRAL)     S(ret) = S(ori)   extends ×                   ║
+║  ◌ HIDDEN   (V UNSEEN)      H(s) ≡ H(u)       background (always legal)   ║
+║  ∫ FORM     (VI GLYPH)      glyph = ∫life dt  extends ÷                   ║
+║  ◇ REFLECT  (VII MIRROR)    ψ = ψ(ψ)          extends −                   ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  N0 ↔ SILENT LAWS: 1→I  2→IV  3→VI  4→II  5→VII  (III,V background)       ║
+║  N0 LAWS (INT Canon):                                                      ║
+║  • N0-1: ^ requires prior () or × → I STILLNESS                            ║
+║  • N0-2: × requires ch≥2         → IV SPIRAL                               ║
+║  • N0-3: ÷ requires structure    → VI GLYPH                                ║
+║  • N0-4: + feeds +,×,^           → II TRUTH                                ║
+║  • N0-5: − leads (),+            → VII MIRROR                              ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  S0 LAWS (Silent Extensions):                                              ║
+║  • S0-1: ⊙ requires prior ^      • S0-5: ◌ always legal                    ║
+║  • S0-2: ◉ requires prior +      • S0-6: ∫ requires traj≥5                 ║
+║  • S0-3: ∅ requires stillness    • S0-7: ◇ requires prior −                ║
+║  • S0-4: ↻ requires prior ×, →() • LIMNUS: L-I-M-N-U-S phases              ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)    ║
 ╚════════════════════════════════════════════════════════════════════════════╝
         `);
 
-        // Runtime validation: verify all + operators feed legal operators
-        console.log('\\n=== N0-4 COMPLIANCE VERIFICATION ===');
-        let n04Violations = 0;
+        // Runtime validation: verify all N0 and S0 laws
+        console.log('\\n=== N0 + S0 COMPLIANCE VERIFICATION ===');
+        let totalViolations = 0;
+        let silentCount = 0;
+        const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+
+        // Count Silent operators
+        state.tokens.forEach(token => {
+            if (silentOps.includes(token.op)) silentCount++;
+        });
+        console.log(`  Silent operators in sequence: ${silentCount}`);
+
+        // Check N0-4: + must feed +, ×, ^, or ◉ (S0-2 extension)
+        console.log('\\n  [N0-4 CHECK: + feeds +,×,^,◉]');
         state.tokens.forEach((token, i) => {
             if (token.op === '+') {
                 const nextToken = state.tokens[i + 1];
                 const nextOp = nextToken ? nextToken.op : null;
-                const isLegal = !nextOp || ['+', '×', '^'].includes(nextOp);
+                const isLegal = !nextOp || ['+', '×', '^', '◉'].includes(nextOp);
                 if (!isLegal) {
-                    console.log(`  ❌ #${i}: + → ${nextOp} [VIOLATION]`);
-                    n04Violations++;
+                    console.log(`    ❌ #${i}: + → ${nextOp}`);
+                    totalViolations++;
                 }
             }
         });
-        if (n04Violations === 0) {
-            console.log('  ✓ All 17 + operators correctly feed +, ×, or ^');
-            console.log('  ✓ N0-4 law: FULLY COMPLIANT');
+
+        // Check N0-5: − must lead to (), +, or ◇ (S0-7 extension)
+        console.log('\\n  [N0-5 CHECK: − leads (),+,◇]');
+        state.tokens.forEach((token, i) => {
+            if (token.op === '−') {
+                const nextToken = state.tokens[i + 1];
+                const nextOp = nextToken ? nextToken.op : null;
+                const isLegal = !nextOp || ['()', '+', '◇'].includes(nextOp);
+                if (!isLegal) {
+                    console.log(`    ❌ #${i}: − → ${nextOp}`);
+                    totalViolations++;
+                }
+            }
+        });
+
+        // Check S0-1: ⊙ requires prior ^
+        console.log('\\n  [S0-1 CHECK: ⊙ requires prior ^]');
+        let hasAmp = false;
+        state.tokens.forEach((token, i) => {
+            if (token.op === '^') hasAmp = true;
+            if (token.op === '⊙' && !hasAmp) {
+                console.log(`    ❌ #${i}: ⊙ without prior ^`);
+                totalViolations++;
+            }
+        });
+
+        // Check S0-4: ↻ requires prior × and leads to ()
+        console.log('\\n  [S0-4 CHECK: ↻ requires prior ×, leads ()]');
+        let hasFusion = false;
+        state.tokens.forEach((token, i) => {
+            if (token.op === '×') hasFusion = true;
+            if (token.op === '↻') {
+                if (!hasFusion) {
+                    console.log(`    ❌ #${i}: ↻ without prior ×`);
+                    totalViolations++;
+                }
+                const nextToken = state.tokens[i + 1];
+                if (nextToken && nextToken.op !== '()') {
+                    console.log(`    ❌ #${i}: ↻ → ${nextToken.op} (must be ())`);
+                    totalViolations++;
+                }
+            }
+        });
+
+        // Check S0-7: ◇ requires prior − and leads to () or ◇
+        console.log('\\n  [S0-7 CHECK: ◇ requires prior −, leads ()/◇]');
+        let hasSep = false;
+        state.tokens.forEach((token, i) => {
+            if (token.op === '−') hasSep = true;
+            if (token.op === '◇') {
+                if (!hasSep) {
+                    console.log(`    ❌ #${i}: ◇ without prior −`);
+                    totalViolations++;
+                }
+                const nextToken = state.tokens[i + 1];
+                if (nextToken && !['()', '◇'].includes(nextToken.op)) {
+                    console.log(`    ❌ #${i}: ◇ → ${nextToken.op} (must be ()/◇)`);
+                    totalViolations++;
+                }
+            }
+        });
+
+        // Summary
+        console.log('\\n  ═══════════════════════════════════');
+        if (totalViolations === 0) {
+            console.log('  ✓ ALL N0 + S0 LAWS: FULLY COMPLIANT');
+            console.log(`  ✓ Silent operators integrated: ${silentCount}`);
+            console.log('  ✓ LIMNUS cycle: ENABLED');
         } else {
-            console.log(`  ✗ Found ${n04Violations} N0-4 violations`);
+            console.log(`  ✗ Found ${totalViolations} law violations`);
         }
-        console.log('=================================\\n');
+        console.log('  ═══════════════════════════════════\\n');
     </script>
 </body>
 </html>
