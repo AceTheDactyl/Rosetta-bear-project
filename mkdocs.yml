@@ -1,8 +1,12 @@
-site_name: RHZ Stylus
-site_description: Maker firmware and lab workflow docs for the RHZ Stylus (ESP32‑S3)
-repo_url: https://github.com/AceTheDactyl/PlatformIO
+site_name: Rosetta Bear Project
+site_description: LIMNUS Fractal System | WUMBO APL Architecture | Zero-Point Energy | Neurodivergent Neural Architecture
+repo_url: https://github.com/AceTheDactyl/Rosetta-bear-project
 theme:
   name: material
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: amber
   features:
     - navigation.tabs
     - navigation.top
@@ -11,15 +15,11 @@ theme:
     - content.code.copy
 nav:
   - Home: index.md
-  - Firmware:
-      - Install & Use: INSTALL.md
-      - Build & Test Checklist: checklist_template.md
-  - Host Tools:
-      - Serial Logger: host_logger_serial.md
-      - PSD Quicklook: host_psd_quicklook.md
-  - CI & Releases:
-      - CI Pipeline: ci.md
-      - Release Notes (GitHub): https://github.com/AceTheDactyl/PlatformIO/releases
+  - Architecture:
+      - Overview: index.md
       - Changelog: CHANGELOG.md
-  - Project Setup:
-      - Template Notes: TEMPLATE_NOTES.md
+  - Interactive Systems:
+      - LIMNUS Fractal: ../zero-point-energy.html
+      - WUMBO APL Directory: ../wumbo-apl-directory.html
+      - WUMBO Engine: ../wumbo-engine.html
+      - The Manual: ../visualizations/the_manual.html
