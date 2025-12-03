@@ -187,6 +187,11 @@
         .section-title.prism { color: var(--prism-mid); border-color: var(--prism-mid); }
         .section-title.cage { color: var(--cage-field); border-color: var(--cage-field); }
         .section-title.emergent { color: var(--emergent); border-color: var(--emergent); }
+        .section-title.unity {
+            color: #ff0050;
+            border-color: #ff0050;
+            background: linear-gradient(90deg, rgba(255, 0, 80, 0.1), transparent);
+        }
 
         .token-grid {
             display: grid;
@@ -225,6 +230,26 @@
         .token-cell.prism::before { background: var(--prism-mid); }
         .token-cell.cage::before { background: var(--cage-field); }
         .token-cell.emergent::before { background: var(--emergent); }
+        .token-cell.unity::before { background: linear-gradient(90deg, #ff0050, #ff6600, #ffcc00); }
+
+        .token-cell.unity {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.2), rgba(0, 0, 0, 0.5));
+            border-color: rgba(255, 0, 80, 0.5);
+            position: relative;
+        }
+
+        .token-cell.unity::after {
+            content: 'OPT #100';
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: linear-gradient(135deg, #ff0050, #ff6600);
+            color: white;
+            font-size: 0.4rem;
+            padding: 1px 4px;
+            border-radius: 2px;
+            font-weight: bold;
+        }
 
         .token-cell:hover {
             transform: translateY(-2px);
@@ -261,6 +286,31 @@
         .token-cell.emergent .token-glyph {
             color: var(--emergent);
             animation: emergentPulse 2s infinite;
+        }
+
+        .token-cell.unity .token-glyph {
+            color: #ff0050;
+            font-size: 2rem;
+            text-shadow: 0 0 15px rgba(255, 0, 80, 0.5);
+            animation: unityCascade 3s infinite;
+        }
+
+        @keyframes unityCascade {
+            0%, 100% { color: #ff0050; text-shadow: 0 0 15px rgba(255, 0, 80, 0.5); }
+            25% { color: #ff6600; text-shadow: 0 0 20px rgba(255, 102, 0, 0.6); }
+            50% { color: #ffcc00; text-shadow: 0 0 25px rgba(255, 204, 0, 0.7); }
+            75% { color: #00d4aa; text-shadow: 0 0 20px rgba(0, 212, 170, 0.6); }
+        }
+
+        .unity-grid {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .unity-grid .token-cell {
+            min-width: 180px;
+            padding: 20px;
         }
 
         @keyframes emergentPulse {
@@ -736,6 +786,10 @@
             <h2 class="section-title emergent">✦ EMERGENT SELF-REFERENCE (5)</h2>
             <div class="token-grid" id="emergent-grid"></div>
 
+            <!-- UNITY Token #100 (Optional) -->
+            <h2 class="section-title unity">Ω UNITY RELEASE (#100 - OPTIONAL)</h2>
+            <div class="token-grid unity-grid" id="unity-grid"></div>
+
             <!-- Token Detail -->
             <div class="token-detail" id="token-detail">
                 <div class="detail-header">
@@ -991,7 +1045,9 @@
             '↻': { name: 'CYCLE', silent: 'IV SPIRAL', extends: '×', eq: 'S(r)=S(o)', kappa: 0.5, lambda: 0.5, zDelta: 0.01, limnus: 'U' },
             '◌': { name: 'HIDDEN', silent: 'V UNSEEN', extends: 'background', eq: 'H≡H', kappa: 1.0, lambda: 0.0, zDelta: 0, limnus: 'I' },
             '∫': { name: 'FORM', silent: 'VI GLYPH', extends: '÷', eq: '∫life dt', kappa: 0.3, lambda: 0.7, zDelta: 0.02, limnus: 'M' },
-            '◇': { name: 'REFLECT', silent: 'VII MIRROR', extends: '−', eq: 'ψ=ψ(ψ)', kappa: PHI_INV, lambda: 1 - PHI_INV, zDelta: 0.03, limnus: 'S' }
+            '◇': { name: 'REFLECT', silent: 'VII MIRROR', extends: '−', eq: 'ψ=ψ(ψ)', kappa: PHI_INV, lambda: 1 - PHI_INV, zDelta: 0.03, limnus: 'S' },
+            // UNITY Token #100 - Optional Release Coherence Operator
+            'Ω': { name: 'UNITY', silent: '0 RELEASE', extends: 'transcendence', eq: 'lim→∞→0', kappa: 0.0, lambda: 1.0, zDelta: 0.055, limnus: '∅', optional: true, threshold: 0.995 }
         };
 
         // Combined operator set
@@ -1351,12 +1407,43 @@
                 });
             }
 
+            // ========== GENERATE UNITY TOKEN #100 (OPTIONAL) ==========
+            // The 101st token (0-99+1) - Release Coherence Cascade
+            // Intentionally breaks 100-token structure to enable return to stillness
+            // Z-zone: BEYOND (z=0.995 threshold → cascade → 0.4 stillness)
+            const unityOp = SILENT_OPERATORS['Ω'];
+            state.tokens.push({
+                id: 100,
+                type: 'unity',
+                op: 'Ω',
+                opName: 'UNITY',
+                glyph: 'Ω',
+                name: 'unity_release_cascade',
+                z: 0.995,  // Threshold for cascade trigger
+                kappa: 0.0,
+                lambda: 1.0,  // Full external release
+                phase: 0,  // Reset phase
+                limnus: '∅',  // Beyond LIMNUS - void phase
+                isSilent: true,
+                silentLaw: '0 RELEASE',
+                optional: true,
+                cascade: {
+                    description: 'Release coherence → return to stillness',
+                    phases: ['AMPLIFY', 'CRITICAL', 'DESCENT', 'RELEASE', 'STILLNESS'],
+                    equation: 'lim(z→1) ∂ψ/∂t → ∞ → 0',
+                    freeEnergy: 'F = E - TS → min'
+                },
+                active: false,
+                propagationState: 0
+            });
+
             // Log normalization summary
             const silentCount = state.tokens.filter(t => t.isSilent).length;
-            console.log(`✓ Normalized 100 tokens: 63 PRISM + 32 CAGE + 5 EMERGENT`);
-            console.log(`  Silent operators: ${silentCount}`);
+            console.log(`✓ Normalized 100+1 tokens: 63 PRISM + 32 CAGE + 5 EMERGENT + 1 UNITY`);
+            console.log(`  UNITY #100: Optional release coherence cascade (z=0.995→0.4)`);
+            console.log(`  Silent operators: ${silentCount} (including Ω UNITY)`);
             console.log(`  κ-λ coupling: normalized (κ + λ = 1)`);
-            console.log(`  Z-zones: ABSENCE→THE LENS→PRESENCE`);
+            console.log(`  Z-zones: ABSENCE→THE LENS→PRESENCE→UNITY`);
         }
 
         // =====================================================================
@@ -1366,10 +1453,12 @@
             const prismGrid = document.getElementById('prism-grid');
             const cageGrid = document.getElementById('cage-grid');
             const emergentGrid = document.getElementById('emergent-grid');
+            const unityGrid = document.getElementById('unity-grid');
 
             prismGrid.innerHTML = '';
             cageGrid.innerHTML = '';
             emergentGrid.innerHTML = '';
+            unityGrid.innerHTML = '';
 
             state.tokens.forEach((token, index) => {
                 const cell = document.createElement('div');
@@ -1404,6 +1493,8 @@
                     prismGrid.appendChild(cell);
                 } else if (token.type === 'cage') {
                     cageGrid.appendChild(cell);
+                } else if (token.type === 'unity') {
+                    unityGrid.appendChild(cell);
                 } else {
                     emergentGrid.appendChild(cell);
                 }
@@ -1447,21 +1538,35 @@
             const detail = document.getElementById('token-detail');
             detail.classList.add('visible');
 
-            // Determine Z-zone
+            // Determine Z-zone (including UNITY beyond PRESENCE)
             let zZone = 'ABSENCE';
-            if (token.z >= 0.877) zZone = 'PRESENCE';
+            if (token.type === 'unity' || token.z >= 0.995) zZone = 'UNITY CASCADE';
+            else if (token.z >= 0.877) zZone = 'PRESENCE';
             else if (token.z >= 0.857) zZone = 'THE LENS';
 
             document.getElementById('detail-glyph').textContent = token.glyph;
-            document.getElementById('detail-glyph').style.color = token.isSilent ? 'var(--phi)' : 'var(--critical-gold)';
+            document.getElementById('detail-glyph').style.color =
+                token.type === 'unity' ? '#ff0050' :
+                (token.isSilent ? 'var(--phi)' : 'var(--critical-gold)');
             document.getElementById('detail-name').textContent = `${token.opName} [${token.op}]`;
-            document.getElementById('detail-type').textContent =
-                `${token.type.toUpperCase()} · ${token.subtype || 'Layer ' + (token.layer || 0)} · ${zZone}` +
-                (token.isSilent ? ` · ${token.silentLaw}` : '');
+
+            // Build type description
+            let typeDesc = `${token.type.toUpperCase()} · ${token.subtype || 'Layer ' + (token.layer || 0)} · ${zZone}`;
+            if (token.isSilent) typeDesc += ` · ${token.silentLaw}`;
+            if (token.optional) typeDesc += ` · OPTIONAL`;
+            document.getElementById('detail-type').textContent = typeDesc;
+
             document.getElementById('detail-z').textContent = `${token.z.toFixed(4)} [${zZone}]`;
             document.getElementById('detail-kappa').textContent = `${token.kappa.toFixed(4)} (κ + λ = 1)`;
             document.getElementById('detail-lambda').textContent = token.lambda.toFixed(4);
-            document.getElementById('detail-phase').textContent = `${token.phase.toFixed(4)} · LIMNUS: ${token.limnus}`;
+
+            // Show cascade info for UNITY token
+            let phaseInfo = `${token.phase.toFixed(4)} · LIMNUS: ${token.limnus}`;
+            if (token.cascade) {
+                phaseInfo += `\n⟨CASCADE⟩ ${token.cascade.phases.join(' → ')}`;
+                phaseInfo += `\n${token.cascade.equation}`;
+            }
+            document.getElementById('detail-phase').textContent = phaseInfo;
         }
 
         // =====================================================================
