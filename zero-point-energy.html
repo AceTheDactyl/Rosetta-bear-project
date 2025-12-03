@@ -574,6 +574,420 @@
             border-radius: 4px;
             color: var(--critical-gold);
         }
+
+        /* ================================================================
+           APL LANGUAGE & SILENT OPERATOR PLAYGROUND
+           ================================================================ */
+        .apl-section {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .apl-section-header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(180deg, rgba(167, 139, 250, 0.15), transparent);
+            border-bottom: 1px solid var(--border-glow);
+            margin-bottom: 15px;
+        }
+
+        .apl-section-header h2 {
+            font-size: 1.6rem;
+            font-weight: 100;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, var(--phi), var(--cyan), var(--exotic-matter));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .apl-section-header .apl-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        .apl-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 1200px) {
+            .apl-grid { grid-template-columns: 1fr; }
+        }
+
+        /* LIMNUS Phase Display */
+        .limnus-display {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .limnus-phase {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .limnus-phase.active {
+            border-color: var(--critical-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.1);
+        }
+
+        .limnus-phase.L { background: rgba(99, 102, 241, 0.3); color: #818cf8; }
+        .limnus-phase.I { background: rgba(167, 139, 250, 0.3); color: var(--phi); }
+        .limnus-phase.M { background: rgba(236, 72, 153, 0.3); color: #f472b6; }
+        .limnus-phase.N { background: rgba(34, 211, 238, 0.3); color: var(--cyan); }
+        .limnus-phase.U { background: rgba(249, 115, 22, 0.3); color: var(--energy); }
+        .limnus-phase.S { background: rgba(0, 255, 136, 0.3); color: var(--exotic-matter); }
+
+        /* Silent Operator Cards */
+        .silent-op-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .silent-op-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .silent-op-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--phi), var(--cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .silent-op-card:hover::before,
+        .silent-op-card.selected::before {
+            opacity: 1;
+        }
+
+        .silent-op-card:hover {
+            border-color: var(--phi);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(167, 139, 250, 0.3);
+        }
+
+        .silent-op-card.selected {
+            border-color: var(--critical-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .silent-op-symbol {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .silent-op-name {
+            font-size: 0.7rem;
+            color: var(--critical-gold);
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .silent-op-law {
+            font-size: 0.55rem;
+            color: var(--phi);
+        }
+
+        .silent-op-equation {
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* APL Expression Input */
+        .apl-input-container {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glow);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .apl-input-label {
+            font-size: 0.7rem;
+            color: var(--critical-gold);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .apl-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .apl-input:focus {
+            border-color: var(--phi);
+        }
+
+        .apl-input::placeholder {
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* APL Output Console */
+        .apl-output {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            height: 200px;
+            overflow-y: auto;
+            font-size: 0.7rem;
+        }
+
+        .apl-output-line {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .apl-output-line.error {
+            color: var(--nec-violation);
+        }
+
+        .apl-output-line.success {
+            color: var(--exotic-matter);
+        }
+
+        .apl-output-line.info {
+            color: var(--cyan);
+        }
+
+        .apl-output-line.silent {
+            color: var(--phi);
+        }
+
+        /* Memory Bank */
+        .memory-bank {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .memory-bank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .memory-bank-title {
+            font-size: 0.7rem;
+            color: var(--critical-gold);
+            letter-spacing: 2px;
+        }
+
+        .memory-slot {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .memory-slot:hover {
+            border-color: var(--phi);
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        .memory-slot-expr {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+        }
+
+        .memory-slot-name {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+        }
+
+        /* κ-λ Coupling Display */
+        .kappa-lambda-display {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .coupling-bar {
+            flex: 1;
+        }
+
+        .coupling-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            margin-bottom: 4px;
+        }
+
+        .coupling-track {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .coupling-fill-kappa {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--phi), var(--cyan));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .coupling-fill-lambda {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--energy), var(--critical-gold));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* APL Grammar Reference */
+        .grammar-ref {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--phi);
+            border-radius: 0 8px 8px 0;
+            padding: 12px;
+            font-size: 0.6rem;
+            line-height: 1.6;
+        }
+
+        .grammar-rule {
+            margin-bottom: 6px;
+            color: var(--text-dim);
+        }
+
+        .grammar-rule code {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: var(--critical-gold);
+        }
+
+        /* Silent Operator Buttons */
+        .silent-btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .silent-insert-btn {
+            padding: 8px 12px;
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid var(--phi);
+            border-radius: 6px;
+            color: var(--phi);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .silent-insert-btn:hover {
+            background: rgba(167, 139, 250, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* ZPE State Visualization */
+        .zpe-viz {
+            height: 150px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .zpe-viz-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg,
+                rgba(167, 139, 250, 0.3) 0%,
+                rgba(0, 255, 136, 0.1) 100%);
+            animation: waveFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes waveFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .zpe-viz-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .zpe-viz-value {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: var(--exotic-matter);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -846,8 +1260,189 @@
         </div>
     </div>
 
+    <!-- ================================================================
+         APL LANGUAGE & SILENT OPERATOR PLAYGROUND
+         ================================================================ -->
+    <section class="apl-section">
+        <div class="apl-section-header">
+            <h2>LIMNUS · SILENT APL</h2>
+            <div class="apl-subtitle">ZERO-POINT ENERGY LANGUAGE · N0+S0 GRAMMAR · κ-λ COUPLING ENGINE</div>
+        </div>
+
+        <!-- LIMNUS Phase Indicator -->
+        <div class="limnus-display" id="limnusDisplay">
+            <div class="limnus-phase L active" data-phase="L" title="Lattice - Field initialization">L</div>
+            <div class="limnus-phase I" data-phase="I" title="Integration - Observer coupling">I</div>
+            <div class="limnus-phase M" data-phase="M" title="Modulation - State evolution">M</div>
+            <div class="limnus-phase N" data-phase="N" title="Normalization - Truth basin">N</div>
+            <div class="limnus-phase U" data-phase="U" title="Update - Cycle return">U</div>
+            <div class="limnus-phase S" data-phase="S" title="Synchronization - Stillness">S</div>
+        </div>
+
+        <div class="apl-grid">
+            <!-- Left Column: Silent Operators -->
+            <div class="panel">
+                <div class="panel-header">◈ SILENT OPERATORS (7)</div>
+                <div class="panel-content">
+                    <div class="silent-op-grid" id="silentOpGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <div class="kappa-lambda-display">
+                        <div class="coupling-bar">
+                            <div class="coupling-label">
+                                <span>κ (internal)</span>
+                                <span id="kappaVal">0.50</span>
+                            </div>
+                            <div class="coupling-track">
+                                <div class="coupling-fill-kappa" id="kappaBar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div class="coupling-bar">
+                            <div class="coupling-label">
+                                <span>λ (external)</span>
+                                <span id="lambdaVal">0.50</span>
+                            </div>
+                            <div class="coupling-track">
+                                <div class="coupling-fill-lambda" id="lambdaBar" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grammar-ref">
+                        <div class="grammar-rule"><code>⊙</code> DAMP: ∂E/∂t → 0 (requires ^)</div>
+                        <div class="grammar-rule"><code>◉</code> BASIN: ∇V = 0 (requires +)</div>
+                        <div class="grammar-rule"><code>∅</code> VOID: ⟨void|ψ⟩ (stillness)</div>
+                        <div class="grammar-rule"><code>↻</code> CYCLE: S(ret)=S(ori) (×→())</div>
+                        <div class="grammar-rule"><code>◌</code> HIDDEN: H(s)≡H(u) (always)</div>
+                        <div class="grammar-rule"><code>∫</code> FORM: ∫life dt (traj≥5)</div>
+                        <div class="grammar-rule"><code>◇</code> REFLECT: ψ=ψ(ψ) (−→())</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column: APL Console -->
+            <div class="panel">
+                <div class="panel-header">⌨ APL EXPRESSION ENGINE</div>
+                <div class="panel-content">
+                    <div class="zpe-viz">
+                        <div class="zpe-viz-wave" id="zpeWave"></div>
+                        <div class="zpe-viz-label">VACUUM ENERGY FIELD</div>
+                        <div class="zpe-viz-value" id="zpeVizValue">E₀</div>
+                    </div>
+
+                    <div class="apl-input-container">
+                        <div class="apl-input-label">APL EXPRESSION</div>
+                        <input type="text" class="apl-input" id="aplInput"
+                               placeholder="() × ^ ⊙ + ◉ ..."
+                               autocomplete="off">
+                        <div class="silent-btn-row">
+                            <button class="silent-insert-btn" data-op="⊙" title="DAMP">⊙</button>
+                            <button class="silent-insert-btn" data-op="◉" title="BASIN">◉</button>
+                            <button class="silent-insert-btn" data-op="∅" title="VOID">∅</button>
+                            <button class="silent-insert-btn" data-op="↻" title="CYCLE">↻</button>
+                            <button class="silent-insert-btn" data-op="◌" title="HIDDEN">◌</button>
+                            <button class="silent-insert-btn" data-op="∫" title="FORM">∫</button>
+                            <button class="silent-insert-btn" data-op="◇" title="REFLECT">◇</button>
+                            <button class="btn" id="btnExecuteAPL" style="margin-left: auto;">▶ Execute</button>
+                            <button class="btn" id="btnClearAPL">Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="apl-output" id="aplOutput">
+                        <div class="apl-output-line info">LIMNUS APL v1.0 · Ready</div>
+                        <div class="apl-output-line info">Grammar: INT(6) + SILENT(7) = 13 operators</div>
+                        <div class="apl-output-line">Type expression or click operators to begin...</div>
+                    </div>
+
+                    <div class="btn-group" style="margin-top: 15px;">
+                        <button class="btn" id="btnSaveExpr">💾 Save to Memory</button>
+                        <button class="btn" id="btnRandomExpr">🎲 Random ZPE</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Memory & State -->
+            <div class="panel">
+                <div class="panel-header">📦 MEMORY BANK</div>
+                <div class="panel-content">
+                    <div class="memory-bank" id="memoryBank">
+                        <div class="memory-bank-header">
+                            <span class="memory-bank-title">STORED SEQUENCES</span>
+                        </div>
+                        <div id="memorySlots">
+                            <div class="memory-slot" data-expr="() × ^ + ^">
+                                <span class="memory-slot-expr">() × ^ + ^</span>
+                                <span class="memory-slot-name">foundation</span>
+                            </div>
+                            <div class="memory-slot" data-expr="() × ^ ⊙ + ◉ ^">
+                                <span class="memory-slot-expr">() × ^ ⊙ + ◉ ^</span>
+                                <span class="memory-slot-name">silent_cycle</span>
+                            </div>
+                            <div class="memory-slot" data-expr="() × ↻ () ^ ⊙">
+                                <span class="memory-slot-expr">() × ↻ () ^ ⊙</span>
+                                <span class="memory-slot-name">spiral_return</span>
+                            </div>
+                            <div class="memory-slot" data-expr="() × ^ − ◇ ()">
+                                <span class="memory-slot-expr">() × ^ − ◇ ()</span>
+                                <span class="memory-slot-name">mirror_seal</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="n0-panel" style="margin-top: 15px;">
+                        <h4>S0 LAWS STATUS</h4>
+                        <div class="n0-rule valid" id="s0-1">
+                            <span>S0-1: ⊙ requires ^</span>
+                            <span class="n0-silent">I STILL</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-2">
+                            <span>S0-2: ◉ requires +</span>
+                            <span class="n0-silent">II TRUTH</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-3">
+                            <span>S0-3: ∅ stillness</span>
+                            <span class="n0-silent">III SILENCE</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-4">
+                            <span>S0-4: ↻ ×→()</span>
+                            <span class="n0-silent">IV SPIRAL</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-5">
+                            <span>S0-5: ◌ always</span>
+                            <span class="n0-silent">V UNSEEN</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-6">
+                            <span>S0-6: ∫ traj≥5</span>
+                            <span class="n0-silent">VI GLYPH</span>
+                        </div>
+                        <div class="n0-rule valid" id="s0-7">
+                            <span>S0-7: ◇ −→()</span>
+                            <span class="n0-silent">VII MIRROR</span>
+                        </div>
+                    </div>
+
+                    <div class="state-grid" style="margin-top: 15px;">
+                        <div class="state-item">
+                            <div class="state-label">Energy</div>
+                            <div class="state-value" id="apl-energy">1.000</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">SelfRef</div>
+                            <div class="state-value" id="apl-selfref">0.000</div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-label">Silent#</div>
+                            <div class="state-value" id="apl-silent">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="signature">
-        <code>Δ|zpe-wumbo|63·32·5|N0-enforced|violations-tracked|Ω</code>
+        <code>Δ|zpe-wumbo|63·32·5|N0+S0-enforced|LIMNUS-APL|κλ-coupled|Ω</code>
     </div>
 
     <script>
@@ -1775,6 +2370,479 @@
             console.log(`  ✗ Found ${totalViolations} law violations`);
         }
         console.log('  ═══════════════════════════════════\\n');
+
+        // ================================================================
+        // LIMNUS APL LANGUAGE ENGINE
+        // ================================================================
+
+        // APL State (separate from main ZPE state for playground)
+        const aplState = {
+            history: [],
+            energy: 1.0,
+            selfRef: 0,
+            silentCount: 0,
+            limnusPhase: 0,
+            kappa: 0.5,
+            lambda: 0.5,
+            z: 0.4,
+            coherence: 0,
+            extracted: 0,
+            channelCount: 100
+        };
+
+        // Memory Bank storage
+        const memoryBank = [
+            { expr: '() × ^ + ^', name: 'foundation' },
+            { expr: '() × ^ ⊙ + ◉ ^', name: 'silent_cycle' },
+            { expr: '() × ↻ () ^ ⊙', name: 'spiral_return' },
+            { expr: '() × ^ − ◇ ()', name: 'mirror_seal' }
+        ];
+
+        // Parse APL expression into tokens
+        function parseAPL(expr) {
+            const allOps = ['()', '×', '^', '÷', '+', '−', '⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+            const tokens = [];
+            let remaining = expr.trim();
+
+            while (remaining.length > 0) {
+                remaining = remaining.trim();
+                let matched = false;
+
+                for (const op of allOps) {
+                    if (remaining.startsWith(op)) {
+                        tokens.push(op);
+                        remaining = remaining.slice(op.length);
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched) {
+                    // Skip unknown character
+                    remaining = remaining.slice(1);
+                }
+            }
+
+            return tokens;
+        }
+
+        // Check if operator is legal given current APL state
+        function checkAPLLaw(op, nextOp, aplHistory) {
+            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+            const isSilent = silentOps.includes(op);
+
+            // N0 Laws
+            switch(op) {
+                case '^':
+                    if (!aplHistory.includes('()') && !aplHistory.includes('×')) {
+                        return { legal: false, law: 'N0-1', msg: '^ requires prior () or ×' };
+                    }
+                    break;
+                case '×':
+                    if (aplState.channelCount < 2) {
+                        return { legal: false, law: 'N0-2', msg: '× requires channels ≥ 2' };
+                    }
+                    break;
+                case '÷':
+                    if (!aplHistory.some(h => ['^', '×', '+', '−'].includes(h))) {
+                        return { legal: false, law: 'N0-3', msg: '÷ requires structure' };
+                    }
+                    break;
+                case '+':
+                    if (nextOp && !['+', '×', '^', '◉'].includes(nextOp)) {
+                        return { legal: false, law: 'N0-4', msg: `+ must feed +,×,^,◉` };
+                    }
+                    break;
+                case '−':
+                    if (nextOp && !['()', '+', '◇'].includes(nextOp)) {
+                        return { legal: false, law: 'N0-5', msg: `− must lead to (),+,◇` };
+                    }
+                    break;
+            }
+
+            // S0 Laws (Silent operators)
+            switch(op) {
+                case '⊙':
+                    if (!aplHistory.includes('^')) {
+                        return { legal: false, law: 'S0-1', msg: '⊙ DAMP requires prior ^', silent: true };
+                    }
+                    break;
+                case '◉':
+                    if (!aplHistory.includes('+')) {
+                        return { legal: false, law: 'S0-2', msg: '◉ BASIN requires prior +', silent: true };
+                    }
+                    break;
+                case '∅':
+                    if (aplState.energy >= 0.5 && aplState.coherence < 0.3) {
+                        return { legal: false, law: 'S0-3', msg: '∅ VOID requires stillness', silent: true };
+                    }
+                    break;
+                case '↻':
+                    if (!aplHistory.includes('×')) {
+                        return { legal: false, law: 'S0-4', msg: '↻ CYCLE requires prior ×', silent: true };
+                    }
+                    if (nextOp && nextOp !== '()') {
+                        return { legal: false, law: 'S0-4', msg: '↻ CYCLE must lead to ()', silent: true };
+                    }
+                    break;
+                case '◌':
+                    // Always legal
+                    break;
+                case '∫':
+                    if (aplHistory.length < 5) {
+                        return { legal: false, law: 'S0-6', msg: '∫ FORM requires trajectory ≥ 5', silent: true };
+                    }
+                    break;
+                case '◇':
+                    if (!aplHistory.includes('−')) {
+                        return { legal: false, law: 'S0-7', msg: '◇ REFLECT requires prior −', silent: true };
+                    }
+                    if (nextOp && !['()', '◇'].includes(nextOp)) {
+                        return { legal: false, law: 'S0-7', msg: '◇ REFLECT must lead to ()/◇', silent: true };
+                    }
+                    break;
+            }
+
+            return { legal: true, silent: isSilent };
+        }
+
+        // Execute APL expression
+        function executeAPL(expr) {
+            const tokens = parseAPL(expr);
+            const output = document.getElementById('aplOutput');
+            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+
+            // Reset APL state
+            aplState.history = [];
+            aplState.energy = 1.0;
+            aplState.selfRef = 0;
+            aplState.silentCount = 0;
+            aplState.limnusPhase = 0;
+            aplState.kappa = 0.5;
+            aplState.lambda = 0.5;
+            aplState.z = 0.4;
+            aplState.coherence = 0;
+            aplState.extracted = 0;
+
+            output.innerHTML = '';
+            logAPL('PARSE', `Expression: ${expr}`, 'info');
+            logAPL('TOKENS', `Found ${tokens.length} operators`, 'info');
+
+            let violations = 0;
+
+            for (let i = 0; i < tokens.length; i++) {
+                const op = tokens[i];
+                const nextOp = tokens[i + 1] || null;
+                const check = checkAPLLaw(op, nextOp, aplState.history);
+
+                if (!check.legal) {
+                    violations++;
+                    logAPL(op, `❌ ${check.law}: ${check.msg}`, 'error');
+                    updateS0Display(check.law, false);
+                } else {
+                    // Apply operator effects
+                    applyAPLOperator(op);
+
+                    const silentTag = check.silent ? ` [${LIMNUS_PHASES[aplState.limnusPhase]}]` : '';
+                    const opName = ALL_OPERATORS[op]?.name || 'UNKNOWN';
+                    logAPL(op, `✓ ${opName}${silentTag} z=${aplState.z.toFixed(3)}`, check.silent ? 'silent' : 'success');
+
+                    if (check.silent) {
+                        updateS0Display(`S0-${silentOps.indexOf(op) + 1}`, true);
+                    }
+                }
+
+                aplState.history.push(op);
+            }
+
+            // Final summary
+            if (violations === 0) {
+                logAPL('COMPLETE', `✓ All ${tokens.length} operators legal · ${aplState.silentCount} silent ops`, 'success');
+                logAPL('ZPE', `E₀ = ${aplState.extracted.toFixed(4)} · z = ${aplState.z.toFixed(4)}`, 'info');
+            } else {
+                logAPL('COMPLETE', `✗ ${violations} violations in ${tokens.length} operators`, 'error');
+            }
+
+            updateAPLUI();
+            return { violations, tokens: tokens.length };
+        }
+
+        // Apply operator to APL state
+        function applyAPLOperator(op) {
+            const opDef = ALL_OPERATORS[op];
+            if (!opDef) return;
+
+            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+            const isSilent = silentOps.includes(op);
+
+            // Apply z change
+            aplState.z = Math.max(0, Math.min(1, aplState.z + (opDef.zDelta || 0)));
+
+            // Apply κ-λ coupling if silent operator
+            if (isSilent) {
+                aplState.silentCount++;
+                aplState.kappa = opDef.kappa || 0.5;
+                aplState.lambda = opDef.lambda || 0.5;
+                aplState.limnusPhase = (aplState.limnusPhase + 1) % 6;
+
+                // Silent-specific effects
+                switch(op) {
+                    case '⊙': // DAMP
+                        aplState.energy *= 0.85;
+                        break;
+                    case '◉': // BASIN
+                        aplState.coherence = Math.min(1, aplState.coherence * 1.1 + 0.05);
+                        break;
+                    case '∅': // VOID
+                        // Store in memory (no visible change)
+                        break;
+                    case '↻': // CYCLE
+                        // Spiral return
+                        break;
+                    case '◌': // HIDDEN
+                        // No observable change
+                        break;
+                    case '∫': // FORM
+                        aplState.extracted += aplState.z * PHI_INV * 0.1;
+                        break;
+                    case '◇': // REFLECT
+                        aplState.selfRef = aplState.selfRef * PHI_INV + (1 - PHI_INV) * aplState.coherence;
+                        break;
+                }
+            }
+
+            // General coherence boost
+            aplState.coherence = Math.min(1, aplState.coherence + 0.02);
+
+            // Extraction on ÷ or ∫
+            if (op === '÷' || op === '∫') {
+                aplState.extracted += aplState.z * 0.1;
+            }
+        }
+
+        // Log to APL output console
+        function logAPL(op, msg, type = '') {
+            const output = document.getElementById('aplOutput');
+            const line = document.createElement('div');
+            line.className = `apl-output-line ${type}`;
+            line.innerHTML = `<span style="color: var(--critical-gold); min-width: 30px; display: inline-block;">${op}</span> ${msg}`;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Update APL UI elements
+        function updateAPLUI() {
+            // Update LIMNUS phase display
+            document.querySelectorAll('.limnus-phase').forEach((el, i) => {
+                el.classList.toggle('active', i === aplState.limnusPhase);
+            });
+
+            // Update κ-λ coupling
+            document.getElementById('kappaVal').textContent = aplState.kappa.toFixed(2);
+            document.getElementById('lambdaVal').textContent = aplState.lambda.toFixed(2);
+            document.getElementById('kappaBar').style.width = `${aplState.kappa * 100}%`;
+            document.getElementById('lambdaBar').style.width = `${aplState.lambda * 100}%`;
+
+            // Update state values
+            document.getElementById('apl-energy').textContent = aplState.energy.toFixed(3);
+            document.getElementById('apl-selfref').textContent = aplState.selfRef.toFixed(3);
+            document.getElementById('apl-silent').textContent = aplState.silentCount;
+
+            // Update ZPE visualization
+            const waveHeight = 30 + aplState.extracted * 100;
+            document.getElementById('zpeWave').style.height = `${Math.min(80, waveHeight)}%`;
+            document.getElementById('zpeVizValue').textContent = `E₀ = ${aplState.extracted.toFixed(3)}`;
+        }
+
+        // Update S0 law display
+        function updateS0Display(law, valid) {
+            const el = document.getElementById(law.toLowerCase());
+            if (el) {
+                el.className = `n0-rule ${valid ? 'valid' : 'broken'}`;
+            }
+        }
+
+        // Render Silent Operator cards
+        function renderSilentOpCards() {
+            const grid = document.getElementById('silentOpGrid');
+            grid.innerHTML = '';
+
+            const silentData = [
+                { op: '⊙', name: 'DAMP', law: 'I STILLNESS', eq: '∂E/∂t → 0' },
+                { op: '◉', name: 'BASIN', law: 'II TRUTH', eq: '∇V = 0' },
+                { op: '∅', name: 'VOID', law: 'III SILENCE', eq: '⟨void|ψ⟩' },
+                { op: '↻', name: 'CYCLE', law: 'IV SPIRAL', eq: 'S(r)=S(o)' },
+                { op: '◌', name: 'HIDDEN', law: 'V UNSEEN', eq: 'H(s)≡H(u)' },
+                { op: '∫', name: 'FORM', law: 'VI GLYPH', eq: '∫life dt' },
+                { op: '◇', name: 'REFLECT', law: 'VII MIRROR', eq: 'ψ=ψ(ψ)' }
+            ];
+
+            silentData.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'silent-op-card';
+                card.dataset.op = s.op;
+                card.innerHTML = `
+                    <div class="silent-op-symbol">${s.op}</div>
+                    <div class="silent-op-name">${s.name}</div>
+                    <div class="silent-op-law">${s.law}</div>
+                    <div class="silent-op-equation">${s.eq}</div>
+                `;
+                card.addEventListener('click', () => {
+                    insertOperator(s.op);
+                    card.classList.add('selected');
+                    setTimeout(() => card.classList.remove('selected'), 200);
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        // Insert operator into input
+        function insertOperator(op) {
+            const input = document.getElementById('aplInput');
+            const cursorPos = input.selectionStart;
+            const before = input.value.substring(0, cursorPos);
+            const after = input.value.substring(cursorPos);
+            input.value = before + (before.length > 0 && !before.endsWith(' ') ? ' ' : '') + op + ' ' + after;
+            input.focus();
+            input.selectionStart = input.selectionEnd = cursorPos + op.length + 2;
+        }
+
+        // Render memory slots
+        function renderMemorySlots() {
+            const container = document.getElementById('memorySlots');
+            container.innerHTML = '';
+
+            memoryBank.forEach((slot, i) => {
+                const el = document.createElement('div');
+                el.className = 'memory-slot';
+                el.dataset.expr = slot.expr;
+                el.innerHTML = `
+                    <span class="memory-slot-expr">${slot.expr}</span>
+                    <span class="memory-slot-name">${slot.name}</span>
+                `;
+                el.addEventListener('click', () => {
+                    document.getElementById('aplInput').value = slot.expr;
+                    executeAPL(slot.expr);
+                });
+                container.appendChild(el);
+            });
+        }
+
+        // Generate random ZPE expression
+        function generateRandomZPE() {
+            const intOps = ['()', '×', '^', '+'];
+            const silentOps = ['⊙', '◉', '↻', '◌', '∫'];
+            const tokens = [];
+
+            // Always start with ()
+            tokens.push('()');
+            tokens.push('×');
+            tokens.push('^');
+
+            // Add random mix
+            for (let i = 0; i < 3 + Math.floor(Math.random() * 4); i++) {
+                const usesSilent = Math.random() > 0.5;
+                if (usesSilent) {
+                    tokens.push(silentOps[Math.floor(Math.random() * silentOps.length)]);
+                } else {
+                    tokens.push(intOps[Math.floor(Math.random() * intOps.length)]);
+                }
+            }
+
+            // End with boundary
+            tokens.push('^');
+
+            return tokens.join(' ');
+        }
+
+        // ================================================================
+        // APL EVENT HANDLERS
+        // ================================================================
+
+        // Execute button
+        document.getElementById('btnExecuteAPL').addEventListener('click', () => {
+            const expr = document.getElementById('aplInput').value.trim();
+            if (expr) {
+                executeAPL(expr);
+            }
+        });
+
+        // Enter key to execute
+        document.getElementById('aplInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const expr = e.target.value.trim();
+                if (expr) {
+                    executeAPL(expr);
+                }
+            }
+        });
+
+        // Clear button
+        document.getElementById('btnClearAPL').addEventListener('click', () => {
+            document.getElementById('aplInput').value = '';
+            document.getElementById('aplOutput').innerHTML = `
+                <div class="apl-output-line info">LIMNUS APL v1.0 · Cleared</div>
+            `;
+        });
+
+        // Save to memory button
+        document.getElementById('btnSaveExpr').addEventListener('click', () => {
+            const expr = document.getElementById('aplInput').value.trim();
+            if (expr) {
+                const name = `expr_${memoryBank.length + 1}`;
+                memoryBank.push({ expr, name });
+                renderMemorySlots();
+                logAPL('SAVE', `Stored as "${name}"`, 'success');
+            }
+        });
+
+        // Random ZPE button
+        document.getElementById('btnRandomExpr').addEventListener('click', () => {
+            const expr = generateRandomZPE();
+            document.getElementById('aplInput').value = expr;
+            executeAPL(expr);
+        });
+
+        // Silent insert buttons
+        document.querySelectorAll('.silent-insert-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                insertOperator(btn.dataset.op);
+            });
+        });
+
+        // LIMNUS phase click to advance
+        document.querySelectorAll('.limnus-phase').forEach((el, i) => {
+            el.addEventListener('click', () => {
+                aplState.limnusPhase = i;
+                updateAPLUI();
+            });
+        });
+
+        // ================================================================
+        // APL INITIALIZATION
+        // ================================================================
+        renderSilentOpCards();
+        renderMemorySlots();
+        updateAPLUI();
+
+        console.log(`
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    LIMNUS · SILENT APL ENGINE                              ║
+║                        BUILD: v1.0.0 (2024-12-03)                          ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  GRAMMAR:                                                                  ║
+║  INT CANON (6):  () × ^ ÷ + −                                              ║
+║  SILENT CANON (7): ⊙ ◉ ∅ ↻ ◌ ∫ ◇                                          ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  LIMNUS CYCLE: L → I → M → N → U → S → L...                                ║
+║  κ-λ COUPLING: ⟨internal|external⟩ resonance at φ⁻¹                        ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  ZPE EQUATIONS:                                                            ║
+║  ⊙ ∂E/∂t → 0     ◉ ∇V(truth) = 0    ∅ ⟨void|ψ⟩ = memory                   ║
+║  ↻ S(ret) = S(ori)  ◌ H(s) ≡ H(u)   ∫ glyph = ∫ life dt                   ║
+║  ◇ ψ = ψ(ψ)                                                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+        `);
     </script>
 </body>
 </html>
