@@ -914,31 +914,31 @@
 
         // ================================================================
         // 100 ZPE TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
-        // NARRATIVE: Single early violation → Full Recovery → Coherence
-        // N0-4: + must feed +, ×, or ^  |  N0-5: − must lead to () or +
+        // NARRATIVE: Complete Causal Compliance → Zero Violations → Coherence
+        // Each operator is valid AT EXECUTION TIME based on current state
         // ================================================================
         function generateZPETokens() {
             const tokens = [];
 
             // ========== PRISM TOKENS (63) ==========
             // Foundation layer - ABSENCE to THE LENS
-            // ONE violation at #0 to demonstrate enforcement, then CLEAN recovery
-            // All + followed by +, ×, or ^ | All operations legal after #0
+            // ZERO VIOLATIONS - Every operator valid when executed
+            // () establishes anchor → × adds channels → ^ amplifies → ÷ extracts
             const prismSequence = [
-                // Phase 0: Foundation (0-8) - Single VIOLATION, then legal recovery
-                '^',   // #0: N0-1 VIOLATION - ^ without prior () [CAUGHT]
-                '()', '()', '×', '^', '+', '^', '×', '()',  // +→^ legal
-                // Phase 1: Boundary (9-17) - All legal
-                '()', '×', '^', '+', '×', '^', '()', '×', '^',
-                // Phase 2: Coupling (18-26) - All legal, build structure
+                // Phase 0: Foundation (0-8) - Establish boundary FIRST
+                '()',  // #0: BOUNDARY - always legal, establishes anchor for ^
+                '×', '^', '+', '^', '×', '()', '×', '^',  // +→^ legal, ^ has prior ()
+                // Phase 1: Structure (9-17) - Build with legal operators
+                '()', '×', '^', '+', '×', '^', '()', '×', '^',  // +→× legal
+                // Phase 2: Coupling (18-26) - Deepen structure
                 '()', '×', '^', '+', '^', '×', '()', '+', '×',  // +→^ and +→× legal
-                // Phase 3: Amplify (27-35) - All legal
+                // Phase 3: Amplify (27-35) - Power accumulation
                 '^', '()', '×', '+', '^', '×', '()', '+', '^',  // +→^ legal
-                // Phase 4: Structure (36-44) - All legal, first ÷ (structure exists)
-                '()', '×', '^', '÷', '()', '×', '^', '+', '^',  // ÷ legal (has structure), +→^ legal
-                // Phase 5: Stabilize (45-53) - All legal
+                // Phase 4: First Extraction (36-44) - ÷ now legal (structure exists)
+                '()', '×', '^', '÷', '()', '×', '^', '+', '^',  // ÷ legal, +→^ legal
+                // Phase 5: Stabilize (45-53) - Lock coherence
                 '()', '×', '^', '+', '×', '()', '^', '+', '^',  // +→× and +→^ legal
-                // Phase 6: Convergence (54-62) - All legal, final coherence build
+                // Phase 6: Convergence (54-62) - Final coherence
                 '()', '×', '^', '+', '^', '×', '()', '+', '^'   // +→^ legal
             ];
 
@@ -1411,26 +1411,27 @@
         console.log(`
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║              ZERO-POINT ENERGY SYSTEM | WUMBO 63·32·5                      ║
-║                        BUILD: v2.1.0 (2024-12-03)                          ║
+║                        BUILD: v2.2.0 (2024-12-03)                          ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  TOKEN STRUCTURE (100 Total):                                              ║
 ║  • 63 PRISM    - Foundation layer (ABSENCE → THE LENS)                     ║
 ║  • 32 EM CAGE  - Stabilization layer (THE LENS)                            ║
 ║  •  5 EMERGENT - Self-reference extraction (PRESENCE)                      ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  NARRATIVE ARC: SINGLE VIOLATION → FULL RECOVERY → COHERENCE               ║
+║  NARRATIVE ARC: COMPLETE CAUSAL COMPLIANCE → ZERO VIOLATIONS               ║
 ║                                                                            ║
-║  TOKEN #0: ^ without prior ()                                              ║
-║            N0-1 VIOLATION [CAUGHT] - Demonstrates enforcement              ║
+║  TOKEN #0: () BOUNDARY - Establishes anchor for all subsequent ^           ║
+║            Every operator valid AT EXECUTION TIME                          ║
 ║                                                                            ║
-║  TOKENS #1-99: ALL LEGAL OPERATIONS                                        ║
-║  • Every + feeds +, ×, or ^ (N0-4 satisfied)                               ║
-║  • Every ^ has prior () or × (N0-1 satisfied)                              ║
-║  • Every ÷ has prior structure (N0-3 satisfied)                            ║
-║  • Channels always ≥ 2 (N0-2 satisfied)                                    ║
+║  TOKENS #0-99: ALL LEGAL OPERATIONS                                        ║
+║  • N0-1: Every ^ has prior () or × in history                              ║
+║  • N0-2: Channels always ≥ 2 (100 tokens)                                  ║
+║  • N0-3: Every ÷ has prior structure (^, ×, +, −)                          ║
+║  • N0-4: Every + feeds +, ×, or ^                                          ║
+║  • N0-5: Every − leads to () or +                                          ║
 ║                                                                            ║
-║  FINAL STATE: COHERENCE ACHIEVED                                           ║
-║  All N0 laws VALID · 1 violation recovered · System stable                 ║
+║  FINAL STATE: PERFECT COHERENCE                                            ║
+║  All N0 laws VALID · 0 violations · Complete causal compliance             ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  N0 ↔ SILENT LAWS: 1→I  2→IV  3→VI  4→II  5→VII  (III,V background)       ║
 ╠════════════════════════════════════════════════════════════════════════════╣
