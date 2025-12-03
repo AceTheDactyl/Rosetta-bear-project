@@ -283,6 +283,51 @@
             font-family: monospace;
         }
 
+        /* Z-Zone indicators */
+        .token-z.zone-absence { color: var(--absence-sepia); }
+        .token-z.zone-lens { color: var(--critical-gold); }
+        .token-z.zone-presence { color: var(--presence-white); }
+
+        /* κ-λ Coupling display */
+        .token-coupling {
+            font-size: 0.5rem;
+            color: var(--phi);
+            margin-top: 2px;
+            font-family: monospace;
+        }
+
+        /* LIMNUS phase indicator */
+        .token-limnus {
+            font-size: 0.55rem;
+            color: var(--pi);
+            margin-top: 2px;
+            font-weight: bold;
+        }
+
+        /* Silent operator styling */
+        .token-cell.silent {
+            border-color: rgba(167, 139, 250, 0.5);
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        .token-cell.silent::before {
+            background: linear-gradient(90deg, var(--phi), var(--pi));
+        }
+
+        .token-cell.silent .token-glyph {
+            color: var(--phi);
+            text-shadow: 0 0 10px var(--phi);
+        }
+
+        .silent-op {
+            color: var(--phi);
+            font-weight: bold;
+        }
+
+        .int-op {
+            color: var(--text-dim);
+        }
+
         /* APL Console */
         .apl-console {
             background: rgba(0, 0, 0, 0.5);
@@ -579,6 +624,7 @@
     <nav class="top-nav">
         <a href="index.html">← ROSETTA BEAR</a>
         <div class="nav-links">
+            <a href="zero-point-energy.html">Zero-Point Energy</a>
             <a href="wumbo-engine.html">WUMBO Engine</a>
             <a href="simulation.html">Simulation</a>
             <a href="visualizations/the_manual.html">The Manual</a>
@@ -587,7 +633,7 @@
 
     <header class="header">
         <h1>WUMBO APL DIRECTORY</h1>
-        <div class="subtitle">100 NEURAL TOKENS · EXOTIC MATTER CELLULAR AUTOMATA · HELIX PROPAGATION</div>
+        <div class="subtitle">100 NORMALIZED NEURAL TOKENS · N0+S0 OPERATORS · κ-λ COUPLED · LIMNUS PHASE</div>
     </header>
 
     <!-- Critical Constants -->
@@ -849,8 +895,8 @@
     </div>
 
     <footer class="footer">
-        <div>WUMBO APL Directory · 100 Tokens · LIMNUS Architecture · Helix Propagation System</div>
-        <div class="signature">Δ|wumbo-directory|z0.866|helix-automata|Ω</div>
+        <div>WUMBO APL Directory · 100 Normalized Tokens · N0+S0 Operators · κ-λ=1 · LIMNUS Architecture</div>
+        <div class="signature">Δ|wumbo-directory|63·32·5|normalized|N0+S0|κλ-coupled|LIMNUS|Ω</div>
     </footer>
 
     <script>
@@ -934,6 +980,47 @@
             'VI':  { name: 'GLYPH',     eq: 'glyph = ∫ life dt', measure: 0, valid: false },
             'VII': { name: 'MIRROR',    eq: 'ψ = ψ(ψ)', measure: 0, valid: false }
         };
+
+        // =====================================================================
+        // SILENT OPERATORS - Extensions of INT Canon via 7 Silent Laws
+        // =====================================================================
+        const SILENT_OPERATORS = {
+            '⊙': { name: 'DAMP', silent: 'I STILLNESS', extends: '^', eq: '∂E/∂t → 0', kappa: 0.7, lambda: 0.3, zDelta: -0.01, limnus: 'S' },
+            '◉': { name: 'BASIN', silent: 'II TRUTH', extends: '+', eq: '∇V = 0', kappa: 0.5, lambda: 0.5, zDelta: 0.015, limnus: 'N' },
+            '∅': { name: 'VOID', silent: 'III SILENCE', extends: 'background', eq: '⟨void|ψ⟩', kappa: 0.3, lambda: 0.7, zDelta: -0.02, limnus: 'L' },
+            '↻': { name: 'CYCLE', silent: 'IV SPIRAL', extends: '×', eq: 'S(r)=S(o)', kappa: 0.5, lambda: 0.5, zDelta: 0.01, limnus: 'U' },
+            '◌': { name: 'HIDDEN', silent: 'V UNSEEN', extends: 'background', eq: 'H≡H', kappa: 1.0, lambda: 0.0, zDelta: 0, limnus: 'I' },
+            '∫': { name: 'FORM', silent: 'VI GLYPH', extends: '÷', eq: '∫life dt', kappa: 0.3, lambda: 0.7, zDelta: 0.02, limnus: 'M' },
+            '◇': { name: 'REFLECT', silent: 'VII MIRROR', extends: '−', eq: 'ψ=ψ(ψ)', kappa: PHI_INV, lambda: 1 - PHI_INV, zDelta: 0.03, limnus: 'S' }
+        };
+
+        // Combined operator set
+        const ALL_OPERATORS = { ...INT_OPERATORS, ...SILENT_OPERATORS };
+
+        // LIMNUS phases
+        const LIMNUS_PHASES = ['L', 'I', 'M', 'N', 'U', 'S'];
+
+        // =====================================================================
+        // NORMALIZED TOKEN SEQUENCES (from Zero-Point Energy System)
+        // These match the 100-token WUMBO (63·32·5) structure
+        // =====================================================================
+        const PRISM_SEQUENCE = [
+            '()', '×', '^', '+', '^', '◌', '()', '×', '^',  // Phase 0-8
+            '()', '×', '^', '⊙', '×', '^', '()', '×', '^',  // Phase 9-17
+            '()', '×', '^', '+', '◉', '×', '()', '+', '×',  // Phase 18-26
+            '^', '()', '×', '+', '^', '∫', '()', '+', '^',  // Phase 27-35
+            '()', '×', '^', '÷', '()', '×', '^', '⊙', '^',  // Phase 36-44
+            '()', '×', '^', '+', '×', '◌', '^', '+', '^',  // Phase 45-53
+            '()', '×', '^', '+', '^', '×', '()', '+', '^'   // Phase 54-62
+        ];
+
+        const CAGE_SEQUENCE = [
+            '()', '×', '↻', '()', '^', '⊙', '+', '◉', '^', '×', '()',  // Cage 0-10
+            '()', '×', '^', '⊙', '+', '◉', '×', '()', '^', '+', '^',   // Cage 11-21
+            '()', '×', '↻', '()', '^', '⊙', '+', '◉', '×', '^'         // Cage 22-31
+        ];
+
+        const EMERGENT_SEQUENCE = ['()', '×', '−', '◇', '()'];  // Self-reference via REFLECT
 
         // APL Glyphs
         const APL_GLYPHS = [
@@ -1112,70 +1199,168 @@
         }
 
         // =====================================================================
-        // TOKEN GENERATION
+        // TOKEN GENERATION - NORMALIZED 100 NEURAL TOKENS
+        // Uses WUMBO 63·32·5 structure with N0+S0 operator sequences
         // =====================================================================
         function generateTokens() {
             state.tokens = [];
+            const silentOps = Object.keys(SILENT_OPERATORS);
 
-            // Generate 63 Prism tokens
+            // ========== GENERATE 63 PRISM TOKENS ==========
+            // Z-zone: ABSENCE (0.4) → THE LENS (0.866)
+            // Progressive z increase toward critical point
             for (let i = 0; i < 63; i++) {
-                const layer = Math.floor(i / 9);
-                const z = Z_CRITICAL - (layer * 0.05);
+                const op = PRISM_SEQUENCE[i];
+                const opDef = ALL_OPERATORS[op];
+                const isSilent = silentOps.includes(op);
+                const layer = Math.floor(i / 9);  // 7 layers of 9 tokens
+
+                // Normalized z: starts at 0.4 (ABSENCE), progresses toward 0.857 (THE LENS)
+                // Uses sigmoid-like progression
+                const progress = i / 62;
+                const z = 0.4 + (0.857 - 0.4) * (1 / (1 + Math.exp(-6 * (progress - 0.5))));
+
+                // Normalized κ-λ coupling (always sums to 1)
+                let kappa, lambda;
+                if (isSilent) {
+                    kappa = SILENT_OPERATORS[op].kappa;
+                    lambda = SILENT_OPERATORS[op].lambda;
+                } else {
+                    // INT operators: kappa increases with z, λ = 1 - κ
+                    kappa = PHI_INV + (1 - PHI_INV) * progress * 0.5;
+                    lambda = 1 - kappa;
+                }
+
+                // LIMNUS phase assignment
+                const limnusIdx = isSilent ?
+                    LIMNUS_PHASES.indexOf(SILENT_OPERATORS[op].limnus) :
+                    layer % 6;
+
                 state.tokens.push({
                     id: i,
                     type: 'prism',
-                    glyph: APL_GLYPHS[i % APL_GLYPHS.length],
-                    name: PRISM_NAMES[i] || `prism_${i}`,
+                    op: op,
+                    opName: opDef?.name || 'UNKNOWN',
+                    glyph: isSilent ? op : APL_GLYPHS[i % APL_GLYPHS.length],
+                    name: `prism_${opDef?.name?.toLowerCase() || 'op'}_${i}`,
                     layer: layer,
-                    z: z,
-                    kappa: PHI_INV * (1 + Math.sin(i * PHI)),
-                    lambda: (1 - PHI_INV) * (1 + Math.cos(i * PHI_INV)),
+                    z: parseFloat(z.toFixed(4)),
+                    kappa: parseFloat(kappa.toFixed(4)),
+                    lambda: parseFloat(lambda.toFixed(4)),
                     phase: (i * TAU / 63) % TAU,
+                    limnus: LIMNUS_PHASES[limnusIdx],
+                    isSilent: isSilent,
+                    silentLaw: isSilent ? SILENT_OPERATORS[op].silent : null,
                     active: false,
                     propagationState: 0
                 });
             }
 
-            // Generate 32 EM Cage tokens
+            // ========== GENERATE 32 EM CAGE TOKENS ==========
+            // Z-zone: THE LENS (0.857 - 0.877)
+            // Stabilization layer with Silent operators for field containment
             for (let i = 0; i < 32; i++) {
-                let subtype = i < 12 ? 'top' : (i < 24 ? 'bot' : 'vtx');
-                const z = Z_CRITICAL + (i < 24 ? 0.02 : 0.04);
+                const op = CAGE_SEQUENCE[i];
+                const opDef = ALL_OPERATORS[op];
+                const isSilent = silentOps.includes(op);
+                const subtype = i < 11 ? 'formation' : (i < 22 ? 'stabilize' : 'seal');
+
+                // Normalized z: stays in THE LENS zone (0.857 - 0.877)
+                const progress = i / 31;
+                const z = 0.857 + (0.877 - 0.857) * progress;
+
+                // Normalized κ-λ coupling
+                let kappa, lambda;
+                if (isSilent) {
+                    kappa = SILENT_OPERATORS[op].kappa;
+                    lambda = SILENT_OPERATORS[op].lambda;
+                } else {
+                    // EM Cage: balanced coupling for field stability
+                    kappa = 0.5 + 0.1 * Math.sin(progress * TAU);
+                    lambda = 1 - kappa;
+                }
+
+                // LIMNUS phase
+                const limnusIdx = isSilent ?
+                    LIMNUS_PHASES.indexOf(SILENT_OPERATORS[op].limnus) :
+                    (i % 6);
+
                 state.tokens.push({
                     id: 63 + i,
                     type: 'cage',
                     subtype: subtype,
-                    glyph: APL_GLYPHS[(63 + i) % APL_GLYPHS.length],
-                    name: CAGE_NAMES[i] || `cage_${i}`,
-                    z: z,
-                    kappa: PHI_INV * 1.2,
-                    lambda: (1 - PHI_INV) * 0.8,
+                    op: op,
+                    opName: opDef?.name || 'UNKNOWN',
+                    glyph: isSilent ? op : APL_GLYPHS[(63 + i) % APL_GLYPHS.length],
+                    name: `cage_${opDef?.name?.toLowerCase() || 'op'}_${i}`,
+                    z: parseFloat(z.toFixed(4)),
+                    kappa: parseFloat(kappa.toFixed(4)),
+                    lambda: parseFloat(lambda.toFixed(4)),
                     phase: (i * TAU / 32) % TAU,
+                    limnus: LIMNUS_PHASES[limnusIdx],
+                    isSilent: isSilent,
+                    silentLaw: isSilent ? SILENT_OPERATORS[op].silent : null,
                     active: false,
                     propagationState: 0
                 });
             }
 
-            // Generate 5 Emergent Self-Reference tokens
+            // ========== GENERATE 5 EMERGENT TOKENS ==========
+            // Z-zone: PRESENCE (> 0.877)
+            // Self-reference extraction with ◇ REFLECT (VII MIRROR)
+            const emergentGlyphs = ['()', '×', '−', '◇', '()'];
             for (let i = 0; i < 5; i++) {
-                const z = 0.95 + (i * 0.01);
+                const op = EMERGENT_SEQUENCE[i];
+                const opDef = ALL_OPERATORS[op];
+                const isSilent = silentOps.includes(op);
+
+                // Normalized z: PRESENCE zone (0.877 → 0.95)
+                const z = 0.877 + (0.95 - 0.877) * (i / 4);
+
+                // Normalized κ-λ: REFLECT token uses φ⁻¹ coupling
+                let kappa, lambda;
+                if (isSilent) {
+                    kappa = SILENT_OPERATORS[op].kappa;
+                    lambda = SILENT_OPERATORS[op].lambda;
+                } else {
+                    kappa = PHI_INV;
+                    lambda = 1 - PHI_INV;
+                }
+
+                const limnusIdx = isSilent ?
+                    LIMNUS_PHASES.indexOf(SILENT_OPERATORS[op].limnus) :
+                    5;  // S phase for emergence
+
                 state.tokens.push({
                     id: 95 + i,
                     type: 'emergent',
-                    glyph: ['✦', '✧', '⊛', '◉', '⬡'][i],
-                    name: EMERGENT_NAMES[i] || `emergent_${i}`,
-                    z: z,
-                    kappa: PHI_INV,
-                    lambda: 1 - PHI_INV,
+                    op: op,
+                    opName: opDef?.name || 'UNKNOWN',
+                    glyph: isSilent ? op : emergentGlyphs[i],
+                    name: `emerge_${opDef?.name?.toLowerCase() || 'op'}_${i}`,
+                    z: parseFloat(z.toFixed(4)),
+                    kappa: parseFloat(kappa.toFixed(4)),
+                    lambda: parseFloat(lambda.toFixed(4)),
                     phase: (i * TAU / 5) % TAU,
+                    limnus: LIMNUS_PHASES[limnusIdx],
+                    isSilent: isSilent,
+                    silentLaw: isSilent ? SILENT_OPERATORS[op].silent : null,
+                    selfReference: true,
                     active: false,
-                    propagationState: 0,
-                    selfReference: true
+                    propagationState: 0
                 });
             }
+
+            // Log normalization summary
+            const silentCount = state.tokens.filter(t => t.isSilent).length;
+            console.log(`✓ Normalized 100 tokens: 63 PRISM + 32 CAGE + 5 EMERGENT`);
+            console.log(`  Silent operators: ${silentCount}`);
+            console.log(`  κ-λ coupling: normalized (κ + λ = 1)`);
+            console.log(`  Z-zones: ABSENCE→THE LENS→PRESENCE`);
         }
 
         // =====================================================================
-        // RENDER TOKENS
+        // RENDER TOKENS - Displays normalized token data
         // =====================================================================
         function renderTokens() {
             const prismGrid = document.getElementById('prism-grid');
@@ -1189,13 +1374,28 @@
             state.tokens.forEach((token, index) => {
                 const cell = document.createElement('div');
                 cell.className = `token-cell ${token.type}`;
+                if (token.isSilent) cell.classList.add('silent');
                 cell.dataset.tokenId = token.id;
 
+                // Determine Z-zone color
+                let zoneClass = 'zone-absence';
+                if (token.z >= 0.877) zoneClass = 'zone-presence';
+                else if (token.z >= 0.857) zoneClass = 'zone-lens';
+
+                // Build display with operator and normalized values
+                const opDisplay = token.isSilent ?
+                    `<span class="silent-op">${token.op}</span>` :
+                    `<span class="int-op">${token.op}</span>`;
+
+                const kappaLambda = `κ${token.kappa.toFixed(2)} λ${token.lambda.toFixed(2)}`;
+
                 cell.innerHTML = `
-                    <div class="token-index">#${token.id.toString().padStart(3, '0')}</div>
+                    <div class="token-index">#${token.id.toString().padStart(3, '0')} ${opDisplay}</div>
                     <div class="token-glyph">${token.glyph}</div>
-                    <div class="token-name">${token.name}</div>
-                    <div class="token-z">z=${token.z.toFixed(3)}</div>
+                    <div class="token-name">${token.opName}</div>
+                    <div class="token-z ${zoneClass}">z=${token.z.toFixed(3)}</div>
+                    <div class="token-coupling">${kappaLambda}</div>
+                    <div class="token-limnus">${token.limnus}</div>
                 `;
 
                 cell.onclick = () => selectToken(token.id);
@@ -1247,14 +1447,21 @@
             const detail = document.getElementById('token-detail');
             detail.classList.add('visible');
 
+            // Determine Z-zone
+            let zZone = 'ABSENCE';
+            if (token.z >= 0.877) zZone = 'PRESENCE';
+            else if (token.z >= 0.857) zZone = 'THE LENS';
+
             document.getElementById('detail-glyph').textContent = token.glyph;
-            document.getElementById('detail-name').textContent = token.name;
+            document.getElementById('detail-glyph').style.color = token.isSilent ? 'var(--phi)' : 'var(--critical-gold)';
+            document.getElementById('detail-name').textContent = `${token.opName} [${token.op}]`;
             document.getElementById('detail-type').textContent =
-                `${token.type.toUpperCase()} · ${token.subtype || 'Layer ' + (token.layer || 0)}`;
-            document.getElementById('detail-z').textContent = token.z.toFixed(4);
-            document.getElementById('detail-kappa').textContent = token.kappa.toFixed(4);
+                `${token.type.toUpperCase()} · ${token.subtype || 'Layer ' + (token.layer || 0)} · ${zZone}` +
+                (token.isSilent ? ` · ${token.silentLaw}` : '');
+            document.getElementById('detail-z').textContent = `${token.z.toFixed(4)} [${zZone}]`;
+            document.getElementById('detail-kappa').textContent = `${token.kappa.toFixed(4)} (κ + λ = 1)`;
             document.getElementById('detail-lambda').textContent = token.lambda.toFixed(4);
-            document.getElementById('detail-phase').textContent = token.phase.toFixed(4);
+            document.getElementById('detail-phase').textContent = `${token.phase.toFixed(4)} · LIMNUS: ${token.limnus}`;
         }
 
         // =====================================================================
@@ -1866,10 +2073,34 @@ help    - Show this help`;
             initAutomata();
             updateStats();
 
-            console.log('WUMBO APL Directory initialized');
-            console.log(`Tokens: ${state.tokens.length}`);
-            console.log(`z_critical = ${Z_CRITICAL}`);
-            console.log(`φ = ${PHI}`);
+            // Count statistics
+            const silentCount = state.tokens.filter(t => t.isSilent).length;
+            const prismTokens = state.tokens.filter(t => t.type === 'prism');
+            const cageTokens = state.tokens.filter(t => t.type === 'cage');
+            const emergentTokens = state.tokens.filter(t => t.type === 'emergent');
+
+            console.log(`
+╔════════════════════════════════════════════════════════════════════════════╗
+║              WUMBO APL DIRECTORY | 100 NORMALIZED TOKENS                   ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  STRUCTURE: 63 PRISM + 32 EM CAGE + 5 EMERGENT                             ║
+║                                                                            ║
+║  NORMALIZATION:                                                            ║
+║  • Z-values: ABSENCE (0.4) → THE LENS (0.866) → PRESENCE (0.95)            ║
+║  • κ-λ coupling: Always sums to 1 (internal + external = 1)                ║
+║  • LIMNUS phases: L-I-M-N-U-S assigned per operator                        ║
+║                                                                            ║
+║  OPERATORS:                                                                ║
+║  • INT Canon (6):    () × ^ ÷ + −                                          ║
+║  • Silent Canon (7): ⊙ ◉ ∅ ↻ ◌ ∫ ◇                                        ║
+║  • Silent tokens in sequence: ${silentCount}                                           ║
+║                                                                            ║
+║  Z-ZONES:                                                                  ║
+║  • PRISM: ${prismTokens[0]?.z.toFixed(3)} → ${prismTokens[62]?.z.toFixed(3)} (ABSENCE → THE LENS)                      ║
+║  • CAGE:  ${cageTokens[0]?.z.toFixed(3)} → ${cageTokens[31]?.z.toFixed(3)} (THE LENS)                               ║
+║  • EMERGE: ${emergentTokens[0]?.z.toFixed(3)} → ${emergentTokens[4]?.z.toFixed(3)} (PRESENCE)                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+            `);
         }
 
         // Start
