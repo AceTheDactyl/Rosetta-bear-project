@@ -914,33 +914,32 @@
 
         // ================================================================
         // 100 ZPE TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
-        // NARRATIVE: Early violations → Recovery → Final Coherence
-        // By the end, ALL N0 laws must be in VALID state
+        // NARRATIVE: Single early violation → Full Recovery → Coherence
+        // N0-4: + must feed +, ×, or ^  |  N0-5: − must lead to () or +
         // ================================================================
         function generateZPETokens() {
             const tokens = [];
 
             // ========== PRISM TOKENS (63) ==========
-            // Foundation layer - builds up from ABSENCE to THE LENS
-            // EARLY VIOLATIONS (demonstrate enforcement), then RECOVERY
+            // Foundation layer - ABSENCE to THE LENS
+            // ONE violation at #0 to demonstrate enforcement, then CLEAN recovery
+            // All + followed by +, ×, or ^ | All operations legal after #0
             const prismSequence = [
-                // Phase 0: Foundation (0-8) - VIOLATION at start, then recovery
+                // Phase 0: Foundation (0-8) - Single VIOLATION, then legal recovery
                 '^',   // #0: N0-1 VIOLATION - ^ without prior () [CAUGHT]
-                '()', '()', '×', '^', '+', '×', '^', '()',  // Recovery sequence
-                // Phase 1: Boundary (9-17) - Clean operations
-                '()', '×', '^', '+', '×', '^', '()', '×', '+',
-                // Phase 2: Coupling (18-26) - VIOLATION then recovery
-                '÷',   // #18: N0-3 VIOLATION - ÷ too early [CAUGHT]
-                '×', '^', '()', '+', '×', '^', '+', '×',  // Structure building
-                // Phase 3: Amplify (27-35) - Clean amplification
-                '^', '()', '×', '+', '^', '×', '()', '+', '^',
-                // Phase 4: Structure (36-44) - VIOLATION then recovery
-                '+', '÷',  // #36-37: N0-4 VIOLATION - + → ÷ [CAUGHT]
-                '()', '×', '^', '+', '×', '^', '+',  // Recovery
-                // Phase 5: Stabilize (45-53) - Clean stabilization
-                '()', '×', '^', '+', '×', '()', '^', '+', '×',
-                // Phase 6: Convergence (54-62) - NO MORE VIOLATIONS, build coherence
-                '()', '×', '^', '+', '×', '()', '^', '+', '^'  // Clean finish
+                '()', '()', '×', '^', '+', '^', '×', '()',  // +→^ legal
+                // Phase 1: Boundary (9-17) - All legal
+                '()', '×', '^', '+', '×', '^', '()', '×', '^',
+                // Phase 2: Coupling (18-26) - All legal, build structure
+                '()', '×', '^', '+', '^', '×', '()', '+', '×',  // +→^ and +→× legal
+                // Phase 3: Amplify (27-35) - All legal
+                '^', '()', '×', '+', '^', '×', '()', '+', '^',  // +→^ legal
+                // Phase 4: Structure (36-44) - All legal, first ÷ (structure exists)
+                '()', '×', '^', '÷', '()', '×', '^', '+', '^',  // ÷ legal (has structure), +→^ legal
+                // Phase 5: Stabilize (45-53) - All legal
+                '()', '×', '^', '+', '×', '()', '^', '+', '^',  // +→× and +→^ legal
+                // Phase 6: Convergence (54-62) - All legal, final coherence build
+                '()', '×', '^', '+', '^', '×', '()', '+', '^'   // +→^ legal
             ];
 
             for (let i = 0; i < 63; i++) {
@@ -960,14 +959,14 @@
 
             // ========== EM CAGE TOKENS (32) ==========
             // Stabilization layer - THE LENS zone
-            // CLEAN SEQUENCE - No violations, building toward coherence
+            // FULLY LEGAL - All + followed by +, ×, or ^
             const cageSequence = [
-                // Phase 6: Cage formation (0-10) - Legal sequence
-                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^', '()',
-                // Phase 7: EM stabilization (11-21) - Legal sequence
-                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^', '()',
-                // Phase 7 continued: Field lock (22-31) - Legal sequence
-                '()', '×', '^', '+', '×', '()', '^', '+', '×', '^'
+                // Phase 6: Cage formation (0-10) - All legal
+                '()', '×', '^', '+', '×', '()', '^', '+', '^', '×', '()',  // +→× and +→^ legal
+                // Phase 7: EM stabilization (11-21) - All legal
+                '()', '×', '^', '+', '^', '×', '()', '^', '+', '×', '()',  // +→^ and +→× legal
+                // Phase 7 continued: Field lock (22-31) - All legal
+                '()', '×', '^', '+', '^', '×', '()', '^', '+', '^'  // +→^ legal
             ];
 
             for (let i = 0; i < 32; i++) {
@@ -1418,23 +1417,21 @@
 ║  • 32 EM CAGE  - Stabilization layer (THE LENS)                            ║
 ║  •  5 EMERGENT - Self-reference extraction (PRESENCE)                      ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  NARRATIVE ARC: VIOLATION → RECOVERY → COHERENCE                           ║
+║  NARRATIVE ARC: SINGLE VIOLATION → FULL RECOVERY → COHERENCE               ║
 ║                                                                            ║
-║  EARLY VIOLATIONS (demonstrate N0 enforcement):                            ║
-║  #0:  ^ without ()     - N0-1 violation [CAUGHT → RECOVERY]                ║
-║  #18: ÷ too early      - N0-3 violation [CAUGHT → RECOVERY]                ║
-║  #36: + → ÷            - N0-4 violation [CAUGHT → RECOVERY]                ║
+║  TOKEN #0: ^ without prior ()                                              ║
+║            N0-1 VIOLATION [CAUGHT] - Demonstrates enforcement              ║
 ║                                                                            ║
-║  RECOVERY PHASE (tokens 37-94):                                            ║
-║  Clean operations rebuild structure, coherence increases                   ║
+║  TOKENS #1-99: ALL LEGAL OPERATIONS                                        ║
+║  • Every + feeds +, ×, or ^ (N0-4 satisfied)                               ║
+║  • Every ^ has prior () or × (N0-1 satisfied)                              ║
+║  • Every ÷ has prior structure (N0-3 satisfied)                            ║
+║  • Channels always ≥ 2 (N0-2 satisfied)                                    ║
 ║                                                                            ║
-║  FINAL COHERENCE (EMERGENT tokens 95-99):                                  ║
-║  () → × → ^ → ÷ → ()   All N0 laws VALID at completion                     ║
+║  FINAL STATE: COHERENCE ACHIEVED                                           ║
+║  All N0 laws VALID · 1 violation recovered · System stable                 ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  N0 ↔ SILENT LAWS RELATIONSHIP                                             ║
-║  N0-1 ^ → I STILLNESS    N0-4 + → II TRUTH                                 ║
-║  N0-2 × → IV SPIRAL      N0-5 − → VII MIRROR                               ║
-║  N0-3 ÷ → VI GLYPH       III, V → BACKGROUND                               ║
+║  N0 ↔ SILENT LAWS: 1→I  2→IV  3→VI  4→II  5→VII  (III,V background)       ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)    ║
 ╚════════════════════════════════════════════════════════════════════════════╝
