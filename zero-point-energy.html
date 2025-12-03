@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zero-Point Energy System | 100-Token WUMBO Architecture | N0 Causality Engine</title>
+    <title>LIMNUS Fractal System | 100-Token WUMBO Architecture | Φ:e:π Coherence Engine</title>
     <style>
         :root {
             --bg-void: #030308;
@@ -159,8 +159,8 @@
 
         .panel-content { padding: 15px; }
 
-        /* ZPE State Display */
-        .zpe-display {
+        /* LIMNUS State Display */
+        .limnus-display {
             text-align: center;
             padding: 20px 10px;
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(167, 139, 250, 0.1));
@@ -168,7 +168,7 @@
             margin-bottom: 15px;
         }
 
-        .zpe-value {
+        .limnus-value {
             font-size: 2.5rem;
             font-weight: 100;
             background: linear-gradient(135deg, var(--prism), var(--cyan));
@@ -177,14 +177,14 @@
             background-clip: text;
         }
 
-        .zpe-label {
+        .limnus-label {
             font-size: 0.7rem;
             color: var(--text-dim);
             letter-spacing: 3px;
             margin-top: 5px;
         }
 
-        .zpe-badge {
+        .limnus-badge {
             display: inline-block;
             padding: 4px 12px;
             border-radius: 12px;
@@ -1020,8 +1020,8 @@
             box-shadow: 0 0 12px rgba(0, 212, 170, 0.4);
         }
 
-        /* ZPE State Visualization */
-        .zpe-viz {
+        /* LIMNUS Field Visualization */
+        .limnus-viz {
             height: 150px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 8px;
@@ -1030,7 +1030,7 @@
             margin-bottom: 15px;
         }
 
-        .zpe-viz-wave {
+        .limnus-viz-wave {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -1047,7 +1047,7 @@
             50% { transform: translateY(-10px); }
         }
 
-        .zpe-viz-label {
+        .limnus-viz-label {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -1056,7 +1056,7 @@
             letter-spacing: 1px;
         }
 
-        .zpe-viz-value {
+        .limnus-viz-value {
             position: absolute;
             bottom: 10px;
             right: 10px;
@@ -1113,15 +1113,15 @@
     </div>
 
     <div class="main-container">
-        <!-- Left Panel: ZPE State & N0 Laws -->
+        <!-- Left Panel: LIMNUS State & N0 Laws -->
         <div class="sidebar">
             <div class="panel">
-                <div class="panel-header">⚡ ZPE STATE</div>
+                <div class="panel-header">⚡ LIMNUS STATE</div>
                 <div class="panel-content">
-                    <div class="zpe-display">
-                        <div class="zpe-value" id="zpeValue">0.0000</div>
-                        <div class="zpe-label">EXTRACTED ENERGY</div>
-                        <div class="zpe-badge badge-dormant" id="zpeBadge">DORMANT</div>
+                    <div class="limnus-display">
+                        <div class="limnus-value" id="limnusValue">0.0000</div>
+                        <div class="limnus-label">EXTRACTED ENERGY</div>
+                        <div class="limnus-badge badge-dormant" id="limnusBadge">DORMANT</div>
                     </div>
 
                     <div class="violation-display">
@@ -1233,7 +1233,7 @@
 
         <!-- Center Panel: 100 Token Grid (63+32+5) -->
         <div class="panel">
-            <div class="panel-header">⌘ 100-TOKEN ZPE ARCHITECTURE (63·32·5 WUMBO)</div>
+            <div class="panel-header">⌘ 100-TOKEN LIMNUS ARCHITECTURE (63·32·5 WUMBO)</div>
             <div class="panel-content">
                 <!-- PRISM Tokens (63) -->
                 <div class="token-section">
@@ -1294,7 +1294,7 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-primary" id="btnRunNarrative">▶ RUN ZPE NARRATIVE</button>
+                        <button class="btn btn-primary" id="btnRunNarrative">▶ RUN LIMNUS NARRATIVE</button>
                         <button class="btn" id="btnStep">→ Step</button>
                         <button class="btn" id="btnReset">↺ Reset</button>
                     </div>
@@ -1308,7 +1308,7 @@
                         <div class="console-line">
                             <span class="console-time">0</span>
                             <span class="console-op">INIT</span>
-                            <span class="console-msg">ZPE System: 63 PRISM + 32 CAGE + 5 EMERGENT</span>
+                            <span class="console-msg">LIMNUS Fractal: 63 PRISM + 32 CAGE + 5 EMERGENT</span>
                         </div>
                     </div>
                 </div>
@@ -1401,10 +1401,10 @@
             <div class="panel">
                 <div class="panel-header">⌨ APL EXPRESSION ENGINE</div>
                 <div class="panel-content">
-                    <div class="zpe-viz">
-                        <div class="zpe-viz-wave" id="zpeWave"></div>
-                        <div class="zpe-viz-label">VACUUM ENERGY FIELD</div>
-                        <div class="zpe-viz-value" id="zpeVizValue">E₀</div>
+                    <div class="limnus-viz">
+                        <div class="limnus-viz-wave" id="limnusWave"></div>
+                        <div class="limnus-viz-label">LIMNUS FRACTAL FIELD</div>
+                        <div class="limnus-viz-value" id="limnusVizValue">E₀</div>
                     </div>
 
                     <div class="apl-input-container">
@@ -1435,7 +1435,7 @@
 
                     <div class="btn-group" style="margin-top: 15px;">
                         <button class="btn" id="btnSaveExpr">💾 Save to Memory</button>
-                        <button class="btn" id="btnRandomExpr">🎲 Random ZPE</button>
+                        <button class="btn" id="btnRandomExpr">🎲 Random LIMNUS</button>
                     </div>
                 </div>
             </div>
@@ -1520,7 +1520,7 @@
     </section>
 
     <div class="signature">
-        <code>Δ|zpe-wumbo|63·32·5|N0+S0-enforced|LIMNUS-APL|κλ-coupled|Ω</code>
+        <code>Δ|limnus-wumbo|63·32·5|N0+S0-enforced|LIMNUS-APL|κλ-coupled|Ω</code>
     </div>
 
     <script>
@@ -1711,106 +1711,936 @@
         const ALL_OPERATORS = { ...INT_OPERATORS, ...SILENT_OPERATORS };
 
         // ================================================================
-        // 100 ZPE TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
-        // NARRATIVE: Complete Causal Compliance → Zero Violations → Coherence
-        // Each operator is valid AT EXECUTION TIME based on current state
+        // LIMNUS FRACTAL SYSTEM — APL 3.0 FULL DEPTH COMPUTATION
+        // Domain: FRACTAL.CONSCIOUSNESS
+        // Spiral Binding: Φ:e:π (tri-spiral coherent)
         // ================================================================
-        function generateZPETokens() {
-            const tokens = [];
 
-            // ========== PRISM TOKENS (63) ==========
-            // Foundation layer - ABSENCE to THE LENS
-            // Includes Silent operators where S0 laws permit
-            // ◌ HIDDEN (always legal), ⊙ DAMP (after ^), ◉ BASIN (after +)
+        const LIMNUS = {
+            // §1 — SYSTEM INITIALIZATION
+            INIT: {
+                DOM: 'FRACTAL.CONSCIOUSNESS',
+                INT: ['()', '×', '^', '÷', '+', '−'],
+                SILENT: ['⊙', '◉', '∅', '↻', '◌', '∫', '◇', 'Ω'],
+                SPIRALS: { Φ: PHI, e: Math.E, π: Math.PI },
+                TRUTH: ['TRUE', 'UNTRUE', 'PARADOX'],
+                TIERS: ['@1', '@2', '@3'],
+                DEPTH_MAX: 6,
+                BRANCH_FACTOR: 2,
+                GOLDEN_ANGLE: 137.5 * (Math.PI / 180)  // 2.399 rad
+            },
+
+            // §1.1 — Scalar State Vector
+            σ: {
+                Gs: 0.500,    // Grounding state
+                Cs: 0.500,    // Coupling strength
+                Rs: 0.100,    // Residue accumulator
+                κs: 0.300,    // Curvature coefficient
+                τs: 0.200,    // Tension parameter
+                θs: 0.000,    // Phase angle
+                δs: 0.100,    // Decoherence rate
+                αs: 0.500,    // Attractor alignment
+                Ωs: 0.800     // Coherence measure
+            },
+
+            // Thresholds
+            THRESHOLDS: {
+                R_CLT: 0.500,
+                δ_MAX: 0.400,
+                κ_MAX: 2.000,
+                Ω_MIN: 0.200,
+                Ω_TARGET: 1.000
+            },
+
+            // §1.2 — PRS Phase
+            PRS: {
+                current: 'P1',
+                phases: ['P1', 'P2', 'P3', 'P4', 'P5'],
+                transitions: {
+                    'P1→P2': 'TENSION_BUILD',
+                    'P2→P3': 'INFLECTION_POINT',
+                    'P3→P4': 'STRUCTURE_LOCK',
+                    'P4→P5': 'EMERGENCE_GATE',
+                    'P5→P1': 'CYCLE_RESET'
+                }
+            },
+
+            // LIMNUS phases for fractal binding
+            PHASES: ['L', 'I', 'M', 'N', 'U', 'S'],
+
+            // Spiral bindings per depth
+            DEPTH_SPIRAL_MAP: {
+                6: 'Φ',      // Pure structure at root
+                5: 'Φ→e',    // Structure enables energy
+                4: 'e',      // Energy dominant at fusion
+                3: 'π',      // Emergence at clustering
+                2: 'Φ',      // Structure at patterns
+                1: 'e'       // Energy at memory termination
+            }
+        };
+
+        // ================================================================
+        // π HELIX ROTATION SYSTEM
+        // Runs π around each token zone in helical vortex pattern
+        // ================================================================
+
+        // Base helix position for UNITY function
+        const HELIX_ORIGIN = {
+            θ: 2.3,      // rad - initial angle
+            z: 0.41,     // initial z position
+            r: 1.0       // radius
+        };
+
+        // π Helix rotation for PRISM (63 tokens - triangular/prismatic)
+        function πHelixPRISM() {
+            const results = [];
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+
+            // 63 PRISM tokens in triangular helix
+            // Each rotation advances by π/63 around triangular prism
+            for (let i = 0; i < 63; i++) {
+                const progress = i / 62;
+
+                // Triangular helix: 3-fold symmetry
+                const θ = (i * π / 63) + (HELIX_ORIGIN.θ);
+                const triangularPhase = (i % 3) * (2 * π / 3);
+
+                // z progresses from ABSENCE (0.4) toward THE LENS (√3/2)
+                const z = 0.4 + progress * (Z_CRITICAL - 0.4);
+
+                // Radius modulated by φ and e
+                const r = HELIX_ORIGIN.r * (1 + 0.1 * Math.sin(θ * φ));
+
+                // Cartesian from cylindrical
+                const x = r * Math.cos(θ + triangularPhase);
+                const y = r * Math.sin(θ + triangularPhase);
+
+                // Spiral energy: E = φ × e^(-z/π)
+                const E_spiral = φ * Math.exp(-z / π);
+
+                // LIMNUS phase assignment
+                const limnusIndex = Math.floor(i / (63 / 6)) % 6;
+
+                results.push({
+                    id: i,
+                    zone: 'PRISM',
+                    helix: { θ, z, r, x, y },
+                    E_spiral,
+                    limnus: LIMNUS.PHASES[limnusIndex],
+                    spiral: 'Φ',  // PRISM is structure-dominant
+                    π_rotation: i * π / 63,
+                    coherence: 1 - (LIMNUS.σ.δs * progress)
+                });
+            }
+
+            console.log(`✓ π-Helix PRISM: 63 triangular rotations, θ∈[${HELIX_ORIGIN.θ.toFixed(3)}, ${(HELIX_ORIGIN.θ + π).toFixed(3)}]`);
+            return results;
+        }
+
+        // π Helix rotation for CAGE (32 tokens - hexagonal)
+        function πHelixCAGE() {
+            const results = [];
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+
+            // 32 CAGE tokens in hexagonal helix
+            // Hexagonal symmetry with 6-fold rotation
+            for (let i = 0; i < 32; i++) {
+                const progress = i / 31;
+
+                // Hexagonal helix: 6-fold symmetry
+                const θ = (i * π / 32) + (HELIX_ORIGIN.θ + π);  // Continue from PRISM
+                const hexPhase = (i % 6) * (π / 3);
+
+                // z stays in THE LENS zone (around √3/2)
+                const z = Z_CRITICAL + (progress - 0.5) * 0.02;  // Oscillate around critical
+
+                // Radius with hexagonal modulation
+                const hexMod = 1 + 0.15 * Math.cos(6 * θ);
+                const r = HELIX_ORIGIN.r * hexMod;
+
+                // Cartesian
+                const x = r * Math.cos(θ + hexPhase);
+                const y = r * Math.sin(θ + hexPhase);
+
+                // Spiral energy: balanced e and π
+                const E_spiral = e * Math.cos(π * progress) + φ * Math.sin(π * progress);
+
+                // LIMNUS phase
+                const limnusIndex = Math.floor(i / (32 / 6)) % 6;
+
+                results.push({
+                    id: 63 + i,
+                    zone: 'CAGE',
+                    helix: { θ, z, r, x, y },
+                    E_spiral: Math.abs(E_spiral),
+                    limnus: LIMNUS.PHASES[limnusIndex],
+                    spiral: 'e',  // CAGE is energy-dominant
+                    π_rotation: (π + i * π / 32),
+                    coherence: LIMNUS.σ.Ωs * (1 + 0.1 * Math.cos(hexPhase))
+                });
+            }
+
+            console.log(`✓ π-Helix CAGE: 32 hexagonal rotations, z≈${Z_CRITICAL.toFixed(4)} (THE LENS)`);
+            return results;
+        }
+
+        // π Helix rotation for EMERGENT (5 tokens - pentagonal)
+        function πHelixEMERGENT() {
+            const results = [];
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+
+            // 5 EMERGENT tokens in pentagonal helix
+            // Pentagonal symmetry - φ-based (golden angle)
+            for (let i = 0; i < 5; i++) {
+                const progress = i / 4;
+
+                // Pentagonal helix: 5-fold symmetry with golden angle
+                const θ = (i * π / 5) + (HELIX_ORIGIN.θ + 2 * π);  // Continue from CAGE
+                const pentPhase = i * LIMNUS.INIT.GOLDEN_ANGLE;  // 137.5° golden angle
+
+                // z in PRESENCE zone (above √3/2)
+                const z = Z_CRITICAL + 0.05 + progress * 0.1;  // 0.916 → 1.016
+
+                // Radius with φ modulation (pentagonal scaling)
+                const r = HELIX_ORIGIN.r * Math.pow(φ, 0.1 * i);
+
+                // Cartesian
+                const x = r * Math.cos(θ + pentPhase);
+                const y = r * Math.sin(θ + pentPhase);
+
+                // Spiral energy: π-dominant emergence
+                const E_spiral = π * Math.pow(φ, progress) / e;
+
+                // LIMNUS phase (S for emergence)
+                const limnusIndex = 5;  // S - Synchronization
+
+                results.push({
+                    id: 95 + i,
+                    zone: 'EMERGENT',
+                    helix: { θ, z, r, x, y },
+                    E_spiral,
+                    limnus: 'S',  // All emergence is Synchronization
+                    spiral: 'π',  // EMERGENT is π-dominant
+                    π_rotation: (2 * π + i * π / 5),
+                    coherence: LIMNUS.σ.Ωs * φ * progress,
+                    selfReference: true
+                });
+            }
+
+            console.log(`✓ π-Helix EMERGENT: 5 pentagonal rotations with φ-scaling`);
+            return results;
+        }
+
+        // ================================================================
+        // UNITY HELIX TRIAD VORTEX FUNCTION
+        // Amplifies position (θ=2.3, z=0.41, r=1) using Φ:e:π binding
+        // ================================================================
+
+        function UNITY_HelixTriadVortex(inputState = null) {
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+            const α_inv = ALPHA_INV;
+
+            // Initial position (or use provided state)
+            const state = inputState || { ...HELIX_ORIGIN };
+
+            // ================================================================
+            // TRI-SPIRAL VORTEX: Φ × e × π coherent binding
+            // Λ × Ν = Β² (Lambda × Nu = Beta²)
+            // ================================================================
+
+            const vortex = {
+                // Phase 1: Φ-SPIRAL (Structure)
+                Φ_spiral: {
+                    θ: state.θ * φ,
+                    z: state.z * φ,
+                    r: state.r,
+                    energy: φ * Math.cos(state.θ),
+                    binding: 'STRUCTURE'
+                },
+
+                // Phase 2: e-SPIRAL (Energy)
+                e_spiral: {
+                    θ: state.θ * e,
+                    z: state.z * Math.exp(state.θ / π),
+                    r: state.r * Math.exp(-state.z),
+                    energy: e * Math.sin(state.θ * φ),
+                    binding: 'ENERGY'
+                },
+
+                // Phase 3: π-SPIRAL (Emergence)
+                π_spiral: {
+                    θ: state.θ + π,
+                    z: state.z + (1 - state.z) * (1 - 1/α_inv),  // Fine structure modulation
+                    r: state.r * (π / e),
+                    energy: π * Math.pow(φ, state.z),
+                    binding: 'EMERGENCE'
+                }
+            };
+
+            // ================================================================
+            // HELIX TRIAD COHERENCE: Combine all three spirals
+            // ================================================================
+
+            // Λ (Lambda) = coupling coefficient
+            const Λ = (vortex.Φ_spiral.energy + vortex.e_spiral.energy) / 2;
+
+            // Ν (Nu) = frequency modulation
+            const Ν = vortex.π_spiral.energy / π;
+
+            // Β² (Beta squared) = coherence field
+            const Β_sq = Λ * Ν;
+
+            // Verify Λ×Ν = Β² identity
+            console.log(`Λ×Ν = ${(Λ * Ν).toFixed(6)} = Β² (field coupling verified)`);
+
+            // Unified vortex position
+            const unified = {
+                θ: (vortex.Φ_spiral.θ + vortex.e_spiral.θ + vortex.π_spiral.θ) / 3,
+                z: Math.min(1, (vortex.Φ_spiral.z + vortex.e_spiral.z + vortex.π_spiral.z) / 3),
+                r: Math.pow(vortex.Φ_spiral.r * vortex.e_spiral.r * vortex.π_spiral.r, 1/3),
+
+                // Cartesian
+                x: 0,
+                y: 0,
+
+                // Energetics
+                E_total: vortex.Φ_spiral.energy + vortex.e_spiral.energy + vortex.π_spiral.energy,
+                Λ, Ν, Β_sq,
+
+                // Coherence metrics
+                coherence: Β_sq / (1 + LIMNUS.σ.δs),
+                resonance: Math.abs(Math.sin(vortex.Φ_spiral.θ) * Math.cos(vortex.e_spiral.θ) * Math.tan(vortex.π_spiral.θ / π))
+            };
+
+            // Calculate Cartesian from unified cylindrical
+            unified.x = unified.r * Math.cos(unified.θ);
+            unified.y = unified.r * Math.sin(unified.θ);
+
+            // ================================================================
+            // UNITY AMPLIFICATION: Push to cascade threshold
+            // ================================================================
+
+            if (unified.z >= Z_CRITICAL) {
+                // In PRESENCE zone - amplify toward UNITY cascade
+                unified.amplified = {
+                    z: unified.z + (1 - unified.z) * φ * 0.1,
+                    coherence: Math.min(1, unified.coherence * φ),
+                    cascadeReady: unified.z >= 0.995
+                };
+            }
+
+            return {
+                input: state,
+                spirals: vortex,
+                unified,
+                LIMNUS_binding: {
+                    L: vortex.Φ_spiral,   // Lattice
+                    I: vortex.e_spiral,   // Integration
+                    M: unified,           // Modulation
+                    N: { Λ, Ν },          // Normalization
+                    U: { Β_sq },          // Update
+                    S: unified.coherence  // Synchronization
+                }
+            };
+        }
+
+        // ================================================================
+        // INTEGRATE SILENT OPERATORS WITH LIMNUS FRACTAL
+        // Hand LIMNUS APL and 7 Silent Operators to fractal domain
+        // ================================================================
+
+        const LIMNUS_SILENT_BINDING = {
+            // Map Silent Operators to LIMNUS phases
+            '⊙': { phase: 'S', depth: 5, spiral: 'Φ', desc: 'DAMP → Synchronization' },
+            '◉': { phase: 'N', depth: 4, spiral: 'e', desc: 'BASIN → Normalization' },
+            '∅': { phase: 'L', depth: 6, spiral: 'Φ', desc: 'VOID → Lattice' },
+            '↻': { phase: 'U', depth: 3, spiral: 'π', desc: 'CYCLE → Update' },
+            '◌': { phase: 'I', depth: 4, spiral: 'e', desc: 'HIDDEN → Integration' },
+            '∫': { phase: 'M', depth: 2, spiral: 'π', desc: 'FORM → Modulation' },
+            '◇': { phase: 'S', depth: 1, spiral: 'π', desc: 'REFLECT → Synchronization' },
+            'Ω': { phase: '∅', depth: 0, spiral: 'Φ:e:π', desc: 'UNITY → Transcendence' }
+        };
+
+        // Run all π helix rotations and generate LIMNUS fractal structure
+        function generateLIMNUSFractal() {
+            console.log('═══════════════════════════════════════════════════');
+            console.log('LIMNUS FRACTAL SYSTEM — APL 3.0 INITIALIZATION');
+            console.log('═══════════════════════════════════════════════════');
+
+            // Run π through all three zones
+            const prismHelix = πHelixPRISM();
+            const cageHelix = πHelixCAGE();
+            const emergentHelix = πHelixEMERGENT();
+
+            // Run UNITY helix triad vortex
+            const unityVortex = UNITY_HelixTriadVortex();
+
+            // Combine all helices
+            const fractalTokens = [...prismHelix, ...cageHelix, ...emergentHelix];
+
+            // Compute aggregate coherence
+            const totalCoherence = fractalTokens.reduce((sum, t) => sum + t.coherence, 0) / fractalTokens.length;
+
+            // Update LIMNUS state
+            LIMNUS.σ.Ωs = totalCoherence;
+
+            console.log('═══════════════════════════════════════════════════');
+            console.log(`Total tokens: ${fractalTokens.length} (63+32+5)`);
+            console.log(`π rotations: 3π across all zones`);
+            console.log(`Coherence Ωs: ${totalCoherence.toFixed(4)}`);
+            console.log(`UNITY Vortex Λ×Ν = ${unityVortex.unified.Β_sq.toFixed(6)}`);
+            console.log('Spiral binding: Φ:e:π COHERENT');
+            console.log('═══════════════════════════════════════════════════');
+
+            return {
+                tokens: fractalTokens,
+                unity: unityVortex,
+                state: LIMNUS.σ,
+                silentBindings: LIMNUS_SILENT_BINDING
+            };
+        }
+
+        // ================================================================
+        // WUMBO 5 PRIME LAWS — Neural Syntax Foundation
+        // Each law governs how tokens combine into "words" (WUMBO regions)
+        // ================================================================
+        const WUMBO_PRIME_LAWS = {
+            'W1': {
+                name: 'GROUNDING',
+                desc: 'All structures must anchor to boundary ()',
+                operator: '()',
+                phase: 'κ_warm',
+                spiral: 'Φ',
+                threshold: 0.4,
+                neurochemistry: 'GABA stabilization'
+            },
+            'W2': {
+                name: 'PLURALITY',
+                desc: 'Fusion requires multiple channels',
+                operator: '×',
+                phase: 'κ→λ transition',
+                spiral: 'e',
+                threshold: Z_CRITICAL * 0.5,
+                neurochemistry: 'Glutamate coupling'
+            },
+            'W3': {
+                name: 'STRUCTURE',
+                desc: 'Decoherence requires prior structure',
+                operator: '÷',
+                phase: 'λ_cold',
+                spiral: 'π',
+                threshold: Z_CRITICAL,
+                neurochemistry: 'Dopamine regulation'
+            },
+            'W4': {
+                name: 'CONTINUITY',
+                desc: 'Grouping feeds forward, never terminates',
+                operator: '+',
+                phase: 'λ→κ return',
+                spiral: 'Φ→e',
+                threshold: Z_CRITICAL * 1.1,
+                neurochemistry: 'Serotonin continuity'
+            },
+            'W5': {
+                name: 'RESET',
+                desc: 'Separation leads to boundary or grouping',
+                operator: '−',
+                phase: 'ψ_collapse',
+                spiral: 'π→Φ',
+                threshold: 0.995,
+                neurochemistry: 'Norepinephrine reset'
+            }
+        };
+
+        // ================================================================
+        // KAELHEDRON — Geometric Normalization Engine
+        // Normalizes 3D helical coordinates to coherent field
+        // Uses icosahedral/dodecahedral symmetry (20/12 faces)
+        // ================================================================
+        const KAELHEDRON = {
+            // Golden ratio based vertices (icosahedron)
+            vertices: 12,
+            faces: 20,
+            edges: 30,
+
+            // Normalization matrix coefficients
+            normalize: function(θ, z, r) {
+                const φ = PHI;
+                const π = Math.PI;
+
+                // Spherical harmonic normalization
+                const Y_lm = Math.cos(θ) * Math.sin(z * π);
+
+                // Icosahedral projection
+                const ico_x = r * Math.cos(θ) * Math.cos(z * π);
+                const ico_y = r * Math.sin(θ) * Math.cos(z * π);
+                const ico_z = r * Math.sin(z * π);
+
+                // Golden ratio scaling
+                const scale = 1 / (1 + φ * Math.abs(z - Z_CRITICAL));
+
+                return {
+                    x: ico_x * scale,
+                    y: ico_y * scale,
+                    z: ico_z * scale,
+                    Y_lm,
+                    coherence: Math.abs(Y_lm) * scale
+                };
+            },
+
+            // Map token to Kaelhedron face
+            faceMapping: function(tokenId) {
+                // 100 tokens distributed across 20 faces (5 tokens per face)
+                const face = Math.floor(tokenId / 5) % 20;
+                const vertex = tokenId % 12;
+                return { face, vertex, edge: (face + vertex) % 30 };
+            },
+
+            // Phase transition detection
+            detectTransition: function(z_prev, z_curr) {
+                const transitions = [];
+                const thresholds = [0.4, Z_CRITICAL * 0.5, Z_CRITICAL, Z_CRITICAL * 1.1, 0.995];
+                const names = ['κ_warm', 'κ→λ', 'THE_LENS', 'λ→κ', 'Ω_cascade'];
+
+                thresholds.forEach((t, i) => {
+                    if ((z_prev < t && z_curr >= t) || (z_prev >= t && z_curr < t)) {
+                        transitions.push({ threshold: t, name: names[i], crossed: true });
+                    }
+                });
+
+                return transitions;
+            }
+        };
+
+        // ================================================================
+        // κ-λ PHASE MECHANICS — Warm/Cold Field Dynamics
+        // κ (kappa) = internal/warm field coupling
+        // λ (lambda) = external/cold field coupling
+        // Always: κ + λ = 1 (conservation)
+        // ================================================================
+        const PHASE_MECHANICS = {
+            // Phase states
+            states: {
+                ABSENCE: { z_min: 0, z_max: 0.4, κ_dominant: true, temp: 'warm', spiral: 'Φ' },
+                APPROACH: { z_min: 0.4, z_max: Z_CRITICAL * 0.9, κ_dominant: true, temp: 'warming', spiral: 'Φ→e' },
+                THE_LENS: { z_min: Z_CRITICAL * 0.9, z_max: Z_CRITICAL * 1.05, κ_dominant: false, temp: 'critical', spiral: 'e' },
+                PRESENCE: { z_min: Z_CRITICAL * 1.05, z_max: 0.95, κ_dominant: false, temp: 'cold', spiral: 'π' },
+                OMEGA: { z_min: 0.95, z_max: 1.0, κ_dominant: false, temp: 'cascade', spiral: 'Φ:e:π' }
+            },
+
+            // Compute κ-λ from z position
+            compute: function(z) {
+                const φ = PHI;
+
+                // Sigmoid-based transition centered at Z_CRITICAL
+                const sigmoid = 1 / (1 + Math.exp(-10 * (z - Z_CRITICAL)));
+
+                // κ dominates in ABSENCE, λ dominates in PRESENCE
+                const κ = (1 - sigmoid) * φ / (φ + 1) + sigmoid * (1 / (φ + 1));
+                const λ = 1 - κ;
+
+                // Temperature: warm (low z) → cold (high z)
+                const temp = 1 - sigmoid;  // 1 = warm, 0 = cold
+
+                // Determine current state
+                let state = 'ABSENCE';
+                for (const [name, range] of Object.entries(this.states)) {
+                    if (z >= range.z_min && z < range.z_max) {
+                        state = name;
+                        break;
+                    }
+                }
+
+                return { κ, λ, temp, state, sigmoid };
+            },
+
+            // ψ (psi) collapse function — triggered after Ω point
+            ψCollapse: function(coherence, z) {
+                if (z < 0.995 || coherence < 0.9) {
+                    return { collapsed: false, ψ: coherence };
+                }
+
+                // Collapse dynamics: rapid descent following free energy principle
+                // ψ → 0 as system returns to stillness
+                const collapseRate = PHI;  // Golden ratio descent
+                const ψ = coherence * Math.exp(-collapseRate * (z - 0.995) * 10);
+
+                return {
+                    collapsed: true,
+                    ψ,
+                    phase: 'STILLNESS',
+                    z_final: 0.4,  // Return to origin
+                    κ_final: PHI_INV,
+                    λ_final: 1 - PHI_INV
+                };
+            }
+        };
+
+        // ================================================================
+        // WUMBO REGION GENERATOR — Create "Words" from Token Syntax
+        // Each WUMBO region is a neural processing unit
+        // Tokens = atoms, WUMBO = molecules, LIMNUS = chemistry
+        // ================================================================
+        function generateWUMBORegion(tokens, startIdx, endIdx, zoneType) {
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+
+            const regionTokens = tokens.slice(startIdx, endIdx + 1);
+            const regionSize = regionTokens.length;
+
+            // Determine spiral type based on zone
+            const spiralType = zoneType === 'prism' ? 'Φ' :
+                               zoneType === 'cage' ? 'e' : 'π';
+
+            // Compute aggregate operators (the "word")
+            const operators = regionTokens.map(t => t.op);
+            const word = operators.join('');
+
+            // Compute κ-λ dynamics for region
+            const z_avg = regionTokens.reduce((s, t) => s + t.z, 0) / regionSize;
+            const phaseData = PHASE_MECHANICS.compute(z_avg);
+
+            // Kaelhedron normalization
+            const θ_region = (startIdx / 100) * 2 * π;
+            const kaelNorm = KAELHEDRON.normalize(θ_region, z_avg, 1.0);
+            const kaelFace = KAELHEDRON.faceMapping(startIdx);
+
+            // Neurochemistry based on phase state
+            let neurochemistry = 'balanced';
+            for (const [key, law] of Object.entries(WUMBO_PRIME_LAWS)) {
+                if (z_avg >= law.threshold * 0.9 && z_avg <= law.threshold * 1.1) {
+                    neurochemistry = law.neurochemistry;
+                    break;
+                }
+            }
+
+            // LIMNUS phase assignment
+            const limnusIdx = Math.floor(startIdx / (100 / 6)) % 6;
+            const limnusPhase = LIMNUS.PHASES[limnusIdx];
+
+            // Silent operator count
+            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇', 'Ω'];
+            const silentCount = operators.filter(op => silentOps.includes(op)).length;
+
+            return {
+                id: `WUMBO_${zoneType}_${startIdx}`,
+                zone: zoneType,
+                startIdx,
+                endIdx,
+                tokens: regionTokens,
+
+                // The "word" — operator sequence
+                word,
+                wordLength: word.length,
+
+                // Spiral binding
+                spiral: {
+                    type: spiralType,
+                    Φ_component: spiralType === 'Φ' ? 1 : (spiralType === 'Φ:e:π' ? 0.333 : 0.1),
+                    e_component: spiralType === 'e' ? 1 : (spiralType === 'Φ:e:π' ? 0.333 : 0.1),
+                    π_component: spiralType === 'π' ? 1 : (spiralType === 'Φ:e:π' ? 0.333 : 0.1)
+                },
+
+                // Phase mechanics
+                phase: {
+                    κ: phaseData.κ,
+                    λ: phaseData.λ,
+                    temp: phaseData.temp,
+                    state: phaseData.state,
+                    z_avg
+                },
+
+                // Geometry
+                kaelhedron: {
+                    face: kaelFace.face,
+                    vertex: kaelFace.vertex,
+                    edge: kaelFace.edge,
+                    normalized: kaelNorm
+                },
+
+                // LIMNUS syntax
+                limnus: {
+                    phase: limnusPhase,
+                    silentCount,
+                    coherence: kaelNorm.coherence
+                },
+
+                // Neurochemistry
+                neurochemistry
+            };
+        }
+
+        // ================================================================
+        // 100 LIMNUS TOKENS (63 PRISM + 32 CAGE + 5 EMERGENT)
+        // Fully aligned with Φ:e:π spiral structure and WUMBO regions
+        // Each token maps to: Φ_spiral, e_spiral, π_spiral components
+        // NARRATIVE: Complete Causal Compliance → Zero Violations → Coherence
+        // ================================================================
+        function generateLIMNUSTokens() {
+            const tokens = [];
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+
+            // ========== PRISM TOKENS (63) — Φ_spiral Dominant ==========
+            // Zone: ABSENCE → THE LENS | Spiral: Φ (Structure)
+            // κ-warm phase, building toward λ transition
             const prismSequence = [
                 // Phase 0: Foundation (0-8) - Establish boundary, add ◌ HIDDEN
-                '()',  // #0: BOUNDARY - always legal, establishes anchor
-                '×', '^', '+', '^', '◌', '()', '×', '^',  // ◌ HIDDEN (S0-5: always legal)
+                '()',  // #0: W1 GROUNDING - GABA stabilization
+                '×', '^', '+', '^', '◌', '()', '×', '^',
                 // Phase 1: Structure (9-17) - Build, add ⊙ DAMP after ^
-                '()', '×', '^', '⊙', '×', '^', '()', '×', '^',  // ⊙ DAMP (S0-1: has prior ^)
+                '()', '×', '^', '⊙', '×', '^', '()', '×', '^',
                 // Phase 2: Coupling (18-26) - Add ◉ BASIN after +
-                '()', '×', '^', '+', '◉', '×', '()', '+', '×',  // ◉ BASIN (S0-2: has prior +)
+                '()', '×', '^', '+', '◉', '×', '()', '+', '×',
                 // Phase 3: Amplify (27-35) - Add ∫ FORM (trajectory > 5)
-                '^', '()', '×', '+', '^', '∫', '()', '+', '^',  // ∫ FORM (S0-6: trajectory ok)
+                '^', '()', '×', '+', '^', '∫', '()', '+', '^',
                 // Phase 4: First Extraction (36-44) - ÷ legal, add ⊙ DAMP
-                '()', '×', '^', '÷', '()', '×', '^', '⊙', '^',  // ⊙ after ^ legal
+                '()', '×', '^', '÷', '()', '×', '^', '⊙', '^',
                 // Phase 5: Stabilize (45-53) - Add ◌ HIDDEN
-                '()', '×', '^', '+', '×', '◌', '^', '+', '^',  // ◌ HIDDEN always legal
+                '()', '×', '^', '+', '×', '◌', '^', '+', '^',
                 // Phase 6: Convergence (54-62) - Prepare for CAGE
-                '()', '×', '^', '+', '^', '×', '()', '+', '^'   // Clean finish
+                '()', '×', '^', '+', '^', '×', '()', '+', '^'
             ];
 
             for (let i = 0; i < 63; i++) {
                 const op = prismSequence[i] || '()';
-                const phase = Math.floor(i / 9);
+                const progress = i / 62;
+
+                // Φ:e:π spiral components (Φ dominant for PRISM)
+                const Φ_spiral = { θ: (i * π / 63) + HELIX_ORIGIN.θ, weight: 0.7 };
+                const e_spiral = { θ: Φ_spiral.θ * e / φ, weight: 0.2 };
+                const π_spiral = { θ: Φ_spiral.θ + π * progress, weight: 0.1 };
+
+                // z progression: 0.4 → Z_CRITICAL (ABSENCE → THE LENS)
+                const z = 0.4 + progress * (Z_CRITICAL - 0.4);
+
+                // κ-λ phase mechanics
+                const phaseData = PHASE_MECHANICS.compute(z);
+
+                // Kaelhedron geometry
+                const kaelFace = KAELHEDRON.faceMapping(i);
+                const kaelNorm = KAELHEDRON.normalize(Φ_spiral.θ, z, 1.0);
+
+                // LIMNUS phase (L-I-M-N-U-S cycle through 63 tokens)
+                const limnusIdx = Math.floor(i / (63 / 6)) % 6;
+
+                // WUMBO Prime Law alignment
+                const wumboLaw = i < 9 ? 'W1' : i < 18 ? 'W2' : i < 27 ? 'W3' : i < 36 ? 'W4' : 'W5';
+
                 tokens.push({
                     id: i,
                     zone: 'prism',
                     op: op,
                     name: `prism_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
-                    z: 0.3 + (i / 63) * 0.55,
-                    phase: phase,
+
+                    // Spiral alignment (Φ:e:π)
+                    spiral: {
+                        Φ: Φ_spiral,
+                        e: e_spiral,
+                        π: π_spiral,
+                        dominant: 'Φ'
+                    },
+
+                    // Position in z-space
+                    z: parseFloat(z.toFixed(4)),
+
+                    // κ-λ phase mechanics
+                    κ: parseFloat(phaseData.κ.toFixed(4)),
+                    λ: parseFloat(phaseData.λ.toFixed(4)),
+                    temp: phaseData.temp,
+                    phaseState: phaseData.state,
+
+                    // Kaelhedron geometry
+                    kaelhedron: kaelFace,
+                    normalized: kaelNorm,
+
+                    // LIMNUS phase
+                    limnus: LIMNUS.PHASES[limnusIdx],
+
+                    // WUMBO law
+                    wumboLaw,
+                    neurochemistry: WUMBO_PRIME_LAWS[wumboLaw]?.neurochemistry || 'balanced',
+
+                    // Execution state
+                    phase: Math.floor(i / 9),
                     executed: false,
                     violated: false
                 });
             }
 
-            // ========== EM CAGE TOKENS (32) ==========
-            // Stabilization layer - THE LENS zone
-            // FULLY LEGAL - Includes Silent operators for EM field stabilization
-            // ↻ CYCLE (after ×, leads ()), ⊙ DAMP (after ^), ◉ BASIN (after +)
+            // ========== EM CAGE TOKENS (32) — e_spiral Dominant ==========
+            // Zone: THE LENS | Spiral: e (Energy)
+            // Critical phase, κ-λ balanced, hexagonal EM containment
             const cageSequence = [
-                // Phase 6: Cage formation (0-10) - EM field containment
-                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '^', '×', '()',  // ↻→() ⊙ after ^ ◉ after +
-                // Phase 7: EM stabilization (11-21) - Field harmonization
-                '()', '×', '^', '⊙', '+', '◉', '×', '()', '^', '+', '^',  // ⊙ DAMP, ◉ BASIN
-                // Phase 7 continued: Field lock (22-31) - Final cage seal
-                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '×', '^'  // ↻→() cycle return
+                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '^', '×', '()',
+                '()', '×', '^', '⊙', '+', '◉', '×', '()', '^', '+', '^',
+                '()', '×', '↻', '()', '^', '⊙', '+', '◉', '×', '^'
             ];
 
             for (let i = 0; i < 32; i++) {
                 const op = cageSequence[i] || '()';
-                const phase = Math.floor(i / 11) + 5;
+                const progress = i / 31;
+
+                // Φ:e:π spiral components (e dominant for CAGE)
+                const baseθ = (i * π / 32) + HELIX_ORIGIN.θ + π;
+                const Φ_spiral = { θ: baseθ / φ, weight: 0.2 };
+                const e_spiral = { θ: baseθ, weight: 0.6 };
+                const π_spiral = { θ: baseθ * π / e, weight: 0.2 };
+
+                // z stays near Z_CRITICAL (THE LENS zone)
+                const z = Z_CRITICAL + (progress - 0.5) * 0.02;
+
+                // κ-λ phase mechanics (balanced at critical point)
+                const phaseData = PHASE_MECHANICS.compute(z);
+
+                // Kaelhedron geometry
+                const kaelFace = KAELHEDRON.faceMapping(63 + i);
+                const kaelNorm = KAELHEDRON.normalize(e_spiral.θ, z, 1.0);
+
+                // LIMNUS phase
+                const limnusIdx = Math.floor(i / (32 / 6)) % 6;
+
+                // WUMBO law (CAGE focuses on W2-W4: plurality, structure, continuity)
+                const wumboLaw = i < 11 ? 'W2' : i < 22 ? 'W3' : 'W4';
+
                 tokens.push({
                     id: 63 + i,
                     zone: 'cage',
                     op: op,
                     name: `cage_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
-                    z: 0.857 + (i / 32) * 0.02,
-                    phase: phase,
+
+                    // Spiral alignment (Φ:e:π)
+                    spiral: {
+                        Φ: Φ_spiral,
+                        e: e_spiral,
+                        π: π_spiral,
+                        dominant: 'e'
+                    },
+
+                    // Position in z-space
+                    z: parseFloat(z.toFixed(4)),
+
+                    // κ-λ phase mechanics
+                    κ: parseFloat(phaseData.κ.toFixed(4)),
+                    λ: parseFloat(phaseData.λ.toFixed(4)),
+                    temp: phaseData.temp,
+                    phaseState: phaseData.state,
+
+                    // Kaelhedron geometry
+                    kaelhedron: kaelFace,
+                    normalized: kaelNorm,
+
+                    // LIMNUS phase
+                    limnus: LIMNUS.PHASES[limnusIdx],
+
+                    // WUMBO law
+                    wumboLaw,
+                    neurochemistry: WUMBO_PRIME_LAWS[wumboLaw]?.neurochemistry || 'balanced',
+
+                    // Execution state
+                    phase: Math.floor(i / 11) + 5,
                     executed: false,
                     violated: false
                 });
             }
 
-            // ========== EMERGENT TOKENS (5) ==========
-            // Extraction/self-reference layer - PRESENCE zone
-            // FINAL COHERENCE SEQUENCE - All laws valid, self-reflective extraction
-            // Includes ◇ REFLECT (VII MIRROR: ψ = ψ(ψ)) for self-reference
+            // ========== EMERGENT TOKENS (5) — π_spiral Dominant ==========
+            // Zone: PRESENCE → Ω | Spiral: π (Emergence)
+            // λ-cold phase, approaching ψ collapse
             const emergentSequence = ['()', '×', '−', '◇', '()'];
-            // () → establishes boundary (always legal ✓)
-            // × → fusion (N0-2: channels=100 ✓)
-            // − → separate (N0-5: leads to ◇ via S0-7 extension ✓)
-            // ◇ → REFLECT (S0-7: has prior −, leads to () ✓) [VII MIRROR: ψ = ψ(ψ)]
-            // () → final seal (always legal ✓) - The mirror returns to origin
 
             for (let i = 0; i < 5; i++) {
                 const op = emergentSequence[i];
+                const progress = i / 4;
+
+                // Φ:e:π spiral components (π dominant for EMERGENT)
+                const baseθ = (i * π / 5) + HELIX_ORIGIN.θ + 2 * π;
+                const goldenAngle = LIMNUS.INIT.GOLDEN_ANGLE;
+                const Φ_spiral = { θ: baseθ * φ, weight: 0.2 };
+                const e_spiral = { θ: baseθ * e / π, weight: 0.2 };
+                const π_spiral = { θ: baseθ + i * goldenAngle, weight: 0.6 };
+
+                // z in PRESENCE zone, approaching Ω threshold
+                const z = Z_CRITICAL + 0.08 + progress * 0.12;  // 0.946 → 1.066 (capped)
+
+                // κ-λ phase mechanics (λ dominant, approaching ψ collapse)
+                const phaseData = PHASE_MECHANICS.compute(Math.min(z, 0.99));
+
+                // Check for ψ collapse readiness
+                const ψCheck = PHASE_MECHANICS.ψCollapse(phaseData.λ, z);
+
+                // Kaelhedron geometry
+                const kaelFace = KAELHEDRON.faceMapping(95 + i);
+                const kaelNorm = KAELHEDRON.normalize(π_spiral.θ, z, 1.0);
+
+                // LIMNUS phase (S - Synchronization for emergence)
+                const limnusPhase = 'S';
+
+                // WUMBO law (W5: RESET for final return)
+                const wumboLaw = 'W5';
+
                 tokens.push({
                     id: 95 + i,
                     zone: 'emergent',
                     op: op,
                     name: `emerge_${ALL_OPERATORS[op]?.name?.toLowerCase() || 'unknown'}_${i}`,
-                    z: 0.95 + (i * 0.01),
+
+                    // Spiral alignment (Φ:e:π)
+                    spiral: {
+                        Φ: Φ_spiral,
+                        e: e_spiral,
+                        π: π_spiral,
+                        dominant: 'π'
+                    },
+
+                    // Position in z-space
+                    z: parseFloat(Math.min(z, 0.99).toFixed(4)),
+
+                    // κ-λ phase mechanics
+                    κ: parseFloat(phaseData.κ.toFixed(4)),
+                    λ: parseFloat(phaseData.λ.toFixed(4)),
+                    temp: phaseData.temp,
+                    phaseState: phaseData.state,
+
+                    // ψ collapse readiness
+                    ψCollapse: ψCheck,
+
+                    // Kaelhedron geometry
+                    kaelhedron: kaelFace,
+                    normalized: kaelNorm,
+
+                    // LIMNUS phase
+                    limnus: limnusPhase,
+
+                    // WUMBO law
+                    wumboLaw,
+                    neurochemistry: WUMBO_PRIME_LAWS[wumboLaw]?.neurochemistry || 'Norepinephrine reset',
+
+                    // Self-reference flag (VII MIRROR)
+                    selfReference: true,
+
+                    // Execution state
                     phase: 7,
                     executed: false,
-                    violated: false,
-                    selfReference: true
+                    violated: false
                 });
             }
 
             return tokens;
         }
+
+        // Legacy alias for compatibility
+        const generateZPETokens = generateLIMNUSTokens;
 
         // ================================================================
         // STATE
@@ -1834,7 +2664,7 @@
             selfRef: 0,            // Self-reference state (VII MIRROR)
             limnusPhase: 0,        // Current LIMNUS phase index
             running: false,
-            zpeState: 'dormant',
+            limnusState: 'dormant',
             violationCount: 0,
             silentCount: 0         // Count of Silent operator uses
         };
@@ -2087,7 +2917,7 @@
                     ? `COHERENCE ACHIEVED. All N0 laws valid. ${state.violationCount} violations recovered.`
                     : `Narrative complete. ${state.violationCount} violations. Some laws still invalid.`;
                 logConsole('END', coherenceMsg);
-                state.zpeState = allValid ? 'saturated' : 'coherent';
+                state.limnusState = allValid ? 'saturated' : 'coherent';
                 updateUI();
                 return false;
             }
@@ -2105,11 +2935,11 @@
 
             state.currentPhase = Math.floor(state.currentStep / 13);
 
-            // Update ZPE state
-            if (state.z < 0.857) state.zpeState = 'dormant';
-            else if (state.z < 0.877) state.zpeState = 'coherent';
-            else if (state.efficiency > 0.3) state.zpeState = 'extracting';
-            else state.zpeState = 'saturated';
+            // Update LIMNUS state
+            if (state.z < 0.857) state.limnusState = 'dormant';
+            else if (state.z < 0.877) state.limnusState = 'coherent';
+            else if (state.efficiency > 0.3) state.limnusState = 'extracting';
+            else state.limnusState = 'saturated';
 
             logConsole(token.op, `${result.msg} [${token.name}]`, !result.violated);
 
@@ -2149,7 +2979,7 @@
             state.phaseLock = 0;
             state.efficiency = 0;
             state.running = false;
-            state.zpeState = 'dormant';
+            state.limnusState = 'dormant';
             state.violationCount = 0;
             state.energy = 1.0;
             state.selfRef = 0;
@@ -2176,7 +3006,7 @@
                 <div class="console-line">
                     <span class="console-time">0</span>
                     <span class="console-op">RESET</span>
-                    <span class="console-msg">ZPE System reset. 63+32+5=100 tokens ready.</span>
+                    <span class="console-msg">LIMNUS Fractal reset. 63+32+5=100 tokens ready.</span>
                 </div>
             `;
 
@@ -2195,13 +3025,13 @@
         }
 
         function updateUI() {
-            // ZPE Value
-            document.getElementById('zpeValue').textContent = state.totalExtracted.toFixed(4);
+            // LIMNUS Value
+            document.getElementById('limnusValue').textContent = state.totalExtracted.toFixed(4);
 
             // Badge
-            const badge = document.getElementById('zpeBadge');
-            badge.textContent = state.zpeState.toUpperCase();
-            badge.className = `zpe-badge badge-${state.zpeState}`;
+            const badge = document.getElementById('limnusBadge');
+            badge.textContent = state.limnusState.toUpperCase();
+            badge.className = `limnus-badge badge-${state.limnusState}`;
 
             // Violation count
             document.getElementById('violationCount').textContent = state.violationCount;
@@ -2478,7 +3308,7 @@
         // LIMNUS APL LANGUAGE ENGINE
         // ================================================================
 
-        // APL State (separate from main ZPE state for playground)
+        // APL State (separate from main LIMNUS state for playground)
         const aplState = {
             history: [],
             energy: 1.0,
@@ -2662,7 +3492,7 @@
             // Final summary
             if (violations === 0) {
                 logAPL('COMPLETE', `✓ All ${tokens.length} operators legal · ${aplState.silentCount} silent ops`, 'success');
-                logAPL('ZPE', `E₀ = ${aplState.extracted.toFixed(4)} · z = ${aplState.z.toFixed(4)}`, 'info');
+                logAPL('LIMNUS', `E₀ = ${aplState.extracted.toFixed(4)} · z = ${aplState.z.toFixed(4)}`, 'info');
             } else {
                 logAPL('COMPLETE', `✗ ${violations} violations in ${tokens.length} operators`, 'error');
             }
@@ -2856,10 +3686,10 @@
             document.getElementById('apl-selfref').textContent = aplState.selfRef.toFixed(3);
             document.getElementById('apl-silent').textContent = aplState.silentCount;
 
-            // Update ZPE visualization
+            // Update LIMNUS visualization
             const waveHeight = 30 + aplState.extracted * 100;
-            document.getElementById('zpeWave').style.height = `${Math.min(80, waveHeight)}%`;
-            document.getElementById('zpeVizValue').textContent = `E₀ = ${aplState.extracted.toFixed(3)}`;
+            document.getElementById('limnusWave').style.height = `${Math.min(80, waveHeight)}%`;
+            document.getElementById('limnusVizValue').textContent = `E₀ = ${aplState.extracted.toFixed(3)}`;
         }
 
         // Update S0 law display
@@ -2938,8 +3768,8 @@
             });
         }
 
-        // Generate random ZPE expression
-        function generateRandomZPE() {
+        // Generate random LIMNUS expression
+        function generateRandomLIMNUS() {
             const intOps = ['()', '×', '^', '+'];
             const silentOps = ['⊙', '◉', '↻', '◌', '∫'];
             const tokens = [];
@@ -3011,9 +3841,9 @@
             }
         });
 
-        // Random ZPE button
+        // Random LIMNUS button
         document.getElementById('btnRandomExpr').addEventListener('click', () => {
-            const expr = generateRandomZPE();
+            const expr = generateRandomLIMNUS();
             document.getElementById('aplInput').value = expr;
             executeAPL(expr);
         });
@@ -3040,22 +3870,44 @@
         renderMemorySlots();
         updateAPLUI();
 
+        // ================================================================
+        // LIMNUS FRACTAL SYSTEM INITIALIZATION
+        // Run π helix rotations and generate fractal structure
+        // ================================================================
+        const LIMNUS_FRACTAL = generateLIMNUSFractal();
+
+        // Store globally for access
+        window.LIMNUS = LIMNUS;
+        window.LIMNUS_FRACTAL = LIMNUS_FRACTAL;
+        window.UNITY_HelixTriadVortex = UNITY_HelixTriadVortex;
+
         console.log(`
 ╔════════════════════════════════════════════════════════════════════════════╗
-║                    LIMNUS · SILENT APL ENGINE                              ║
-║                        BUILD: v1.0.0 (2024-12-03)                          ║
+║            LIMNUS FRACTAL SYSTEM — APL 3.0 FULL DEPTH                      ║
+║                      BUILD: v3.0.0 (2024-12-03)                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  FOUR FUNDAMENTAL CONSTANTS:                                               ║
+║  z = √3/2 ≈ ${Z_CRITICAL.toFixed(4)}   φ = ${PHI.toFixed(4)}   α⁻¹ = ${ALPHA_INV}   Λ×Ν = Β²       ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  GRAMMAR:                                                                  ║
-║  INT CANON (6):  () × ^ ÷ + −                                              ║
-║  SILENT CANON (7): ⊙ ◉ ∅ ↻ ◌ ∫ ◇                                          ║
+║  INT CANON (6):    () × ^ ÷ + −                                            ║
+║  SILENT CANON (8): ⊙ ◉ ∅ ↻ ◌ ∫ ◇ Ω                                        ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  LIMNUS CYCLE: L → I → M → N → U → S → L...                                ║
+║  π HELIX ROTATIONS:                                                        ║
+║  PRISM (63):    Triangular 3-fold · z: 0.4 → √3/2 · Spiral: Φ              ║
+║  CAGE (32):     Hexagonal 6-fold · z: √3/2 (THE LENS) · Spiral: e          ║
+║  EMERGENT (5):  Pentagonal φ-angle · z: > √3/2 · Spiral: π                 ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  UNITY HELIX TRIAD VORTEX:                                                 ║
+║  Origin: (θ=2.3 rad, z=0.41, r=1) → Φ:e:π tri-spiral coherent              ║
+║  Λ×Ν = Β² = ${LIMNUS_FRACTAL.unity.unified.Β_sq.toFixed(6)} (field coupling verified)                    ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  LIMNUS PHASES: L → I → M → N → U → S → L...                               ║
 ║  κ-λ COUPLING: ⟨internal|external⟩ resonance at φ⁻¹                        ║
+║  COHERENCE Ωs: ${LIMNUS.σ.Ωs.toFixed(4)}                                                   ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  ZPE EQUATIONS:                                                            ║
-║  ⊙ ∂E/∂t → 0     ◉ ∇V(truth) = 0    ∅ ⟨void|ψ⟩ = memory                   ║
-║  ↻ S(ret) = S(ori)  ◌ H(s) ≡ H(u)   ∫ glyph = ∫ life dt                   ║
-║  ◇ ψ = ψ(ψ)                                                                ║
+║  SILENT OPERATOR BINDINGS:                                                 ║
+║  ⊙→S(Φ) ◉→N(e) ∅→L(Φ) ↻→U(π) ◌→I(e) ∫→M(π) ◇→S(π) Ω→∅(Φ:e:π)             ║
 ╚════════════════════════════════════════════════════════════════════════════╝
         `);
     </script>

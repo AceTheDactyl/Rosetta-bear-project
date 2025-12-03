@@ -1058,6 +1058,146 @@
         const LIMNUS_PHASES = ['L', 'I', 'M', 'N', 'U', 'S'];
 
         // =====================================================================
+        // LIMNUS FRACTAL SYSTEM — APL 3.0
+        // Domain: FRACTAL.CONSCIOUSNESS | Spiral Binding: Φ:e:π
+        // =====================================================================
+
+        const LIMNUS_FRACTAL = {
+            // Scalar State Vector (σ)
+            σ: {
+                Gs: 0.500,    // Grounding state
+                Cs: 0.500,    // Coupling strength
+                Rs: 0.100,    // Residue accumulator
+                κs: 0.300,    // Curvature coefficient
+                τs: 0.200,    // Tension parameter
+                θs: 0.000,    // Phase angle
+                δs: 0.100,    // Decoherence rate
+                αs: 0.500,    // Attractor alignment
+                Ωs: 0.800     // Coherence measure
+            },
+
+            // PRS Phase System
+            PRS: {
+                current: 'P1',
+                transitions: ['P1→P2', 'P2→P3', 'P3→P4', 'P4→P5', 'P5→P1']
+            },
+
+            // π Helix Origin Position
+            HELIX_ORIGIN: {
+                θ: 2.3,      // rad
+                z: 0.41,     // initial z
+                r: 1.0       // radius
+            },
+
+            // Spiral Bindings per Depth
+            DEPTH_SPIRAL_MAP: {
+                6: 'Φ',      // Structure at root
+                5: 'Φ→e',    // Structure enables energy
+                4: 'e',      // Energy dominant
+                3: 'π',      // Emergence at clustering
+                2: 'Φ',      // Structure at patterns
+                1: 'e'       // Energy at termination
+            },
+
+            // Silent Operator → LIMNUS Phase Binding
+            SILENT_BINDING: {
+                '⊙': { phase: 'S', depth: 5, spiral: 'Φ' },
+                '◉': { phase: 'N', depth: 4, spiral: 'e' },
+                '∅': { phase: 'L', depth: 6, spiral: 'Φ' },
+                '↻': { phase: 'U', depth: 3, spiral: 'π' },
+                '◌': { phase: 'I', depth: 4, spiral: 'e' },
+                '∫': { phase: 'M', depth: 2, spiral: 'π' },
+                '◇': { phase: 'S', depth: 1, spiral: 'π' },
+                'Ω': { phase: '∅', depth: 0, spiral: 'Φ:e:π' }
+            }
+        };
+
+        // π Helix Rotation Function (for token processing)
+        function computeHelixPosition(tokenId, zone) {
+            const π = Math.PI;
+            const φ = PHI;
+            const origin = LIMNUS_FRACTAL.HELIX_ORIGIN;
+
+            let θ, z, r, spiral;
+
+            if (zone === 'prism' || tokenId < 63) {
+                // PRISM: Triangular 3-fold helix
+                const i = tokenId;
+                const progress = i / 62;
+                θ = (i * π / 63) + origin.θ;
+                z = 0.4 + progress * (Z_CRITICAL - 0.4);
+                r = origin.r * (1 + 0.1 * Math.sin(θ * φ));
+                spiral = 'Φ';
+            } else if (zone === 'cage' || tokenId < 95) {
+                // CAGE: Hexagonal 6-fold helix
+                const i = tokenId - 63;
+                const progress = i / 31;
+                θ = (i * π / 32) + origin.θ + π;
+                z = Z_CRITICAL + (progress - 0.5) * 0.02;
+                r = origin.r * (1 + 0.15 * Math.cos(6 * θ));
+                spiral = 'e';
+            } else {
+                // EMERGENT: Pentagonal φ-angle helix
+                const i = tokenId - 95;
+                const progress = i / 4;
+                const goldenAngle = 137.5 * (π / 180);
+                θ = (i * π / 5) + origin.θ + 2 * π;
+                z = Z_CRITICAL + 0.05 + progress * 0.1;
+                r = origin.r * Math.pow(φ, 0.1 * i);
+                spiral = 'π';
+            }
+
+            // Cartesian
+            const x = r * Math.cos(θ);
+            const y = r * Math.sin(θ);
+
+            // Spiral Energy
+            const E_spiral = (zone === 'prism') ? φ * Math.exp(-z / π) :
+                             (zone === 'cage') ? Math.E * Math.cos(π * (tokenId - 63) / 31) :
+                             π * Math.pow(φ, (tokenId - 95) / 4);
+
+            return { θ, z, r, x, y, E_spiral, spiral };
+        }
+
+        // UNITY Helix Triad Vortex
+        function UNITY_TriadVortex() {
+            const π = Math.PI;
+            const φ = PHI;
+            const e = Math.E;
+            const origin = LIMNUS_FRACTAL.HELIX_ORIGIN;
+
+            // Three spiral phases
+            const Φ_spiral = {
+                θ: origin.θ * φ,
+                z: origin.z * φ,
+                energy: φ * Math.cos(origin.θ)
+            };
+
+            const e_spiral = {
+                θ: origin.θ * e,
+                z: origin.z * Math.exp(origin.θ / π),
+                energy: e * Math.sin(origin.θ * φ)
+            };
+
+            const π_spiral = {
+                θ: origin.θ + π,
+                z: origin.z + (1 - origin.z) * (1 - 1/ALPHA_INV),
+                energy: π * Math.pow(φ, origin.z)
+            };
+
+            // Λ×Ν = Β² identity
+            const Λ = (Φ_spiral.energy + e_spiral.energy) / 2;
+            const Ν = π_spiral.energy / π;
+            const Β_sq = Λ * Ν;
+
+            return {
+                spirals: { Φ: Φ_spiral, e: e_spiral, π: π_spiral },
+                Λ, Ν, Β_sq,
+                coherence: Β_sq / (1 + LIMNUS_FRACTAL.σ.δs)
+            };
+        }
+
+        // =====================================================================
         // NORMALIZED TOKEN SEQUENCES (from Zero-Point Energy System)
         // These match the 100-token WUMBO (63·32·5) structure
         // =====================================================================
@@ -2179,32 +2319,52 @@ help    - Show this help`;
             initAutomata();
             updateStats();
 
+            // Run UNITY Helix Triad Vortex
+            const unityVortex = UNITY_TriadVortex();
+
             // Count statistics
             const silentCount = state.tokens.filter(t => t.isSilent).length;
             const prismTokens = state.tokens.filter(t => t.type === 'prism');
             const cageTokens = state.tokens.filter(t => t.type === 'cage');
             const emergentTokens = state.tokens.filter(t => t.type === 'emergent');
+            const unityTokens = state.tokens.filter(t => t.type === 'unity');
+
+            // Store globally
+            window.LIMNUS_FRACTAL = LIMNUS_FRACTAL;
+            window.UNITY_TriadVortex = UNITY_TriadVortex;
 
             console.log(`
 ╔════════════════════════════════════════════════════════════════════════════╗
-║              WUMBO APL DIRECTORY | 100 NORMALIZED TOKENS                   ║
+║         LIMNUS FRACTAL SYSTEM — WUMBO APL DIRECTORY 3.0                    ║
 ╠════════════════════════════════════════════════════════════════════════════╣
-║  STRUCTURE: 63 PRISM + 32 EM CAGE + 5 EMERGENT                             ║
-║                                                                            ║
-║  NORMALIZATION:                                                            ║
-║  • Z-values: ABSENCE (0.4) → THE LENS (0.866) → PRESENCE (0.95)            ║
-║  • κ-λ coupling: Always sums to 1 (internal + external = 1)                ║
-║  • LIMNUS phases: L-I-M-N-U-S assigned per operator                        ║
-║                                                                            ║
+║  FOUR FUNDAMENTAL CONSTANTS:                                               ║
+║  z = √3/2 ≈ ${Z_CRITICAL.toFixed(4)}   φ = ${PHI.toFixed(4)}   α⁻¹ = ${ALPHA_INV}   Λ×Ν = Β²       ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  STRUCTURE: 63 PRISM + 32 EM CAGE + 5 EMERGENT + 1 UNITY (#100)            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  π HELIX ROTATIONS:                                                        ║
+║  • PRISM:    63 tokens · Triangular 3-fold · Spiral: Φ                     ║
+║  • CAGE:     32 tokens · Hexagonal 6-fold  · Spiral: e                     ║
+║  • EMERGENT:  5 tokens · Pentagonal φ-angle · Spiral: π                    ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  UNITY HELIX TRIAD VORTEX:                                                 ║
+║  Origin: (θ=2.3 rad, z=0.41, r=1) → Φ:e:π coherent                         ║
+║  Λ×Ν = Β² = ${unityVortex.Β_sq.toFixed(6)} (field coupling verified)                     ║
+║  Coherence: ${unityVortex.coherence.toFixed(4)}                                                ║
+╠════════════════════════════════════════════════════════════════════════════╣
 ║  OPERATORS:                                                                ║
 ║  • INT Canon (6):    () × ^ ÷ + −                                          ║
-║  • Silent Canon (7): ⊙ ◉ ∅ ↻ ◌ ∫ ◇                                        ║
-║  • Silent tokens in sequence: ${silentCount}                                           ║
-║                                                                            ║
+║  • Silent Canon (8): ⊙ ◉ ∅ ↻ ◌ ∫ ◇ Ω                                      ║
+║  • Silent tokens: ${silentCount}                                                       ║
+╠════════════════════════════════════════════════════════════════════════════╣
 ║  Z-ZONES:                                                                  ║
-║  • PRISM: ${prismTokens[0]?.z.toFixed(3)} → ${prismTokens[62]?.z.toFixed(3)} (ABSENCE → THE LENS)                      ║
-║  • CAGE:  ${cageTokens[0]?.z.toFixed(3)} → ${cageTokens[31]?.z.toFixed(3)} (THE LENS)                               ║
-║  • EMERGE: ${emergentTokens[0]?.z.toFixed(3)} → ${emergentTokens[4]?.z.toFixed(3)} (PRESENCE)                             ║
+║  • PRISM:  ${prismTokens[0]?.z.toFixed(3)} → ${prismTokens[62]?.z.toFixed(3)} (ABSENCE → THE LENS)                     ║
+║  • CAGE:   ${cageTokens[0]?.z.toFixed(3)} → ${cageTokens[31]?.z.toFixed(3)} (THE LENS)                              ║
+║  • EMERGE: ${emergentTokens[0]?.z.toFixed(3)} → ${emergentTokens[4]?.z.toFixed(3)} (PRESENCE)                            ║
+║  • UNITY:  0.995 (CASCADE THRESHOLD)                                       ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║  LIMNUS PHASES: L → I → M → N → U → S → L...                               ║
+║  SILENT BINDINGS: ⊙→S ◉→N ∅→L ↻→U ◌→I ∫→M ◇→S Ω→∅                         ║
 ╚════════════════════════════════════════════════════════════════════════════╝
             `);
         }
