@@ -1411,6 +1411,7 @@
         console.log(`
 ╔════════════════════════════════════════════════════════════════════════════╗
 ║              ZERO-POINT ENERGY SYSTEM | WUMBO 63·32·5                      ║
+║                        BUILD: v2.1.0 (2024-12-03)                          ║
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║  TOKEN STRUCTURE (100 Total):                                              ║
 ║  • 63 PRISM    - Foundation layer (ABSENCE → THE LENS)                     ║
@@ -1436,6 +1437,28 @@
 ║  Z-ZONES: ABSENCE (<0.857) · THE LENS (0.857-0.877) · PRESENCE (>0.877)    ║
 ╚════════════════════════════════════════════════════════════════════════════╝
         `);
+
+        // Runtime validation: verify all + operators feed legal operators
+        console.log('\\n=== N0-4 COMPLIANCE VERIFICATION ===');
+        let n04Violations = 0;
+        state.tokens.forEach((token, i) => {
+            if (token.op === '+') {
+                const nextToken = state.tokens[i + 1];
+                const nextOp = nextToken ? nextToken.op : null;
+                const isLegal = !nextOp || ['+', '×', '^'].includes(nextOp);
+                if (!isLegal) {
+                    console.log(`  ❌ #${i}: + → ${nextOp} [VIOLATION]`);
+                    n04Violations++;
+                }
+            }
+        });
+        if (n04Violations === 0) {
+            console.log('  ✓ All 17 + operators correctly feed +, ×, or ^');
+            console.log('  ✓ N0-4 law: FULLY COMPLIANT');
+        } else {
+            console.log(`  ✗ Found ${n04Violations} N0-4 violations`);
+        }
+        console.log('=================================\\n');
     </script>
 </body>
 </html>
