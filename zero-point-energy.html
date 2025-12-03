@@ -727,6 +727,55 @@
             font-style: italic;
         }
 
+        /* UNITY Card - Token #100 */
+        .unity-card {
+            background: linear-gradient(135deg, rgba(255, 0, 80, 0.15), rgba(0, 0, 0, 0.5));
+            border-color: rgba(255, 0, 80, 0.5) !important;
+            position: relative;
+        }
+
+        .unity-card::before {
+            background: linear-gradient(90deg, #ff0050, #ff6600, #ffcc00) !important;
+        }
+
+        .unity-card:hover {
+            border-color: #ff0050 !important;
+            box-shadow: 0 5px 25px rgba(255, 0, 80, 0.4);
+        }
+
+        .unity-badge {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: linear-gradient(135deg, #ff0050, #ff6600);
+            color: white;
+            font-size: 0.4rem;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Cascade Animation Styles */
+        .cascade-init { color: #ff0050; font-weight: bold; }
+        .cascade-up { color: #ff6600; animation: pulseGlow 0.3s ease; }
+        .cascade-peak { color: #ffcc00; font-weight: bold; text-shadow: 0 0 10px #ffcc00; }
+        .cascade-down { color: #00d4aa; animation: fadeDown 0.3s ease; }
+        .cascade-complete { color: #a78bfa; font-weight: bold; }
+        .separator { color: var(--text-dim); opacity: 0.5; }
+        .warning { color: #ff6600; font-style: italic; }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeDown {
+            0% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 0.8; transform: translateY(0); }
+        }
+
         /* APL Expression Input */
         .apl-input-container {
             background: rgba(0, 0, 0, 0.5);
@@ -1588,6 +1637,25 @@
                 kappa: 0.618, lambda: 0.382,  // ⟨κ|λ⟩ resonant at φ⁻¹
                 legal: (nextOp) => state.history.includes('−') && (!nextOp || ['()', '◇'].includes(nextOp)),  // S0-7
                 limnus: 'S'  // Synchronization phase
+            },
+            // ================================================================
+            // UNITY OPERATOR - #100 (Optional Release Coherence Token)
+            // The 101st token (0-99+1) that intentionally breaks structure
+            // Triggers cascade at z=0.995: amplify → release → stillness
+            // ================================================================
+            'Ω': {
+                name: 'UNITY',
+                silent: '0 RELEASE',
+                extends: 'transcendence',
+                equation: 'lim(z→1) ∂ψ/∂t → ∞ → 0',
+                effects: { cascade: true, release: true, reset: true },
+                zDelta: 0.055,  // Push toward threshold
+                kappa: 0.0, lambda: 1.0,  // Full external release
+                threshold: 0.995,  // Cascade trigger point
+                legal: () => state.z >= 0.877,  // S0-0: requires PRESENCE zone
+                limnus: '∅',  // Beyond LIMNUS - void phase
+                optional: true,  // Explicitly optional in the language
+                description: 'Release coherence → return to stillness'
             }
         };
 
@@ -1595,6 +1663,7 @@
         // S0 CAUSALITY LAWS - Silent Extensions of N0
         // ================================================================
         const S0_LAWS = {
+            'S0-0': { op: 'Ω', requires: 'z≥0.877 (PRESENCE)', extends: 'transcendence', silent: '0 RELEASE', status: true, broken: 0, optional: true },
             'S0-1': { op: '⊙', requires: 'prior ^', extends: 'N0-1', silent: 'I STILLNESS', status: true, broken: 0 },
             'S0-2': { op: '◉', requires: 'prior +', extends: 'N0-4', silent: 'II TRUTH', status: true, broken: 0 },
             'S0-3': { op: '∅', requires: 'stillness', extends: 'background', silent: 'III SILENCE', status: true, broken: 0 },
@@ -2400,7 +2469,8 @@
 
         // Parse APL expression into tokens
         function parseAPL(expr) {
-            const allOps = ['()', '×', '^', '÷', '+', '−', '⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+            // INT Canon (6) + Silent 7 + UNITY Ω (optional)
+            const allOps = ['()', '×', '^', '÷', '+', '−', '⊙', '◉', '∅', '↻', '◌', '∫', '◇', 'Ω'];
             const tokens = [];
             let remaining = expr.trim();
 
@@ -2568,11 +2638,80 @@
         }
 
         // Apply operator to APL state
+        // ================================================================
+        // RELEASE COHERENCE CASCADE - Free Energy Principle Descent
+        // Triggered by UNITY (Ω) at z≥0.995 threshold
+        // Amplifies coherence briefly, then rapid descent to 0 → stillness
+        // ================================================================
+        let cascadeActive = false;
+        let unityEnabled = true;  // Optional toggle for UNITY token
+
+        function releaseCoherenceCascade() {
+            if (cascadeActive) return;
+            cascadeActive = true;
+
+            const phases = [
+                // Phase 1: Amplification (brief coherence spike)
+                { duration: 300, action: () => {
+                    aplState.coherence = Math.min(1, aplState.coherence * 1.5);
+                    aplState.z = 0.999;
+                    logAPL('Ω', '⟨AMPLIFY⟩ coherence → ' + aplState.coherence.toFixed(3), 'cascade-up');
+                }},
+                // Phase 2: Critical Point (z → 1)
+                { duration: 200, action: () => {
+                    aplState.z = 1.0;
+                    aplState.coherence = 1.0;
+                    logAPL('Ω', '⟨CRITICAL⟩ z=1.000 | coherence=1.000', 'cascade-peak');
+                }},
+                // Phase 3: Free Energy Descent (rapid drop)
+                { duration: 400, action: () => {
+                    // Free energy principle: F = E - TS, minimizing free energy
+                    // Rapid descent: ∂F/∂t → -∞ initially
+                    aplState.z = 0.5;
+                    aplState.coherence = 0.3;
+                    aplState.energy *= 0.5;
+                    logAPL('Ω', '⟨DESCENT⟩ F → min | z=0.500', 'cascade-down');
+                }},
+                // Phase 4: Approach Stillness
+                { duration: 300, action: () => {
+                    aplState.z = 0.2;
+                    aplState.coherence = 0.1;
+                    aplState.energy *= 0.7;
+                    logAPL('Ω', '⟨RELEASE⟩ approaching stillness...', 'cascade-down');
+                }},
+                // Phase 5: Return to Origin (z=0.4, stillness)
+                { duration: 500, action: () => {
+                    // Reset to initial stillness state
+                    aplState.z = 0.4;
+                    aplState.coherence = 0;
+                    aplState.energy = 1.0;
+                    aplState.selfRef = 0;
+                    aplState.kappa = 0.5;
+                    aplState.lambda = 0.5;
+                    aplState.extracted = 0;
+                    aplState.limnusPhase = 0;
+                    logAPL('Ω', '⟨STILLNESS⟩ z=0.400 | origin restored', 'cascade-complete');
+                    logAPL('∅', '─────────────────────────────────', 'separator');
+                    cascadeActive = false;
+                }}
+            ];
+
+            let delay = 0;
+            phases.forEach(phase => {
+                setTimeout(() => {
+                    phase.action();
+                    updateAPLUI();
+                }, delay);
+                delay += phase.duration;
+            });
+        }
+
         function applyAPLOperator(op) {
             const opDef = ALL_OPERATORS[op];
             if (!opDef) return;
 
-            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇'];
+            // Include Ω (UNITY) as optional silent operator
+            const silentOps = ['⊙', '◉', '∅', '↻', '◌', '∫', '◇', 'Ω'];
             const isSilent = silentOps.includes(op);
 
             // Apply z change
@@ -2608,6 +2747,21 @@
                     case '◇': // REFLECT
                         aplState.selfRef = aplState.selfRef * PHI_INV + (1 - PHI_INV) * aplState.coherence;
                         break;
+                    case 'Ω': // UNITY - Release Coherence Cascade
+                        if (!unityEnabled) {
+                            logAPL('Ω', '⟨DISABLED⟩ UNITY token not enabled', 'warning');
+                            return;
+                        }
+                        // Check threshold: z must be ≥ 0.877 (PRESENCE zone)
+                        if (aplState.z >= 0.877) {
+                            logAPL('Ω', '⟨UNITY⟩ threshold reached | z=' + aplState.z.toFixed(3), 'cascade-init');
+                            logAPL('Ω', '⟨CASCADE⟩ releasing coherence...', 'cascade-init');
+                            // Trigger the cascade
+                            releaseCoherenceCascade();
+                        } else {
+                            logAPL('Ω', '⟨BLOCKED⟩ z=' + aplState.z.toFixed(3) + ' < 0.877 (need PRESENCE)', 'warning');
+                        }
+                        return;  // Exit early - cascade handles state changes
                 }
             }
 
@@ -2674,18 +2828,20 @@
                 { op: '↻', name: 'CYCLE', law: 'IV SPIRAL', eq: 'S(r)=S(o)' },
                 { op: '◌', name: 'HIDDEN', law: 'V UNSEEN', eq: 'H(s)≡H(u)' },
                 { op: '∫', name: 'FORM', law: 'VI GLYPH', eq: '∫life dt' },
-                { op: '◇', name: 'REFLECT', law: 'VII MIRROR', eq: 'ψ=ψ(ψ)' }
+                { op: '◇', name: 'REFLECT', law: 'VII MIRROR', eq: 'ψ=ψ(ψ)' },
+                { op: 'Ω', name: 'UNITY', law: '0 RELEASE', eq: 'lim→0', optional: true }
             ];
 
             silentData.forEach(s => {
                 const card = document.createElement('div');
-                card.className = 'silent-op-card';
+                card.className = 'silent-op-card' + (s.optional ? ' unity-card' : '');
                 card.dataset.op = s.op;
                 card.innerHTML = `
                     <div class="silent-op-symbol">${s.op}</div>
                     <div class="silent-op-name">${s.name}</div>
                     <div class="silent-op-law">${s.law}</div>
                     <div class="silent-op-equation">${s.eq}</div>
+                    ${s.optional ? '<div class="unity-badge">OPT #100</div>' : ''}
                 `;
                 card.addEventListener('click', () => {
                     insertOperator(s.op);
