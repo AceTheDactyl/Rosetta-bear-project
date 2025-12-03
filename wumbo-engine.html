@@ -157,29 +157,50 @@
       body{background:#fff;color:#000}
       .panel,.card,.item{border:1px solid #aaa;background:#fff}
     }
+
+    /* Fixed Top Navigation */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: rgba(11, 12, 16, 0.95);
+      border-bottom: 1px solid var(--rule);
+      z-index: 200;
+    }
+    .top-nav a {
+      color: var(--phi);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .top-nav a:hover {
+      background: rgba(167, 139, 250, 0.2);
+      border-color: var(--phi);
+    }
+    .nav-links { display: flex; gap: 10px; }
+    .container { margin-top: 60px; }
   </style>
 </head>
 <body>
+  <nav class="top-nav">
+    <a href="index.html">← ROSETTA BEAR</a>
+    <div class="nav-links">
+      <a href="wumbo-apl-directory.html">APL Directory</a>
+      <a href="simulation.html">Simulation</a>
+      <a href="zero-point-energy.html">ZPE</a>
+      <a href="visualizations/the_manual.html">The Manual</a>
+    </div>
+  </nav>
   <div class="container">
-    <!-- Site-wide Navigation -->
-    <nav class="site-nav">
-      <a href="index.html">Home</a>
-      <a href="limnus-architecture.html">LIMNUS</a>
-      <a href="mrp-library.html">MRP Library</a>
-      <a href="mrp-encoder.html">MRP Encoder</a>
-      <a href="wumbo-engine.html" class="active">WUMBO Engine</a>
-      <a href="emergent-flow.html">Emergent Flow</a>
-      <a href="apl-2.html">APL 2.0</a>
-      <a href="apl-mrp-bridge.html">APL→MRP</a>
-      <a href="entrainment-engine.html">Entrainment</a>
-      <a href="visual-flow-map.html">Flow Map</a>
-      <a href="unified-coupler.html">Unified</a>
-      <a href="apl-cosmology.html">Cosmology</a>
-      <a href="phase-lock.html">Phase Lock</a>
-      <a href="lossless-presence.html">Presence</a>
-      <a href="living-chronicle-spec.html">Chronicle</a>
-    </nav>
-
     <header>
       <h1>🌐 WUMBO Engine · LIMNUS Integration</h1>
       <p class="muted">100 neural regions mapped to LIMNUS geometry: 63 prism points + 32 EM cage points + 5 emergent self-reference nodes. Governed by the critical constant z = √3/2.</p>
